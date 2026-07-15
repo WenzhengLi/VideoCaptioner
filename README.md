@@ -19,6 +19,9 @@
 - 将语音、说话人和课板合并到统一时间轴，导出 JSON、TXT、SRT 和课板索引。
 - 任务阶段可恢复；大体积帧和 OCR 元数据可落盘缓存，不要求全部常驻内存。
 - 提供 Gradio 本地网页，适合没有 AI 人工介入的日常批处理。
+- 提供 P01–P06 课程知识流水线：完整规范化、来源分类、案例边界、证据提取、安全审查和
+  Tidy 兼容原子知识条目。
+- 将 WeSpeaker 的 `Speaker N` 声纹簇原样保留为 `speaker_N`，避免身份未知时丢失说话人区分。
 
 ## 架构
 
@@ -135,6 +138,36 @@ scripts/        # 环境验证和视觉算法复跑工具
 docs/           # 架构、配置、评估与设计记录
 ```
 
+## 课程知识库流水线
+
+知识数据默认写入 `data/`，不提交 Git，也不覆盖历史版本：
+
+```text
+01_raw -> P01 规范化 -> P02 来源/知识属性 -> P03 案例边界
+       -> P04 单案例证据提取 -> P05 证据与安全审查
+       -> P06 原子条目 + Markdown -> SQLite FTS 检索
+```
+
+Cursor 阶段通过独立任务清单调用，固定使用 headless 全权限参数：
+`-p --force --sandbox disabled --approve-mcps --trust --model auto`。每课、每案例使用独立上下文；
+程序负责完整性校验、证据范围校验、缓存、重试和断点续跑。P02 使用紧凑复核包，Cursor 只返回
+判断决策，再由确定性代码应用到全量 segments，避免大 JSON 导致长时间阻塞。
+
+常用命令：
+
+```powershell
+python -m course_video_analyzer.knowledge.cli index-tidy `
+  --data-root data --database data/tidy/knowledge.db
+
+python -m course_video_analyzer.knowledge.cli search-tidy "明确拒绝" `
+  --database data/tidy/knowledge.db --limit 8
+
+python -m course_video_analyzer.knowledge.cli answer-context "聊天问题" `
+  data/tidy/query-context.json --database data/tidy/knowledge.db
+```
+
+完整目录、Prompt 迭代和批次规则见 [知识库流水线](docs/knowledge-pipeline.md)。
+
 ## 开发与质量检查
 
 ```powershell
@@ -159,6 +192,8 @@ uv run pytest -q -m integration
 - 本地优先：原始视频、音频、图片和 OCR 缓存默认不离开本机。
 - 可恢复：每个阶段有明确输入、输出和持久化状态。
 - 可替换：ASR、人物分离、OCR、帧仓库和导出器均通过清晰接口解耦。
+- 可追溯：知识条目必须引用原始 segment ID，并区分观察、讲师观点、引用和模型推断。
+- 尊重边界：明确拒绝、不适和撤回同意是停止信号，不会被转换成默认的“测试”或推进技巧。
 
 ## 文档
 

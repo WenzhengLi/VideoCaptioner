@@ -71,9 +71,18 @@ course-knowledge cursor-stage C001 P01 `
 
 ## Prompt 阶段
 
-Prompt 位于 `prompts/knowledge-v001/`。每个 Cursor 命令只处理一课的一个阶段，并使用全新
+当前 Prompt 位于 `prompts/knowledge-v002/`；P02 紧凑复核规则位于
+`prompts/knowledge-v002-compact/`。每个 Cursor 命令只处理一课或一个案例的一个阶段，并使用全新
 上下文。阶段输出为严格 JSON；Markdown 只用于展示。所有输出必须记录 `schema_version`、
 `prompt_version`、`source_ids` 和可定位的 `evidence_spans`。
+
+P01 不再把身份未知的 `Speaker 0`/`Speaker 1` 统一降级为 `unknown`，而是保留为
+`speaker_0`/`speaker_1`。P02 先生成全量确定性基线，再把均匀声纹样本和明确候选压缩为小型
+Cursor 复核包；Cursor 只返回角色、引用和不确定项决策，程序将决策应用到全量数据并执行逐段 QA。
+
+P03 必须让案例区间与 `unassigned_segment_ids` 无重叠地覆盖全部输入 segments。P04 以后按案例
+隔离执行：P04 的每条结论必须引用案例范围内的 segment ID，P05 逐条审查证据与安全边界，P06
+只把通过审查的内容转换为原子 JSON 和 Tidy 兼容 Markdown。
 
 ## 迭代与验收
 
