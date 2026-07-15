@@ -15,6 +15,7 @@ from course_video_analyzer.knowledge.normalizer import (
     restore_p01_speaker_clusters,
 )
 from course_video_analyzer.knowledge.classifier import classify_p02_baseline
+from course_video_analyzer.knowledge.p02_review import build_p02_review_pack, apply_p02_review
 from course_video_analyzer.knowledge.runs import archive_successful_job, write_run_qa
 
 
@@ -103,6 +104,16 @@ def build_parser() -> argparse.ArgumentParser:
     classify.add_argument("p01", type=Path)
     classify.add_argument("output", type=Path)
     classify.add_argument("--prompt-version", default="knowledge-v002-p02-baseline")
+    p02_pack = subparsers.add_parser("build-p02-review", help="build compact P02 Cursor review pack")
+    p02_pack.add_argument("course_id")
+    p02_pack.add_argument("baseline", type=Path)
+    p02_pack.add_argument("output", type=Path)
+    p02_apply = subparsers.add_parser("apply-p02-review", help="apply compact P02 review decisions")
+    p02_apply.add_argument("course_id")
+    p02_apply.add_argument("baseline", type=Path)
+    p02_apply.add_argument("review_pack", type=Path)
+    p02_apply.add_argument("review", type=Path)
+    p02_apply.add_argument("output", type=Path)
     return parser
 
 
@@ -228,6 +239,18 @@ def main() -> int:
             prompt_version=args.prompt_version,
         )
         print(f"P02 基线完成: {output}")
+    elif args.command == "build-p02-review":
+        output = build_p02_review_pack(args.course_id, args.baseline, args.output)
+        print(f"P02 紧凑复核包完成: {output}")
+    elif args.command == "apply-p02-review":
+        output = apply_p02_review(
+            args.course_id,
+            args.baseline,
+            args.review_pack,
+            args.review,
+            args.output,
+        )
+        print(f"P02 复核决策已应用: {output}")
     return 0
 
 

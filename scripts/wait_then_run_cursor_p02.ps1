@@ -76,19 +76,46 @@ for ($ordinal = $StartCourse; $ordinal -le $EndCourse; $ordinal++) {
         }
     }
 
+    $reviewPack = Join-Path $DataRoot "courses\$courseId\02_normalized\P02-review-pack-knowledge-v002.json"
+    if (-not (Test-Path -LiteralPath $reviewPack)) {
+        & $PythonExe -m course_video_analyzer.knowledge.cli build-p02-review `
+            $courseId $baseline $reviewPack
+        if ($LASTEXITCODE -ne 0) {
+            Add-JsonLine $failurePath @{
+                at = [DateTime]::UtcNow.ToString("o"); course_id = $courseId
+                error = "P02 compact review pack failed"
+            }
+            continue
+        }
+    }
+    $reviewDecision = Join-Path $DataRoot "courses\$courseId\02_normalized\P02-review-decisions-knowledge-v002.json"
+
     for ($attempt = 1; $attempt -le $MaxAttempts; $attempt++) {
         Add-JsonLine $statusPath @{
             at = [DateTime]::UtcNow.ToString("o"); course_id = $courseId
             attempt = $attempt; status = "started"
         }
+        if (Test-Path -LiteralPath $reviewDecision) {
+            $stamp = [DateTime]::UtcNow.ToString("yyyyMMddTHHmmssZ")
+            Move-Item -LiteralPath $reviewDecision -Destination "$reviewDecision.invalid-$stamp"
+        }
         & $PythonExe -m course_video_analyzer.knowledge.cli cursor-stage `
-            $courseId P02 $baseline $output `
+            $courseId P02 $reviewPack $reviewDecision `
             --workspace $Workspace --model auto `
-            --prompt-root prompts\knowledge-v002 --timeout-seconds 3600
+            --prompt-root prompts\knowledge-v002-compact --timeout-seconds 1200
         if ($LASTEXITCODE -ne 0) {
             Add-JsonLine $failurePath @{
                 at = [DateTime]::UtcNow.ToString("o"); course_id = $courseId
                 attempt = $attempt; error = "Cursor P02 review failed"
+            }
+            continue
+        }
+        & $PythonExe -m course_video_analyzer.knowledge.cli apply-p02-review `
+            $courseId $baseline $reviewPack $reviewDecision $output
+        if ($LASTEXITCODE -ne 0) {
+            Add-JsonLine $failurePath @{
+                at = [DateTime]::UtcNow.ToString("o"); course_id = $courseId
+                attempt = $attempt; error = "P02 compact review apply failed"
             }
             continue
         }
