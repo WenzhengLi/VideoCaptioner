@@ -53,3 +53,18 @@ def test_normalizer_includes_rules_discovered_by_cursor_review(tmp_path: Path) -
     payload = json.loads(output.read_text(encoding="utf-8"))
 
     assert payload["segments"][0]["normalized_text"] == "然后维持关系并总结。"
+
+
+def test_normalizer_includes_safe_rules_discovered_in_c004_review(tmp_path: Path) -> None:
+    transcript = tmp_path / "transcript.txt"
+    transcript.write_text(
+        "[00:00:00.000 -> 00:00:01.000] 导师\n"
+        "因为因为大家大家今今天在在家家里约约熊熊猫。\n",
+        encoding="utf-8",
+    )
+    output = tmp_path / "p01.json"
+
+    normalize_transcript_p01("C004", transcript, output)
+    payload = json.loads(output.read_text(encoding="utf-8"))
+
+    assert payload["segments"][0]["normalized_text"] == "因为大家今天在家里约熊猫。"
