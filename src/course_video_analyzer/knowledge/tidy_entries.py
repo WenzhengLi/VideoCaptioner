@@ -44,6 +44,20 @@ def validate_p06_output(
     valid_segment_ids: set[str] = set()
     for span in extraction.get("evidence_spans", []):
         valid_segment_ids.update(span.get("segment_ids", []))
+    for field, evidence_field in (
+        ("participants", "evidence_segment_ids"),
+        ("timeline", "evidence_segment_ids"),
+        ("observations", "evidence_segment_ids"),
+        ("instructor_claims", "evidence_segment_ids"),
+        ("alternative_explanations", "basis_evidence_segment_ids"),
+        ("outcomes", "evidence_segment_ids"),
+        ("quoted_expressions", "evidence_segment_ids"),
+        ("uncertainties", "evidence_segment_ids"),
+    ):
+        for item in extraction.get(field, []):
+            valid_segment_ids.update(item.get(evidence_field, []))
+    for review in (source.get("review") or {}).get("evidence_reviews", []):
+        valid_segment_ids.update(review.get("supported_by_segment_ids", []))
     entries = output.get("entries") if isinstance(output.get("entries"), list) else []
     entry_ids: list[str] = []
     invalid_entries: list[int] = []
