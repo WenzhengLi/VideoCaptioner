@@ -15,6 +15,11 @@ from course_video_analyzer.exporters.srt_exporter import export_srt
 from course_video_analyzer.exporters.txt_exporter import export_txt
 from course_video_analyzer.media.ffmpeg import FFmpegMediaProcessor
 from course_video_analyzer.models import AnalysisResult, OcrLine
+from course_video_analyzer.runtime_cleanup import (
+    cleanup_disposable_artifacts,
+    validate_json_output,
+    validate_text_output,
+)
 from course_video_analyzer.timeline.merger import merge_timeline
 from course_video_analyzer.vision.adaptive_sampling import (
     AdaptiveSamplingConfig,
@@ -36,6 +41,11 @@ def main() -> int:
     parser.add_argument("--initial-stride-ms", type=int, default=60_000)
     parser.add_argument("--image-similarity-threshold", type=float, default=0.55)
     parser.add_argument("--image-difference-threshold", type=float, default=0.45)
+    parser.add_argument(
+        "--keep-artifacts",
+        action="store_true",
+        help="保留帧、OCR 图片和调试目录；默认输出 TXT 后清理。",
+    )
     args = parser.parse_args()
 
     video = args.video.resolve()
@@ -131,6 +141,7 @@ def main() -> int:
     export_boards_index(result, artifacts_dir / "boards_index.json")
     output_txt.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(generated_txt, output_txt)
+    validate_text_output(output_txt)
 
     payload = {
         "video": str(video),
@@ -144,10 +155,15 @@ def main() -> int:
         "tracking_export_elapsed_s": round(time.perf_counter() - sampled_at, 3),
         "total_elapsed_s": round(time.perf_counter() - started, 3),
     }
-    (output_dir / "version.json").write_text(
+    if not args.keep_artifacts:
+        cleanup = cleanup_disposable_artifacts(output_dir)
+        payload["cleanup"] = cleanup.as_dict()
+    version_path = output_dir / "version.json"
+    version_path.write_text(
         json.dumps(payload, ensure_ascii=False, indent=2, default=str),
         encoding="utf-8",
     )
+    validate_json_output(version_path)
     print(json.dumps(payload, ensure_ascii=False, indent=2, default=str))
     return 0
 

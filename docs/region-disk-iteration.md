@@ -132,6 +132,8 @@ uv run python scripts/rerun_visual_version.py `
 ```
 
 脚本会自动完成：媒体读取、磁盘缓存恢复、区间拆分、OCR 调度、代表帧选择、课板跟踪、
-OCR 文本组合、去重和 TXT/JSON/SRT 导出。输出目录或 TXT 已存在时会直接报错，禁止覆盖。
+OCR 文本组合、去重和 TXT/JSON/SRT 导出。最终 TXT 校验成功后，默认删除版本目录中的帧、
+OCR 图片和调试产物，仅保留 `version.json` 与外部 TXT；传 `--keep-artifacts` 才保留完整
+实验现场。输出目录或 TXT 已存在时会直接报错，禁止覆盖。
 
 完整比较数据：`jobs/visual-iterations/comparison.json`。

@@ -9,6 +9,10 @@ from pathlib import Path
 from typing import Any
 
 from course_video_analyzer.media.ffmpeg import FFmpegMediaProcessor
+from course_video_analyzer.runtime_cleanup import (
+    cleanup_disposable_artifacts,
+    validate_json_output,
+)
 from course_video_analyzer.vision.adaptive_sampling import (
     AdaptiveSamplingConfig,
     sample_video_adaptively,
@@ -30,6 +34,11 @@ def main() -> int:
     parser.add_argument("--cache-dir", type=Path, default=None)
     parser.add_argument("--reuse-output", action="store_true")
     parser.add_argument("--ocr", action="store_true")
+    parser.add_argument(
+        "--keep-artifacts",
+        action="store_true",
+        help="保留帧、OCR 图片和跟踪目录；默认只保留 benchmark.json。",
+    )
     args = parser.parse_args()
 
     video = args.video.resolve()
@@ -103,10 +112,20 @@ def main() -> int:
         payload["total_elapsed_s"] = round(tracked_at - started, 3)
 
     output.mkdir(parents=True, exist_ok=True)
-    (output / "benchmark.json").write_text(
+    benchmark_path = output / "benchmark.json"
+    benchmark_path.write_text(
         json.dumps(payload, ensure_ascii=False, indent=2, default=str),
         encoding="utf-8",
     )
+    validate_json_output(benchmark_path)
+    if not args.keep_artifacts:
+        cleanup = cleanup_disposable_artifacts(output)
+        payload["cleanup"] = cleanup.as_dict()
+        benchmark_path.write_text(
+            json.dumps(payload, ensure_ascii=False, indent=2, default=str),
+            encoding="utf-8",
+        )
+        validate_json_output(benchmark_path)
     print(json.dumps(payload, ensure_ascii=False, indent=2, default=str))
     return 0
 
