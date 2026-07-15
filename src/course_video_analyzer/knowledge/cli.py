@@ -8,7 +8,7 @@ from pathlib import Path
 from course_video_analyzer.knowledge.catalog import initialize_knowledge_workspace
 from course_video_analyzer.knowledge.batch import mark_batch_item, run_batch
 from course_video_analyzer.knowledge.cursor_runner import CursorStageConfig, run_cursor_stage
-from course_video_analyzer.knowledge.cleaning_qa import write_p01_qa, write_p02_qa
+from course_video_analyzer.knowledge.cleaning_qa import write_p01_qa, write_p02_qa, write_p03_qa
 from course_video_analyzer.knowledge.normalizer import (
     TranscriptNormalizerConfig,
     normalize_transcript_p01,
@@ -79,6 +79,12 @@ def build_parser() -> argparse.ArgumentParser:
     p02_qa.add_argument("output", type=Path)
     p02_qa.add_argument("report", type=Path)
     p02_qa.add_argument("--prompt-version", default="knowledge-v002-p02")
+    p03_qa = subparsers.add_parser("qa-p03", help="validate P03 case boundaries and coverage")
+    p03_qa.add_argument("course_id")
+    p03_qa.add_argument("p02", type=Path)
+    p03_qa.add_argument("output", type=Path)
+    p03_qa.add_argument("report", type=Path)
+    p03_qa.add_argument("--prompt-version", default="knowledge-v002-p03")
     normalize = subparsers.add_parser("normalize-p01", help="generate deterministic P01 baseline")
     normalize.add_argument("course_id")
     normalize.add_argument("transcript", type=Path)
@@ -181,6 +187,15 @@ def main() -> int:
             expected_prompt_version=args.prompt_version,
         )
         print(f"P02 QA 报告: {report}")
+    elif args.command == "qa-p03":
+        report = write_p03_qa(
+            args.course_id,
+            args.p02,
+            args.output,
+            args.report,
+            expected_prompt_version=args.prompt_version,
+        )
+        print(f"P03 QA 报告: {report}")
     elif args.command == "normalize-p01":
         output = normalize_transcript_p01(
             args.course_id,

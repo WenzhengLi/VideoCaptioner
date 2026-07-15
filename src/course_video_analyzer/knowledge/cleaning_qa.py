@@ -41,6 +41,7 @@ ALLOWED_EPISTEMIC_TYPES = {
     "unknown",
 }
 ALLOWED_RELEVANCE = {"core", "supporting", "boilerplate", "uncertain"}
+ALLOWED_CASE_COMPLETENESS = {"complete", "partial", "uncertain"}
 
 
 def _timestamp_ms(value: str) -> int:
@@ -278,6 +279,148 @@ def write_p02_qa(
     report = validate_p02_output(
         course_id,
         p01_path,
+        output_path,
+        expected_prompt_version=expected_prompt_version,
+    )
+    atomic_write_text(report_path, json.dumps(report, ensure_ascii=False, indent=2))
+    return Path(report_path)
+
+
+def validate_p03_output(
+    course_id: str,
+    p02_path: Path,
+    output_path: Path,
+    *,
+    expected_prompt_version: str = "knowledge-v002-p03",
+) -> dict[str, Any]:
+    source = json.loads(Path(p02_path).read_text(encoding="utf-8"))
+    output = json.loads(Path(output_path).read_text(encoding="utf-8"))
+    source_segments = source.get("segments") if isinstance(source.get("segments"), list) else []
+    source_ids = [
+        str(item.get("segment_id", ""))
+        for item in source_segments
+        if isinstance(item, dict)
+    ]
+    index_by_id = {segment_id: index for index, segment_id in enumerate(source_ids)}
+    cases = output.get("cases") if isinstance(output.get("cases"), list) else []
+    unassigned = (
+        output.get("unassigned_segment_ids")
+        if isinstance(output.get("unassigned_segment_ids"), list)
+        else []
+    )
+    invalid_case_indexes: list[int] = []
+    invalid_boundary_indexes: list[int] = []
+    overlapping_case_indexes: list[int] = []
+    covered: set[str] = set()
+    case_ids: list[str] = []
+    last_end = -1
+    expected_case_prefix = f"CASE-{course_id}-"
+    for index, case in enumerate(cases):
+        if not isinstance(case, dict):
+            invalid_case_indexes.append(index)
+            continue
+        case_id = str(case.get("case_id", ""))
+        case_ids.append(case_id)
+        confidence = case.get("confidence")
+        structurally_valid = (
+            case_id.startswith(expected_case_prefix)
+            and bool(str(case.get("title", "")).strip())
+            and case.get("completeness") in ALLOWED_CASE_COMPLETENESS
+            and isinstance(case.get("participant_roles"), list)
+            and isinstance(case.get("boundary_evidence"), dict)
+            and isinstance(confidence, (int, float))
+            and 0 <= confidence <= 1
+        )
+        if not structurally_valid:
+            invalid_case_indexes.append(index)
+        start_id = str(case.get("start_segment_id", ""))
+        end_id = str(case.get("end_segment_id", ""))
+        if start_id not in index_by_id or end_id not in index_by_id:
+            invalid_boundary_indexes.append(index)
+            continue
+        start = index_by_id[start_id]
+        end = index_by_id[end_id]
+        if start > end:
+            invalid_boundary_indexes.append(index)
+            continue
+        if start <= last_end:
+            overlapping_case_indexes.append(index)
+        last_end = max(last_end, end)
+        for segment_id in source_ids[start : end + 1]:
+            if segment_id in covered:
+                if index not in overlapping_case_indexes:
+                    overlapping_case_indexes.append(index)
+            covered.add(segment_id)
+
+    unassigned_ids = [str(value) for value in unassigned]
+    invalid_unassigned = [
+        index for index, segment_id in enumerate(unassigned_ids) if segment_id not in index_by_id
+    ]
+    duplicate_unassigned = len(unassigned_ids) != len(set(unassigned_ids))
+    case_unassigned_overlap = sorted(covered.intersection(unassigned_ids))
+    represented = covered.union(unassigned_ids)
+    missing_ids = [segment_id for segment_id in source_ids if segment_id not in represented]
+    extra_ids = [segment_id for segment_id in represented if segment_id not in index_by_id]
+    metrics = output.get("segmentation_metrics")
+    metrics_consistent = isinstance(metrics, dict) and (
+        metrics.get("input_segment_count") == len(source_ids)
+        and metrics.get("case_count") == len(cases)
+        and metrics.get("assigned_segment_count") == len(covered)
+        and metrics.get("unassigned_segment_count") == len(unassigned_ids)
+    )
+    checks = {
+        "schema_version": output.get("schema_version") == "1.0",
+        "prompt_version": output.get("prompt_version") == expected_prompt_version,
+        "source_id": output.get("source_ids") == [course_id]
+        and output.get("course_id") == course_id,
+        "source_segment_ids_valid": len(source_ids) == len(source_segments)
+        and len(source_ids) == len(set(source_ids))
+        and all(source_ids),
+        "case_contract": not invalid_case_indexes and len(case_ids) == len(set(case_ids)),
+        "case_boundaries_valid": not invalid_boundary_indexes,
+        "cases_do_not_overlap": not overlapping_case_indexes,
+        "unassigned_contract": not invalid_unassigned and not duplicate_unassigned,
+        "case_unassigned_disjoint": not case_unassigned_overlap,
+        "complete_segment_coverage": not missing_ids and not extra_ids and bool(source_ids),
+        "segmentation_metrics_consistent": metrics_consistent,
+    }
+    return {
+        "schema_version": "1.0",
+        "course_id": course_id,
+        "stage": "P03",
+        "status": "pass" if all(checks.values()) else "needs_review",
+        "checks": checks,
+        "metrics": {
+            "input_segment_count": len(source_ids),
+            "case_count": len(cases),
+            "assigned_segment_count": len(covered),
+            "unassigned_segment_count": len(unassigned_ids),
+            "missing_segment_count": len(missing_ids),
+            "overlap_count": len(case_unassigned_overlap) + len(overlapping_case_indexes),
+        },
+        "samples": {
+            "invalid_case_indexes": invalid_case_indexes[:20],
+            "invalid_boundary_indexes": invalid_boundary_indexes[:20],
+            "overlapping_case_indexes": overlapping_case_indexes[:20],
+            "invalid_unassigned_indexes": invalid_unassigned[:20],
+            "case_unassigned_overlap_ids": case_unassigned_overlap[:20],
+            "missing_segment_ids": missing_ids[:20],
+            "extra_segment_ids": extra_ids[:20],
+        },
+    }
+
+
+def write_p03_qa(
+    course_id: str,
+    p02_path: Path,
+    output_path: Path,
+    report_path: Path,
+    *,
+    expected_prompt_version: str = "knowledge-v002-p03",
+) -> Path:
+    report = validate_p03_output(
+        course_id,
+        p02_path,
         output_path,
         expected_prompt_version=expected_prompt_version,
     )
