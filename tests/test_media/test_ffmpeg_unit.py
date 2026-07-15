@@ -61,7 +61,7 @@ def test_require_tool_finds_winget_ffmpeg_when_path_is_stale(tmp_path: Path) -> 
     ffmpeg.write_bytes(b"")
     with (
         patch("course_video_analyzer.media.subprocess_utils.shutil.which", return_value=None),
-        patch("course_video_analyzer.media.subprocess_utils.os.name", "nt"),
+        patch("course_video_analyzer.media.subprocess_utils._is_windows", return_value=True),
         patch.dict("os.environ", {"LOCALAPPDATA": str(tmp_path)}),
     ):
         assert require_tool("ffmpeg") == str(ffmpeg)

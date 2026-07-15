@@ -110,7 +110,12 @@ class CandidateGenerator:
     ) -> RawCandidate | None:
         area_ratio = region.area / frame_area
         cfg = self.config
-        if area_ratio < cfg.min_area_ratio or area_ratio > cfg.max_area_ratio:
+        # A generated fullscreen proposal intentionally covers 100% of the
+        # frame. Other contour proposals still respect ``max_area_ratio`` so a
+        # uniform background cannot masquerade as a board. Keeping this exact
+        # proposal also avoids OpenCV contour differences across platforms.
+        max_area_ratio = 1.0 if source == "fullscreen" else cfg.max_area_ratio
+        if area_ratio < cfg.min_area_ratio or area_ratio > max_area_ratio:
             return None
         aspect = region.width / region.height
         if aspect < cfg.min_aspect_ratio or aspect > cfg.max_aspect_ratio:

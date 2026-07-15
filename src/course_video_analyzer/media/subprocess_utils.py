@@ -12,7 +12,7 @@ from .errors import MediaToolError
 
 def require_tool(name: str) -> str:
     path = shutil.which(name)
-    if path is None and os.name == "nt":
+    if path is None and _is_windows():
         path = _find_winget_ffmpeg_tool(name)
     if path is None:
         raise MediaToolError(
@@ -20,6 +20,12 @@ def require_tool(name: str) -> str:
             " Windows 可用: winget install Gyan.FFmpeg"
         )
     return path
+
+
+def _is_windows() -> bool:
+    """Isolate the platform check so tests never mutate global ``os.name``."""
+
+    return os.name == "nt"
 
 
 def _find_winget_ffmpeg_tool(name: str) -> str | None:
