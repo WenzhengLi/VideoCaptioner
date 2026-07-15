@@ -25,8 +25,11 @@ if (Test-Path $answer) {
     $stamp = [DateTime]::UtcNow.ToString("yyyyMMddTHHmmssZ")
     Move-Item $answer "$answer.previous-$stamp"
 }
+$query = Get-Content -Raw -Encoding utf8 (
+    Join-Path $Workspace "prompts\knowledge-v002\smoke-query.txt"
+)
 & $PythonExe -m course_video_analyzer.knowledge.cli answer-tidy `
-    "对方回复变冷淡时，我应该如何判断，并分别用稳妥、幽默和真诚方式回复？" `
+    $query `
     $answer --database $database --workspace $Workspace --limit 8
 if ($LASTEXITCODE -ne 0) { throw "Knowledge answer smoke test failed" }
 
