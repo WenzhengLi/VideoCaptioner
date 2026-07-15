@@ -80,6 +80,52 @@ def compare_transcripts(candidate: Path, baseline: Path) -> dict[str, Any]:
     }
 
 
+def validate_transcript(transcript: Path, media_json: Path | None = None) -> dict[str, Any]:
+    """Run cheap structural checks before a transcript enters the cleaning pipeline."""
+    metrics = transcript_metrics(transcript)
+    duration_ms: int | None = None
+    if media_json is not None and Path(media_json).is_file():
+        media = json.loads(Path(media_json).read_text(encoding="utf-8"))
+        raw_duration = media.get("duration_ms")
+        if isinstance(raw_duration, int):
+            duration_ms = raw_duration
+    checks = {
+        "non_empty": metrics["size_bytes"] > 0,
+        "has_timestamps": metrics["timestamp_count"] > 0,
+        "starts_near_video_start": (
+            metrics["first_timestamp_ms"] is not None
+            and metrics["first_timestamp_ms"] <= 60_000
+        ),
+        "ends_near_video_end": True,
+    }
+    end_gap_ms: int | None = None
+    if duration_ms is not None and metrics["last_timestamp_ms"] is not None:
+        end_gap_ms = duration_ms - metrics["last_timestamp_ms"]
+        allowed_gap_ms = max(30_000, int(duration_ms * 0.02))
+        checks["ends_near_video_end"] = (
+            end_gap_ms is not None and abs(end_gap_ms) <= allowed_gap_ms
+        )
+    return {
+        "schema_version": "1.0",
+        "status": "pass" if all(checks.values()) else "needs_review",
+        "checks": checks,
+        "metrics": metrics,
+        "video_duration_ms": duration_ms,
+        "end_gap_ms": end_gap_ms,
+        "note": "结构检查不能代替内容完整度与语义准确性人工审查。",
+    }
+
+
+def write_run_qa(course_id: str, run_id: str, data_root: Path) -> Path:
+    run_dir = Path(data_root).resolve() / "courses" / course_id / "01_raw" / run_id
+    report = validate_transcript(run_dir / "transcript.txt", run_dir / "media.json")
+    destination = Path(data_root).resolve() / "courses" / course_id / "qa" / f"{run_id}.json"
+    payload = json.dumps(report, ensure_ascii=False, indent=2)
+    atomic_write_text(run_dir / "qa.json", payload)
+    atomic_write_text(destination, payload)
+    return destination
+
+
 def archive_successful_job(
     course_id: str,
     job_dir: Path,
@@ -127,6 +173,8 @@ def archive_successful_job(
         "archived_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
         "artifacts": copied,
     }
+    write_run_qa(course_id, run_id, data_root)
+    run_record["qa"] = "qa.json"
     if baseline is not None:
         report = compare_transcripts(run_dir / "transcript.txt", baseline)
         atomic_write_text(

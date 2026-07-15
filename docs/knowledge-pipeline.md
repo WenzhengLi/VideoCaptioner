@@ -45,6 +45,17 @@ course-video-analyze "E:\课程\[2]--第二课.mp4" `
 命令一次只运行一课。任务失败时保留 `jobs/batch/<job-id>/job.json`，再次执行同一命令会从
 已完成阶段恢复；成功后才归档轻量最终结果。归档目录已存在时命令拒绝覆盖。
 
+小批次串行运行：
+
+```powershell
+course-knowledge run-batch BATCH-20260715-001 `
+  --start 3 --end 5 --run-version V001 `
+  --ffmpeg-bin "C:\ffmpeg\bin"
+```
+
+调度器为每课启动独立 Python 进程，默认单课超时 4 小时、最多尝试 2 次。失败写入
+`failures.jsonl` 后继续下一课，重复执行会跳过已成功归档的课程。
+
 ## Prompt 阶段
 
 Prompt 位于 `prompts/knowledge-v001/`。每个 Cursor 命令只处理一课的一个阶段，并使用全新
