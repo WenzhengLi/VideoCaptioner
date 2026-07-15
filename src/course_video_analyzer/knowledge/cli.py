@@ -18,6 +18,7 @@ from course_video_analyzer.knowledge.classifier import classify_p02_baseline
 from course_video_analyzer.knowledge.p02_review import build_p02_review_pack, apply_p02_review
 from course_video_analyzer.knowledge.case_segmentation import build_p03_timeline_input
 from course_video_analyzer.knowledge.extraction import build_p04_case_input, write_p04_qa
+from course_video_analyzer.knowledge.safety_review import build_p05_input, write_p05_qa
 from course_video_analyzer.knowledge.runs import archive_successful_job, write_run_qa
 
 
@@ -134,6 +135,18 @@ def build_parser() -> argparse.ArgumentParser:
     p04_qa.add_argument("case_input", type=Path)
     p04_qa.add_argument("output", type=Path)
     p04_qa.add_argument("report", type=Path)
+    p05_input = subparsers.add_parser("build-p05-input", help="build P05 evidence review bundle")
+    p05_input.add_argument("course_id")
+    p05_input.add_argument("case_id")
+    p05_input.add_argument("case_input", type=Path)
+    p05_input.add_argument("p04", type=Path)
+    p05_input.add_argument("output", type=Path)
+    p05_qa = subparsers.add_parser("qa-p05", help="validate P05 review coverage and evidence")
+    p05_qa.add_argument("course_id")
+    p05_qa.add_argument("case_id")
+    p05_qa.add_argument("input", type=Path)
+    p05_qa.add_argument("output", type=Path)
+    p05_qa.add_argument("report", type=Path)
     return parser
 
 
@@ -294,6 +307,24 @@ def main() -> int:
             args.report,
         )
         print(f"P04 QA 报告: {output}")
+    elif args.command == "build-p05-input":
+        output = build_p05_input(
+            args.course_id,
+            args.case_id,
+            args.case_input,
+            args.p04,
+            args.output,
+        )
+        print(f"P05 审查输入完成: {output}")
+    elif args.command == "qa-p05":
+        output = write_p05_qa(
+            args.course_id,
+            args.case_id,
+            args.input,
+            args.output,
+            args.report,
+        )
+        print(f"P05 QA 报告: {output}")
     return 0
 
 
