@@ -53,6 +53,7 @@ def build_parser() -> argparse.ArgumentParser:
         default=Path(r"C:\Users\Administrator\AppData\Local\cursor-agent\cursor-agent.cmd"),
     )
     cursor.add_argument("--model", default="auto")
+    cursor.add_argument("--prompt-root", type=Path, default=Path("prompts/knowledge-v001"))
     cursor.add_argument("--timeout-seconds", type=int, default=3600)
     mark = subparsers.add_parser("mark-batch", help="reconcile one course into a batch")
     mark.add_argument("batch_id")
@@ -66,6 +67,7 @@ def build_parser() -> argparse.ArgumentParser:
     clean_qa.add_argument("transcript", type=Path)
     clean_qa.add_argument("output", type=Path)
     clean_qa.add_argument("report", type=Path)
+    clean_qa.add_argument("--prompt-version", default="knowledge-v001-p01")
     return parser
 
 
@@ -123,6 +125,7 @@ def main() -> int:
             config=CursorStageConfig(
                 cursor_agent=args.cursor_agent,
                 model=args.model,
+                prompt_root=args.prompt_root,
                 timeout_seconds=args.timeout_seconds,
             ),
         )
@@ -140,7 +143,13 @@ def main() -> int:
         )
         print(f"批次状态已更新: {args.course_id} -> {args.status}")
     elif args.command == "qa-p01":
-        report = write_p01_qa(args.course_id, args.transcript, args.output, args.report)
+        report = write_p01_qa(
+            args.course_id,
+            args.transcript,
+            args.output,
+            args.report,
+            expected_prompt_version=args.prompt_version,
+        )
         print(f"P01 QA 报告: {report}")
     return 0
 

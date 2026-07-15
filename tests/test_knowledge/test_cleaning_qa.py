@@ -50,3 +50,47 @@ def test_validate_p01_output_checks_raw_completeness(tmp_path: Path) -> None:
     assert report["status"] == "pass"
     assert report["metrics"]["input_segment_count"] == 2
     assert report["metrics"]["raw_mismatch_count"] == 0
+
+
+def test_v002_requires_real_normalization_and_consistent_metrics(tmp_path: Path) -> None:
+    transcript = tmp_path / "transcript.txt"
+    transcript.write_text(
+        "[00:00:00.000 -> 00:00:01.000] 导师\n你好,\n",
+        encoding="utf-8",
+    )
+    output = tmp_path / "p01.json"
+    output.write_text(
+        json.dumps(
+            {
+                "schema_version": "1.0",
+                "prompt_version": "knowledge-v002-p01",
+                "source_ids": ["C001"],
+                "segments": [
+                    {
+                        "segment_id": "SEG-C001-000001",
+                        "start_ms": 0,
+                        "end_ms": 1000,
+                        "speaker": "teacher_a",
+                        "content_type": "speech",
+                        "raw_text": "你好,",
+                        "normalized_text": "你好，",
+                    }
+                ],
+                "uncertainties": [],
+                "quality_metrics": {"changed_segment_count": 1},
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    report = validate_p01_output(
+        "C001",
+        transcript,
+        output,
+        expected_prompt_version="knowledge-v002-p01",
+    )
+
+    assert report["status"] == "pass"
+    assert report["checks"]["effective_normalization"] is True
+    assert report["checks"]["quality_metrics_consistent"] is True

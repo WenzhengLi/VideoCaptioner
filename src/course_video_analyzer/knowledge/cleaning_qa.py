@@ -52,6 +52,8 @@ def validate_p01_output(
     course_id: str,
     transcript_path: Path,
     output_path: Path,
+    *,
+    expected_prompt_version: str = "knowledge-v001-p01",
 ) -> dict[str, Any]:
     source_blocks = parse_transcript_blocks(transcript_path)
     payload = json.loads(Path(output_path).read_text(encoding="utf-8"))
@@ -65,6 +67,7 @@ def validate_p01_output(
     invalid_speakers: list[int] = []
     invalid_content_types: list[int] = []
     empty_normalized: list[int] = []
+    changed_segment_count = 0
     for index, (source, item) in enumerate(zip(source_blocks, segments, strict=False)):
         if not isinstance(item, dict):
             raw_mismatches.append(index)
@@ -79,12 +82,21 @@ def validate_p01_output(
             invalid_content_types.append(index)
         if not str(item.get("normalized_text", "")).strip():
             empty_normalized.append(index)
+        if str(item.get("normalized_text", "")) != str(item.get("raw_text", "")):
+            changed_segment_count += 1
 
     uncertainties = payload.get("uncertainties")
     uncertainty_count = len(uncertainties) if isinstance(uncertainties, list) else 0
+    quality_metrics = payload.get("quality_metrics")
+    reported_changed = (
+        quality_metrics.get("changed_segment_count")
+        if isinstance(quality_metrics, dict)
+        else None
+    )
+    requires_effective_normalization = expected_prompt_version == "knowledge-v002-p01"
     checks = {
         "schema_version": payload.get("schema_version") == "1.0",
-        "prompt_version": payload.get("prompt_version") == "knowledge-v001-p01",
+        "prompt_version": payload.get("prompt_version") == expected_prompt_version,
         "source_id": payload.get("source_ids") == [course_id],
         "segment_count": len(segments) == len(source_blocks) and len(source_blocks) > 0,
         "unique_segment_ids": len(ids) == len(set(ids)) and all(ids),
@@ -93,6 +105,14 @@ def validate_p01_output(
         "speaker_contract": not invalid_speakers,
         "content_type_contract": not invalid_content_types,
         "normalized_text_non_empty": not empty_normalized,
+        "effective_normalization": (
+            changed_segment_count > 0 if requires_effective_normalization else True
+        ),
+        "quality_metrics_consistent": (
+            reported_changed == changed_segment_count
+            if requires_effective_normalization
+            else True
+        ),
     }
     return {
         "schema_version": "1.0",
@@ -110,6 +130,8 @@ def validate_p01_output(
             "invalid_speaker_count": len(invalid_speakers),
             "invalid_content_type_count": len(invalid_content_types),
             "empty_normalized_count": len(empty_normalized),
+            "changed_segment_count": changed_segment_count,
+            "reported_changed_segment_count": reported_changed,
         },
         "samples": {
             "raw_mismatch_indexes": raw_mismatches[:20],
@@ -127,8 +149,15 @@ def write_p01_qa(
     transcript_path: Path,
     output_path: Path,
     report_path: Path,
+    *,
+    expected_prompt_version: str = "knowledge-v001-p01",
 ) -> Path:
-    report = validate_p01_output(course_id, transcript_path, output_path)
+    report = validate_p01_output(
+        course_id,
+        transcript_path,
+        output_path,
+        expected_prompt_version=expected_prompt_version,
+    )
     atomic_write_text(
         report_path,
         json.dumps(report, ensure_ascii=False, indent=2),
