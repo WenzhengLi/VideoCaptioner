@@ -31,6 +31,12 @@ class TrackingConfig:
     # Text/edge density collapse inside predicted box → redetect.
     min_region_edge_density: float = 0.02
     edge_density_drop_ratio: float = 0.35
+    # Detect a bright side slide expanding to full-screen even when ORB still
+    # tracks the old subregion successfully.
+    layout_expansion_min_luma: float = 150.0
+    layout_expansion_color_tolerance: float = 36.0
+    layout_expansion_min_outside_match: float = 0.55
+    layout_expansion_min_outside_edge_density: float = 0.02
     # Minimum ORB score to accept a redetected candidate against the last template.
     min_relocate_score: float = 0.06
     # Prefer content match over geometric IoU when relocating.
@@ -285,6 +291,15 @@ class BoardTracker:
             return True, "feature_insufficient"
 
         frame_h, frame_w = image.shape[:2]
+        if _has_electronic_layout_expanded_outside(
+            image,
+            tracked_region,
+            min_luma=cfg.layout_expansion_min_luma,
+            color_tolerance=cfg.layout_expansion_color_tolerance,
+            min_outside_match=cfg.layout_expansion_min_outside_match,
+            min_outside_edge_density=cfg.layout_expansion_min_outside_edge_density,
+        ):
+            return True, "layout_expanded"
         diag = float(np.hypot(frame_w, frame_h))
         shift = _center_distance(previous_region, tracked_region) / max(diag, 1.0)
         if shift > cfg.max_center_shift_ratio:
@@ -537,3 +552,41 @@ def _edge_density(crop_bgr: np.ndarray) -> float:
     gray = crop_bgr if crop_bgr.ndim == 2 else cv2.cvtColor(crop_bgr, cv2.COLOR_BGR2GRAY)
     edges = cv2.Canny(gray, 50, 150)
     return float(np.mean(edges > 0))
+
+
+def _has_electronic_layout_expanded_outside(
+    image: np.ndarray,
+    region: BoardRegion,
+    *,
+    min_luma: float,
+    color_tolerance: float,
+    min_outside_match: float,
+    min_outside_edge_density: float,
+) -> bool:
+    """Detect structured bright slide content newly appearing outside a valid box."""
+
+    frame_h, frame_w = image.shape[:2]
+    frame_area = frame_h * frame_w
+    if frame_area <= 0 or region.area / frame_area >= 0.80:
+        return False
+
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    x1, y1, x2, y2 = region.as_xyxy()
+    inside = gray[y1:y2, x1:x2]
+    if inside.size == 0:
+        return False
+    board_luma = float(np.median(inside))
+    if board_luma < min_luma:
+        return False
+
+    outside_mask = np.ones(gray.shape, dtype=bool)
+    outside_mask[y1:y2, x1:x2] = False
+    outside = gray[outside_mask]
+    if outside.size == 0:
+        return False
+    color_delta = np.abs(outside.astype(np.float32) - board_luma)
+    if float(np.mean(color_delta <= color_tolerance)) < min_outside_match:
+        return False
+
+    edges = cv2.Canny(gray, 40, 120)
+    return float(np.mean(edges[outside_mask] > 0)) >= min_outside_edge_density
