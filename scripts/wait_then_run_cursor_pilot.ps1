@@ -3,6 +3,11 @@ param(
     [Parameter(Mandatory = $true)][string]$PythonExe,
     [string]$Workspace = "D:\Dev\VideoCaptioner",
     [string]$BatchId = "BATCH-20260715-001",
+    [string]$PromptRoot = "prompts\knowledge-v001",
+    [string]$PromptVersion = "knowledge-v001-p01",
+    [string]$OutputName = "P01-knowledge-v001.json",
+    [int]$StartCourse = 1,
+    [int]$EndCourse = 5,
     [int]$PollSeconds = 60,
     [int]$MaxAttempts = 2
 )
@@ -16,8 +21,9 @@ $runs = [ordered]@{
     C005 = "RUN-20260715-001-V001"
 }
 $batchDir = Join-Path $DataRoot "batches\$BatchId"
-$statusPath = Join-Path $batchDir "cursor-p01-status.jsonl"
-$failurePath = Join-Path $batchDir "cursor-p01-failures.jsonl"
+$versionTag = $PromptVersion -replace '[^a-zA-Z0-9._-]', '_'
+$statusPath = Join-Path $batchDir "cursor-p01-$versionTag-status.jsonl"
+$failurePath = Join-Path $batchDir "cursor-p01-$versionTag-failures.jsonl"
 
 function Add-JsonLine {
     param([string]$Path, [hashtable]$Value)
@@ -27,6 +33,10 @@ function Add-JsonLine {
 
 foreach ($entry in $runs.GetEnumerator()) {
     $courseId = $entry.Key
+    $ordinal = [int]$courseId.Substring(1)
+    if ($ordinal -lt $StartCourse -or $ordinal -gt $EndCourse) {
+        continue
+    }
     $runId = $entry.Value
     $inputPath = Join-Path $DataRoot "courses\$courseId\01_raw\$runId\transcript.txt"
     $qaPath = Join-Path $DataRoot "courses\$courseId\qa\$runId.json"
@@ -44,7 +54,7 @@ foreach ($entry in $runs.GetEnumerator()) {
         continue
     }
 
-    $outputPath = Join-Path $DataRoot "courses\$courseId\02_normalized\P01-knowledge-v001.json"
+    $outputPath = Join-Path $DataRoot "courses\$courseId\02_normalized\$OutputName"
     if (Test-Path -LiteralPath $outputPath) {
         try {
             Get-Content -Raw -Encoding utf8 -LiteralPath $outputPath |
@@ -75,11 +85,13 @@ foreach ($entry in $runs.GetEnumerator()) {
             $courseId P01 $inputPath $outputPath `
             --workspace $Workspace `
             --model auto `
+            --prompt-root $PromptRoot `
             --timeout-seconds 7200
         if ($LASTEXITCODE -eq 0) {
-            $qaOutputPath = Join-Path $DataRoot "courses\$courseId\qa\P01-knowledge-v001.json"
+            $qaOutputPath = Join-Path $DataRoot "courses\$courseId\qa\$($OutputName -replace '\.json$', '')-qa.json"
             & $PythonExe -m course_video_analyzer.knowledge.cli qa-p01 `
-                $courseId $inputPath $outputPath $qaOutputPath
+                $courseId $inputPath $outputPath $qaOutputPath `
+                --prompt-version $PromptVersion
             if ($LASTEXITCODE -ne 0) {
                 Add-JsonLine -Path $failurePath -Value @{
                     at = [DateTime]::UtcNow.ToString("o")
@@ -129,5 +141,6 @@ foreach ($entry in $runs.GetEnumerator()) {
     schema_version = "1.0"
     batch_id = $BatchId
     stage = "P01"
+    prompt_version = $PromptVersion
     completed_at = [DateTime]::UtcNow.ToString("o")
-} | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $batchDir "cursor-p01-complete.json") -Encoding utf8
+} | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $batchDir "cursor-p01-$versionTag-complete.json") -Encoding utf8
