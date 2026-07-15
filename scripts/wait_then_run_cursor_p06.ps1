@@ -64,7 +64,7 @@ for ($ordinal = $StartCourse; $ordinal -le $EndCourse; $ordinal++) {
             & $PythonExe -m course_video_analyzer.knowledge.cli cursor-stage `
                 $courseId P06 $input $output --workspace $Workspace --model auto `
                 --prompt-root prompts\knowledge-v002 --timeout-seconds 1800 `
-                --finish-on-stable-output --output-stability-seconds 60
+                --finish-on-stable-output --output-stability-seconds 30
             if ($LASTEXITCODE -ne 0) { continue }
             & $PythonExe -m course_video_analyzer.knowledge.cli qa-p06 `
                 $courseId $caseId $input $output $qaOutput
