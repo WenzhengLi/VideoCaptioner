@@ -56,23 +56,35 @@ def run_cursor_stage(
         raise FileExistsError(f"阶段输出已存在，拒绝覆盖: {output_path}")
     output_path.parent.mkdir(parents=True, exist_ok=True)
     log_path = output_path.with_suffix(output_path.suffix + ".cursor.log")
-
-    instruction = f"""使用 Flow 工作方式完成一次独立、无上下文继承的课程清洗任务。
-
-课程 ID：{course_id}
-阶段：{stage}
-规则文件：{prompt_path}
-输入文件：{input_path}
-唯一允许写入的结果文件：{output_path}
-
-严格要求：
-1. 先完整读取规则文件，再按规则处理输入文件。
-2. 不得修改输入文件、规则文件、项目源代码或其他课程数据。
-3. 输出必须是严格可解析的 UTF-8 JSON，不要使用 Markdown 代码围栏。
-4. 保留证据定位、原始文本和不确定项；不得为了缩短结果而删除有效内容。
-5. 写入后必须重新读取并解析 JSON，自检失败则修正。
-6. 完成后只在最终响应中输出 CURSOR_STAGE_COMPLETED。
-"""
+    task_path = output_path.with_suffix(output_path.suffix + ".cursor-task.json")
+    task_payload = {
+        "schema_version": "1.0",
+        "course_id": course_id,
+        "stage": stage,
+        "rule_file": str(prompt_path),
+        "input_file": str(input_path),
+        "output_file": str(output_path),
+        "requirements": [
+            "先完整读取规则文件，再按规则处理输入文件",
+            "不得修改输入、规则、项目源代码或其他课程数据",
+            "输出必须是严格可解析的 UTF-8 JSON，不使用 Markdown 代码围栏",
+            "完整保留证据定位、原始文本和不确定项，不以缩短为目标",
+            "写入后重新读取并解析 JSON，自检失败必须修正",
+            "完成后的最终响应只输出 CURSOR_STAGE_COMPLETED",
+        ],
+    }
+    task_path.write_text(
+        json.dumps(task_payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+    # Keep this as a single physical line. On Windows the .cmd/PowerShell
+    # wrapper can truncate multiline prompt arguments at the first paragraph.
+    instruction = (
+        "使用 Flow 工作方式执行一次独立且不继承上下文的课程清洗任务；"
+        f"完整读取任务清单 {task_path}，严格按清单中的 rule_file、input_file、"
+        "output_file 和 requirements 执行；不要自行寻找其他待办；完成后只输出 "
+        "CURSOR_STAGE_COMPLETED。"
+    )
     command = [
         str(cursor_agent),
         "-p",

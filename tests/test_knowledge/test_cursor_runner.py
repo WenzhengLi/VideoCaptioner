@@ -34,3 +34,11 @@ def test_cursor_stage_refuses_existing_output(tmp_path: Path) -> None:
 def test_cursor_stage_rejects_unknown_stage(tmp_path: Path) -> None:
     with pytest.raises(ValueError):
         run_cursor_stage("C001", "P99", tmp_path / "in", tmp_path / "out", tmp_path)
+
+
+def test_cursor_instruction_source_avoids_multiline_windows_prompt() -> None:
+    source = Path(__file__).parents[2] / "src/course_video_analyzer/knowledge/cursor_runner.py"
+    text = source.read_text(encoding="utf-8")
+
+    assert "cursor-task.json" in text
+    assert "single physical line" in text
