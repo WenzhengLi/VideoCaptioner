@@ -93,6 +93,8 @@ def _current_rss_mb() -> float | None:
 
 
 def _windows_rss_mb() -> float | None:
+    if os.name != "nt":
+        return None
     try:
         import ctypes
         from ctypes import wintypes
@@ -113,8 +115,14 @@ def _windows_rss_mb() -> float | None:
 
         counters = PROCESS_MEMORY_COUNTERS()
         counters.cb = ctypes.sizeof(PROCESS_MEMORY_COUNTERS)
-        handle = ctypes.windll.kernel32.GetCurrentProcess()
-        ok = ctypes.windll.psapi.GetProcessMemoryInfo(
+        # ``ctypes.windll`` only exists on Windows.  Resolve it dynamically so
+        # Linux CI/type checking can import this module without platform-only
+        # attribute errors.
+        windll = getattr(ctypes, "windll", None)
+        if windll is None:
+            return None
+        handle = windll.kernel32.GetCurrentProcess()
+        ok = windll.psapi.GetProcessMemoryInfo(
             handle,
             ctypes.byref(counters),
             counters.cb,
