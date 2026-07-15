@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import subprocess
+import time
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -25,6 +26,8 @@ class CursorStageConfig:
     model: str = "auto"
     prompt_root: Path = Path("prompts/knowledge-v001")
     timeout_seconds: int = 3600
+    finish_on_stable_output: bool = False
+    output_stability_seconds: int = 30
 
 
 def run_cursor_stage(
@@ -110,9 +113,37 @@ def run_cursor_stage(
         encoding="utf-8",
         errors="replace",
     )
-    try:
-        stdout, stderr = process.communicate(timeout=cfg.timeout_seconds)
-    except subprocess.TimeoutExpired as exc:
+    accepted_stable_output = False
+    started = time.monotonic()
+    stable_signature: tuple[int, int] | None = None
+    stable_since: float | None = None
+    while process.poll() is None:
+        if time.monotonic() - started >= cfg.timeout_seconds:
+            break
+        if cfg.finish_on_stable_output and output_path.is_file():
+            try:
+                json.loads(output_path.read_text(encoding="utf-8"))
+                stat = output_path.stat()
+                signature = (stat.st_size, stat.st_mtime_ns)
+                if signature != stable_signature:
+                    stable_signature = signature
+                    stable_since = time.monotonic()
+                elif stable_since is not None and (
+                    time.monotonic() - stable_since >= cfg.output_stability_seconds
+                ):
+                    subprocess.run(
+                        ["taskkill", "/PID", str(process.pid), "/T", "/F"],
+                        capture_output=True,
+                        text=True,
+                        check=False,
+                    )
+                    accepted_stable_output = True
+                    break
+            except (OSError, json.JSONDecodeError):
+                stable_signature = None
+                stable_since = None
+        time.sleep(2)
+    if process.poll() is None and not accepted_stable_output:
         subprocess.run(
             ["taskkill", "/PID", str(process.pid), "/T", "/F"],
             capture_output=True,
@@ -123,12 +154,13 @@ def run_cursor_stage(
         log_path.write_text((stdout or "") + ("\n" + stderr if stderr else ""), encoding="utf-8")
         raise TimeoutError(
             f"Cursor 阶段超时: course={course_id}, stage={stage}, log={log_path}"
-        ) from exc
+        )
+    stdout, stderr = process.communicate()
     log_path.write_text(
         (stdout or "") + ("\n" + stderr if stderr else ""),
         encoding="utf-8",
     )
-    if process.returncode != 0:
+    if process.returncode != 0 and not accepted_stable_output:
         raise RuntimeError(
             f"Cursor 阶段失败: course={course_id}, stage={stage}, "
             f"exit={process.returncode}, log={log_path}"

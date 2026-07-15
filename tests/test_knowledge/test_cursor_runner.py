@@ -42,3 +42,13 @@ def test_cursor_instruction_source_avoids_multiline_windows_prompt() -> None:
 
     assert "cursor-task.json" in text
     assert "single physical line" in text
+
+
+def test_cursor_stage_config_can_finish_after_stable_output() -> None:
+    config = CursorStageConfig(
+        finish_on_stable_output=True,
+        output_stability_seconds=15,
+    )
+
+    assert config.finish_on_stable_output is True
+    assert config.output_stability_seconds == 15

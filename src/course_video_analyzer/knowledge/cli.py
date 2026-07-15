@@ -62,6 +62,8 @@ def build_parser() -> argparse.ArgumentParser:
     cursor.add_argument("--model", default="auto")
     cursor.add_argument("--prompt-root", type=Path, default=Path("prompts/knowledge-v001"))
     cursor.add_argument("--timeout-seconds", type=int, default=3600)
+    cursor.add_argument("--finish-on-stable-output", action="store_true")
+    cursor.add_argument("--output-stability-seconds", type=int, default=30)
     mark = subparsers.add_parser("mark-batch", help="reconcile one course into a batch")
     mark.add_argument("batch_id")
     mark.add_argument("course_id")
@@ -173,6 +175,8 @@ def main() -> int:
                 model=args.model,
                 prompt_root=args.prompt_root,
                 timeout_seconds=args.timeout_seconds,
+                finish_on_stable_output=args.finish_on_stable_output,
+                output_stability_seconds=args.output_stability_seconds,
             ),
         )
         print(f"Cursor 阶段完成: {result}")

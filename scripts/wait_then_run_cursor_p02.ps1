@@ -102,7 +102,8 @@ for ($ordinal = $StartCourse; $ordinal -le $EndCourse; $ordinal++) {
         & $PythonExe -m course_video_analyzer.knowledge.cli cursor-stage `
             $courseId P02 $reviewPack $reviewDecision `
             --workspace $Workspace --model auto `
-            --prompt-root prompts\knowledge-v002-compact --timeout-seconds 1200
+            --prompt-root prompts\knowledge-v002-compact --timeout-seconds 1200 `
+            --finish-on-stable-output --output-stability-seconds 30
         if ($LASTEXITCODE -ne 0) {
             Add-JsonLine $failurePath @{
                 at = [DateTime]::UtcNow.ToString("o"); course_id = $courseId
