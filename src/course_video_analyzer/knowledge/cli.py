@@ -13,6 +13,7 @@ from course_video_analyzer.knowledge.normalizer import (
     TranscriptNormalizerConfig,
     normalize_transcript_p01,
 )
+from course_video_analyzer.knowledge.classifier import classify_p02_baseline
 from course_video_analyzer.knowledge.runs import archive_successful_job, write_run_qa
 
 
@@ -83,6 +84,11 @@ def build_parser() -> argparse.ArgumentParser:
     normalize.add_argument("transcript", type=Path)
     normalize.add_argument("output", type=Path)
     normalize.add_argument("--prompt-version", default="knowledge-v002-p01")
+    classify = subparsers.add_parser("classify-p02", help="generate deterministic P02 baseline")
+    classify.add_argument("course_id")
+    classify.add_argument("p01", type=Path)
+    classify.add_argument("output", type=Path)
+    classify.add_argument("--prompt-version", default="knowledge-v002-p02-baseline")
     return parser
 
 
@@ -183,6 +189,14 @@ def main() -> int:
             config=TranscriptNormalizerConfig(prompt_version=args.prompt_version),
         )
         print(f"P01 基线完成: {output}")
+    elif args.command == "classify-p02":
+        output = classify_p02_baseline(
+            args.course_id,
+            args.p01,
+            args.output,
+            prompt_version=args.prompt_version,
+        )
+        print(f"P02 基线完成: {output}")
     return 0
 
 

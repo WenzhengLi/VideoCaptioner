@@ -2,6 +2,27 @@
 
 输入为通过 P01 QA 的 JSON。只做分类，不得再次改写、删除或合并文本。
 
+项目提供了可复用的保守分类基线。优先运行：
+
+```powershell
+python -m course_video_analyzer.knowledge.cli classify-p02 <course_id> <p01> <baseline-output>
+```
+
+Cursor 应审核 baseline JSON 并写入新的最终输出文件，重点修正“讲师复述实际聊天”“学员复述案例”
+以及营销误判，不能为每课重写机械分类程序。最终 `prompt_version` 必须为
+`knowledge-v002-p02`。
+
+输入若已经是 P02 baseline JSON，保留全部 P01 字段，只审核新增分类字段，并增加：
+
+```json
+"review_metrics": {
+  "baseline_segment_count": 0,
+  "reviewed_segment_count": 0,
+  "classification_change_count": 0,
+  "remaining_uncertain_count": 0
+}
+```
+
 ## 完整性约束
 
 1. 每个输入 segment 对应一个输出 segment，顺序和 segment ID 不变。
