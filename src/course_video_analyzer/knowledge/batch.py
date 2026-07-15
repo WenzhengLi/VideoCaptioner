@@ -34,6 +34,20 @@ def _load_source_paths(data_root: Path) -> dict[str, Path]:
     return result
 
 
+def _persist_batch_item(manifest_path: Path, item: Any) -> BatchManifest:
+    """Merge one item into the latest on-disk manifest to avoid stale-writer loss."""
+    latest = BatchManifest.model_validate_json(manifest_path.read_text(encoding="utf-8"))
+    target = next((entry for entry in latest.items if entry.course_id == item.course_id), None)
+    if target is None:
+        raise KeyError(f"批次中不存在课程: {item.course_id}")
+    target.status = item.status
+    target.attempts = item.attempts
+    target.last_run_id = item.last_run_id
+    target.error = item.error
+    atomic_write_text(manifest_path, latest.model_dump_json(indent=2))
+    return latest
+
+
 def mark_batch_item(
     batch_id: str,
     course_id: str,
@@ -107,7 +121,7 @@ def run_batch(
         if (archive_dir / "run.json").is_file():
             item.status = CourseStatus.SUCCEEDED
             item.last_run_id = run_id
-            atomic_write_text(manifest_path, manifest.model_dump_json(indent=2))
+            _persist_batch_item(manifest_path, item)
             continue
 
         job_id = f"{item.course_id}-{run_id}"
@@ -131,7 +145,7 @@ def run_batch(
         ]
         item.status = CourseStatus.RUNNING
         item.last_run_id = run_id
-        atomic_write_text(manifest_path, manifest.model_dump_json(indent=2))
+        _persist_batch_item(manifest_path, item)
 
         while item.attempts < max_attempts:
             item.attempts += 1
@@ -171,9 +185,9 @@ def run_batch(
                 batch_dir / "failures.jsonl",
                 {**event, "at": _utc_now(), "event": "failed", "error": item.error},
             )
-            atomic_write_text(manifest_path, manifest.model_dump_json(indent=2))
+            _persist_batch_item(manifest_path, item)
 
         if item.status is not CourseStatus.SUCCEEDED:
             item.status = CourseStatus.FAILED
-        atomic_write_text(manifest_path, manifest.model_dump_json(indent=2))
-    return manifest
+        _persist_batch_item(manifest_path, item)
+    return BatchManifest.model_validate_json(manifest_path.read_text(encoding="utf-8"))

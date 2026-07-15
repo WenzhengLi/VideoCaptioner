@@ -1,7 +1,11 @@
 import json
 from pathlib import Path
 
-from course_video_analyzer.knowledge.batch import _load_source_paths, mark_batch_item
+from course_video_analyzer.knowledge.batch import (
+    _load_source_paths,
+    _persist_batch_item,
+    mark_batch_item,
+)
 from course_video_analyzer.knowledge.models import (
     BatchItem,
     BatchManifest,
@@ -47,3 +51,25 @@ def test_mark_batch_item_reconciles_external_run(tmp_path: Path) -> None:
     assert updated.items[0].status is CourseStatus.SUCCEEDED
     assert updated.items[0].last_run_id == "RUN-001"
     assert (batch_dir / "status.jsonl").is_file()
+
+
+def test_persist_batch_item_preserves_concurrent_course_updates(tmp_path: Path) -> None:
+    manifest_path = tmp_path / "manifest.json"
+    stale = BatchManifest(
+        batch_id="BATCH-TEST",
+        created_at="2026-01-01T00:00:00+00:00",
+        prompt_version="v1",
+        items=[
+            BatchItem(course_id="C001", source_id="C001"),
+            BatchItem(course_id="C002", source_id="C002"),
+        ],
+    )
+    manifest_path.write_text(stale.model_dump_json(indent=2), encoding="utf-8")
+
+    mark_item = stale.items[0].model_copy(update={"status": CourseStatus.SUCCEEDED})
+    _persist_batch_item(manifest_path, mark_item)
+    stale_second = stale.items[1].model_copy(update={"status": CourseStatus.RUNNING})
+    latest = _persist_batch_item(manifest_path, stale_second)
+
+    assert latest.items[0].status is CourseStatus.SUCCEEDED
+    assert latest.items[1].status is CourseStatus.RUNNING
