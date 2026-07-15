@@ -50,6 +50,19 @@ for ($ordinal = $StartCourse; $ordinal -le $EndCourse; $ordinal++) {
 
     $outputDir = Join-Path $DataRoot "courses\$courseId\03_cases"
     New-Item -ItemType Directory -Force -Path $outputDir | Out-Null
+    $timelineInput = Join-Path $outputDir "P03-input-knowledge-v002.json"
+    if (-not (Test-Path -LiteralPath $timelineInput)) {
+        & $PythonExe -m course_video_analyzer.knowledge.cli build-p03-input `
+            $courseId $p02 $timelineInput
+        if ($LASTEXITCODE -ne 0) {
+            $failedCourses += $courseId
+            Add-JsonLine $failurePath @{
+                at = [DateTime]::UtcNow.ToString("o"); course_id = $courseId
+                error = "P03 compact timeline build failed"
+            }
+            continue
+        }
+    }
     $output = Join-Path $outputDir "P03-knowledge-v002.json"
     $qaOutput = Join-Path $DataRoot "courses\$courseId\qa\P03-knowledge-v002-qa.json"
     if ((Test-Path -LiteralPath $output) -and (Test-Path -LiteralPath $qaOutput)) {
@@ -78,9 +91,10 @@ for ($ordinal = $StartCourse; $ordinal -le $EndCourse; $ordinal++) {
             attempt = $attempt; status = "started"
         }
         & $PythonExe -m course_video_analyzer.knowledge.cli cursor-stage `
-            $courseId P03 $p02 $output `
+            $courseId P03 $timelineInput $output `
             --workspace $Workspace --model auto `
-            --prompt-root prompts\knowledge-v002 --timeout-seconds 3600
+            --prompt-root prompts\knowledge-v002 --timeout-seconds 1800 `
+            --finish-on-stable-output --output-stability-seconds 60
         if ($LASTEXITCODE -ne 0) {
             Add-JsonLine $failurePath @{
                 at = [DateTime]::UtcNow.ToString("o"); course_id = $courseId

@@ -16,6 +16,7 @@ from course_video_analyzer.knowledge.normalizer import (
 )
 from course_video_analyzer.knowledge.classifier import classify_p02_baseline
 from course_video_analyzer.knowledge.p02_review import build_p02_review_pack, apply_p02_review
+from course_video_analyzer.knowledge.case_segmentation import build_p03_timeline_input
 from course_video_analyzer.knowledge.runs import archive_successful_job, write_run_qa
 
 
@@ -116,6 +117,10 @@ def build_parser() -> argparse.ArgumentParser:
     p02_apply.add_argument("review_pack", type=Path)
     p02_apply.add_argument("review", type=Path)
     p02_apply.add_argument("output", type=Path)
+    p03_input = subparsers.add_parser("build-p03-input", help="build compact P03 timeline input")
+    p03_input.add_argument("course_id")
+    p03_input.add_argument("p02", type=Path)
+    p03_input.add_argument("output", type=Path)
     return parser
 
 
@@ -255,6 +260,9 @@ def main() -> int:
             args.output,
         )
         print(f"P02 复核决策已应用: {output}")
+    elif args.command == "build-p03-input":
+        output = build_p03_timeline_input(args.course_id, args.p02, args.output)
+        print(f"P03 紧凑时间线完成: {output}")
     return 0
 
 
