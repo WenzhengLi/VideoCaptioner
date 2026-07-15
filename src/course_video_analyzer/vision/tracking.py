@@ -332,7 +332,12 @@ class BoardTracker:
             det_cfg.frame_index = prev_frame_index
             det_cfg.timestamp_ms = prev_timestamp
 
-        best = self._pick_relocate_candidate(image, candidates, previous_crop)
+        best = self._pick_relocate_candidate(
+            image,
+            candidates,
+            previous_crop,
+            previous_region,
+        )
         if best is None:
             return TrackObservation(
                 frame_index=sample.frame_index,
@@ -376,6 +381,7 @@ class BoardTracker:
         image: np.ndarray,
         candidates: list[BoardCandidate],
         previous_crop: np.ndarray | None,
+        previous_region: BoardRegion | None,
     ) -> tuple[BoardCandidate, float] | None:
         if not candidates:
             return None
@@ -392,6 +398,29 @@ class BoardTracker:
             ranked.append((combined, sim, cand))
         ranked.sort(key=lambda t: t[0], reverse=True)
         best_combined, best_sim, best_cand = ranked[0]
+
+        # A side panel expanding to a full-screen slide is a special layout
+        # transition. Different OpenCV builds can rank a smaller fragment
+        # above the full panel because the fragment resembles the old crop
+        # more closely. Prefer a credible near-full candidate only when it is
+        # a clear expansion and still carries a real content match.
+        if previous_region is not None:
+            frame_area = max(image.shape[0] * image.shape[1], 1)
+            previous_area_ratio = previous_region.area / frame_area
+            expanded = [
+                item
+                for item in ranked
+                if item[2].area_ratio >= 0.75
+                and item[2].area_ratio >= previous_area_ratio * 1.45
+                and item[2].score >= self.config.detector_min_score
+                and item[1] >= self.config.min_relocate_score
+            ]
+            if expanded:
+                expanded.sort(key=lambda item: (item[2].score, item[0]), reverse=True)
+                _full_combined, full_sim, full_cand = expanded[0]
+                if full_cand.score >= best_cand.score * 0.75:
+                    return full_cand, float(full_sim)
+
         if best_sim < self.config.min_relocate_score and best_combined < self.config.min_relocate_score:
             # Still accept top detector hit if no prior content signal was strong,
             # but only when detector score is healthy — else mark lost.

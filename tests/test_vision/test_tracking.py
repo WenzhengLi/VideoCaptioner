@@ -7,7 +7,7 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-from course_video_analyzer.models import BoardRegion
+from course_video_analyzer.models import BoardCandidate, BoardRegion
 from course_video_analyzer.vision.candidates import region_iou
 from course_video_analyzer.vision.tracking import BoardTracker, FrameSample, TrackingConfig
 
@@ -199,6 +199,37 @@ def test_fullscreen_layout_switch(tmp_path: Path) -> None:
     assert recovered
     assert any(region_iou(o.region, full_gt) >= 0.45 for o in recovered if o.region)
     assert any(o.status == "redetected" for o in result.observations)
+
+
+def test_relocate_prefers_credible_fullscreen_expansion(monkeypatch) -> None:
+    image = np.zeros((FRAME_H, FRAME_W, 3), dtype=np.uint8)
+    previous = BoardRegion(x=20, y=30, width=560, height=480)
+    previous_crop = np.zeros((480, 560, 3), dtype=np.uint8)
+    partial = BoardCandidate(
+        region=BoardRegion(x=20, y=30, width=560, height=480),
+        score=0.80,
+        area_ratio=560 * 480 / (FRAME_W * FRAME_H),
+    )
+    fullscreen = BoardCandidate(
+        region=BoardRegion(x=0, y=0, width=FRAME_W, height=FRAME_H),
+        score=0.68,
+        area_ratio=1.0,
+    )
+    tracker = BoardTracker()
+
+    def fake_similarity(_previous: np.ndarray, current: np.ndarray) -> float:
+        return 0.18 if current.shape[1] == FRAME_W else 0.30
+
+    monkeypatch.setattr(tracker.matcher, "content_similarity", fake_similarity)
+    selected = tracker._pick_relocate_candidate(
+        image,
+        [partial, fullscreen],
+        previous_crop,
+        previous,
+    )
+
+    assert selected is not None
+    assert selected[0] == fullscreen
 
 
 def test_person_motion_keeps_tracking(tmp_path: Path) -> None:
