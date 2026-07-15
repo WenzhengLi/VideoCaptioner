@@ -1,49 +1,45 @@
 # Python
 __pycache__/
-*.pyc
-*.pyo
+*.py[cod]
 *.egg-info/
+.venv/
 dist/
 build/
 
-# Virtual environments
-.venv/
-venv/
-
-# IDE
-.idea/
-.vscode/
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Environment & secrets
-.env
-*.key
-*.pem
-cookies.txt
-
-# Testing
+# Tests and tooling
 .pytest_cache/
+.ruff_cache/
+.mypy_cache/
 .coverage
 htmlcov/
 
-# Node.js (docs site)
-node_modules/
-docs/.vitepress/cache/
-docs/.vitepress/dist/
+# Editors and operating systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
 
-# Project-specific
-/resource/bin/
-!/resource/bin/bin_environment.txt
-/AppData/
-/work-dir/
-/*.srt
-/*.mp4
+# Secrets
+.env
+*.key
+*.pem
+
+# Runtime data and generated artifacts
+/data/
+/jobs/
+/models/
+/output/
+/benchmarks/output/
+/benchmarks/results/
 *.log
+*.sqlite3
+*.sqlite3-shm
+*.sqlite3-wal
 
-# Claude Code
-.claude/
-CLAUDE.md
-videocaptioner/_version.py
+# Local agent/editor state
+.cursor/
+.codex/
+
+# Local user material kept outside the application source tree
+/聊天课程知识库搭建/
+/新建文件夹/

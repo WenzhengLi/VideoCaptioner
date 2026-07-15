@@ -1,43 +1,37 @@
 name: CI
 
 on:
-  pull_request:
   push:
-    branches:
-      - master
-      - main
-      - dev
+    branches: [master, main]
+  pull_request:
+
+permissions:
+  contents: read
 
 jobs:
-  python:
+  quality:
     runs-on: ubuntu-latest
+    timeout-minutes: 45
+
     steps:
-      - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v4
 
-      - uses: astral-sh/setup-uv@v8.1.0
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
         with:
-          version: "latest"
+          enable-cache: true
 
-      - uses: actions/setup-python@v6
-        with:
-          python-version: "3.12"
-
-      - name: Install system dependencies
-        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - name: Install Python
+        run: uv python install 3.11
 
       - name: Install dependencies
-        run: uv sync --frozen
+        run: uv sync --extra web --extra audio --extra vision --group dev
 
-      - name: Lint
-        run: uv run ruff check videocaptioner/
+      - name: Ruff
+        run: uv run ruff check .
 
-      - name: Type check CLI
-        run: uv run pyright videocaptioner/cli/
+      - name: Pyright
+        run: uv run pyright
 
       - name: Unit tests
-        run: uv run pytest tests/test_cli tests/test_dubbing -q
-
-      - name: Build package
-        run: uv build
+        run: uv run pytest -q -m "not integration"
