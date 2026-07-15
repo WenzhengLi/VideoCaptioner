@@ -34,3 +34,9 @@ def test_local_tidy_index_and_search(tmp_path: Path) -> None:
 
     assert metrics["entry_count"] == 1
     assert results[0]["id"] == "KNOW-C001-CASE001-001"
+
+    long_query_results = search_tidy_entries(
+        database,
+        "对方明确拒绝以后，我应该如何判断并回复？",
+    )
+    assert long_query_results[0]["id"] == "KNOW-C001-CASE001-001"

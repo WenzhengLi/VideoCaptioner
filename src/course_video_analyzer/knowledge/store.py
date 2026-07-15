@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import math
+import re
 import sqlite3
 from pathlib import Path
 from typing import Any
@@ -110,12 +112,44 @@ def search_tidy_entries(database_path: Path, query: str, *, limit: int = 8) -> l
         except sqlite3.OperationalError:
             rows = []
         if not rows:
-            rows = connection.execute(
-                """SELECT *, 0.0 AS rank FROM knowledge_entries
-                WHERE title LIKE ? OR body LIKE ?
-                ORDER BY confidence DESC LIMIT ?""",
-                (f"%{query}%", f"%{query}%", limit),
+            all_rows = connection.execute(
+                "SELECT *, 0.0 AS rank FROM knowledge_entries"
             ).fetchall()
+            chunks = re.findall(r"[\u4e00-\u9fff]+|[A-Za-z0-9]+", query)
+            ignored = {"如何", "应该", "分别", "方式", "时候", "怎么", "什么", "进行"}
+            tokens: set[str] = set()
+            for chunk in chunks:
+                if re.fullmatch(r"[\u4e00-\u9fff]+", chunk):
+                    for size in (2, 3, 4):
+                        tokens.update(
+                            chunk[index : index + size]
+                            for index in range(max(0, len(chunk) - size + 1))
+                        )
+                elif len(chunk) >= 2:
+                    tokens.add(chunk.lower())
+            tokens -= ignored
+            document_frequency = {
+                token: sum(
+                    token in (str(row["title"]) + "\n" + str(row["body"]))
+                    for row in all_rows
+                )
+                for token in tokens
+            }
+            scored: list[tuple[float, sqlite3.Row]] = []
+            total = max(1, len(all_rows))
+            for row in all_rows:
+                title = str(row["title"])
+                body = str(row["body"])
+                score = 0.0
+                for token in tokens:
+                    if token not in title and token not in body:
+                        continue
+                    idf = math.log((total + 1) / (document_frequency[token] + 1)) + 1
+                    score += len(token) * idf * (2.5 if token in title else 1.0)
+                if score > 0:
+                    scored.append((score + float(row["confidence"]), row))
+            scored.sort(key=lambda item: item[0], reverse=True)
+            rows = [row for _, row in scored[:limit]]
     return [
         {
             "id": row["id"],
