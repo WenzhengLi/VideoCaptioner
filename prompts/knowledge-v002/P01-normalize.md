@@ -49,6 +49,8 @@ python -m course_video_analyzer.knowledge.cli normalize-p01 <course_id> <input> 
 
 - 原标签“导师”确定映射为 `teacher_a`，“学员”映射为 `student`；这是确定性映射，不得加入
   `uncertainties`，也不必为每段重复写 `edit_notes`。
+- 原标签为 `Speaker 0`/`Speaker 1` 等音频聚类时，必须分别保留为
+  `speaker_0`/`speaker_1`。聚类身份不明不等于没有说话人区分，禁止统一改为 `unknown`。
 - 不能确定具体人物时使用 `unknown`。
 - `课板[...]` 使用 `speaker=unknown`、`content_type=board_ocr`。
 - `uncertainties` 只记录真正的文字、人物或上下文歧义，不记录机械标签映射。
@@ -71,7 +73,7 @@ python -m course_video_analyzer.knowledge.cli normalize-p01 <course_id> <input> 
     "segment_id": "SEG-C001-000001",
     "start_ms": 0,
     "end_ms": 1000,
-    "speaker": "teacher_a|teacher_b|student|chat_male|chat_female|unknown",
+    "speaker": "teacher_a|teacher_b|student|chat_male|chat_female|speaker_N|unknown",
     "content_type": "speech|board_ocr|pdf_text|image_ocr",
     "raw_text": "",
     "normalized_text": "",

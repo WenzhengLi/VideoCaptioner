@@ -44,6 +44,25 @@ ALLOWED_RELEVANCE = {"core", "supporting", "boilerplate", "uncertain"}
 ALLOWED_CASE_COMPLETENESS = {"complete", "partial", "uncertain"}
 
 
+def _is_allowed_speaker(value: Any) -> bool:
+    return value in ALLOWED_SPEAKERS or (
+        isinstance(value, str) and re.fullmatch(r"speaker_\d+", value) is not None
+    )
+
+
+def _expected_speaker_from_label(label: str) -> str | None:
+    match = re.fullmatch(r"Speaker\s+(\d+)", label, flags=re.IGNORECASE)
+    if match:
+        return f"speaker_{match.group(1)}"
+    if label == "导师":
+        return "teacher_a"
+    if label == "学员":
+        return "student"
+    if label == "unknown" or label.startswith("课板"):
+        return "unknown"
+    return None
+
+
 def _timestamp_ms(value: str) -> int:
     hours, minutes, seconds_ms = value.split(":")
     seconds, millis = seconds_ms.split(".")
@@ -85,6 +104,7 @@ def validate_p01_output(
     invalid_speakers: list[int] = []
     invalid_content_types: list[int] = []
     empty_normalized: list[int] = []
+    speaker_mapping_mismatches: list[int] = []
     changed_segment_count = 0
     for index, (source, item) in enumerate(zip(source_blocks, segments, strict=False)):
         if not isinstance(item, dict):
@@ -94,8 +114,11 @@ def validate_p01_output(
             raw_mismatches.append(index)
         if item.get("start_ms") != source["start_ms"] or item.get("end_ms") != source["end_ms"]:
             timestamp_mismatches.append(index)
-        if item.get("speaker") not in ALLOWED_SPEAKERS:
+        if not _is_allowed_speaker(item.get("speaker")):
             invalid_speakers.append(index)
+        expected_speaker = _expected_speaker_from_label(str(source["label"]))
+        if expected_speaker is not None and item.get("speaker") != expected_speaker:
+            speaker_mapping_mismatches.append(index)
         if item.get("content_type") not in ALLOWED_CONTENT_TYPES:
             invalid_content_types.append(index)
         if not str(item.get("normalized_text", "")).strip():
@@ -121,6 +144,7 @@ def validate_p01_output(
         "raw_text_preserved": not raw_mismatches,
         "timestamps_preserved": not timestamp_mismatches,
         "speaker_contract": not invalid_speakers,
+        "raw_speaker_clusters_preserved": not speaker_mapping_mismatches,
         "content_type_contract": not invalid_content_types,
         "normalized_text_non_empty": not empty_normalized,
         "effective_normalization": (
@@ -146,6 +170,7 @@ def validate_p01_output(
             "raw_mismatch_count": len(raw_mismatches),
             "timestamp_mismatch_count": len(timestamp_mismatches),
             "invalid_speaker_count": len(invalid_speakers),
+            "speaker_mapping_mismatch_count": len(speaker_mapping_mismatches),
             "invalid_content_type_count": len(invalid_content_types),
             "empty_normalized_count": len(empty_normalized),
             "changed_segment_count": changed_segment_count,
@@ -155,6 +180,7 @@ def validate_p01_output(
             "raw_mismatch_indexes": raw_mismatches[:20],
             "timestamp_mismatch_indexes": timestamp_mismatches[:20],
             "invalid_speaker_indexes": invalid_speakers[:20],
+            "speaker_mapping_mismatch_indexes": speaker_mapping_mismatches[:20],
             "invalid_content_type_indexes": invalid_content_types[:20],
             "empty_normalized_indexes": empty_normalized[:20],
         },

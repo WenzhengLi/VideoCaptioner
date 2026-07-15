@@ -23,7 +23,11 @@ class SegmentClassification:
 MARKETING_RE = re.compile(r"(报名|优惠|课程咨询|加微信|二维码|招生|付费群|私教名额)")
 
 
-def classify_segment_baseline(segment: dict[str, Any]) -> SegmentClassification:
+def classify_segment_baseline(
+    segment: dict[str, Any],
+    *,
+    cluster_roles: dict[str, str] | None = None,
+) -> SegmentClassification:
     text = str(segment.get("normalized_text", ""))
     speaker = segment.get("speaker")
     content_type = segment.get("content_type")
@@ -51,6 +55,24 @@ def classify_segment_baseline(segment: dict[str, Any]) -> SegmentClassification:
             "讲师发言默认视为课程解释或判断，不当作客观事实",
             0.8,
         )
+    if isinstance(speaker, str) and speaker.startswith("speaker_"):
+        inferred_role = (cluster_roles or {}).get(speaker)
+        if inferred_role == "instructor_explanation":
+            return SegmentClassification(
+                "instructor_explanation",
+                "instructor_claim",
+                "core",
+                "该声纹簇在本课发言占比最高，保守作为主讲簇，需 Cursor 结合上下文复核",
+                0.65,
+            )
+        if inferred_role == "student_question":
+            return SegmentClassification(
+                "student_question",
+                "quoted_statement",
+                "core",
+                "该声纹簇不是主讲簇，保守作为参与者发言，需 Cursor 结合上下文复核",
+                0.55,
+            )
     if speaker == "student":
         return SegmentClassification(
             "student_question",
@@ -84,13 +106,33 @@ def classify_p02_baseline(
     if not isinstance(source_segments, list) or not source_segments:
         raise ValueError(f"P01 segments 为空: {p01_path}")
     segments: list[dict[str, Any]] = []
+    cluster_counts: dict[str, int] = {}
+    for source_segment in source_segments:
+        if isinstance(source_segment, dict):
+            speaker = source_segment.get("speaker")
+            if isinstance(speaker, str) and speaker.startswith("speaker_"):
+                cluster_counts[speaker] = cluster_counts.get(speaker, 0) + 1
+    cluster_roles: dict[str, str] = {}
+    if cluster_counts:
+        dominant_cluster = max(cluster_counts, key=cluster_counts.get)
+        cluster_roles = {
+            speaker: (
+                "instructor_explanation"
+                if speaker == dominant_cluster
+                else "student_question"
+            )
+            for speaker in cluster_counts
+        }
     role_counts: dict[str, int] = {}
     epistemic_counts: dict[str, int] = {}
     relevance_counts: dict[str, int] = {}
     for source_segment in source_segments:
         if not isinstance(source_segment, dict):
             raise ValueError("P01 segment 必须是对象")
-        classification = classify_segment_baseline(source_segment)
+        classification = classify_segment_baseline(
+            source_segment,
+            cluster_roles=cluster_roles,
+        )
         item = dict(source_segment)
         item.update(
             {
@@ -126,6 +168,8 @@ def classify_p02_baseline(
             "uncertain_segment_count": sum(
                 item["relevance"] == "uncertain" for item in segments
             ),
+            "speaker_cluster_counts": cluster_counts,
+            "speaker_cluster_role_baseline": cluster_roles,
         },
     }
     atomic_write_text(output_path, json.dumps(payload, ensure_ascii=False, indent=2))

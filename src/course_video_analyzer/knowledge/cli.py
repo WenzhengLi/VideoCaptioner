@@ -12,6 +12,7 @@ from course_video_analyzer.knowledge.cleaning_qa import write_p01_qa, write_p02_
 from course_video_analyzer.knowledge.normalizer import (
     TranscriptNormalizerConfig,
     normalize_transcript_p01,
+    restore_p01_speaker_clusters,
 )
 from course_video_analyzer.knowledge.classifier import classify_p02_baseline
 from course_video_analyzer.knowledge.runs import archive_successful_job, write_run_qa
@@ -90,6 +91,13 @@ def build_parser() -> argparse.ArgumentParser:
     normalize.add_argument("transcript", type=Path)
     normalize.add_argument("output", type=Path)
     normalize.add_argument("--prompt-version", default="knowledge-v002-p01")
+    repair_speakers = subparsers.add_parser(
+        "repair-p01-speakers", help="restore raw diarization cluster IDs in an existing P01"
+    )
+    repair_speakers.add_argument("course_id")
+    repair_speakers.add_argument("transcript", type=Path)
+    repair_speakers.add_argument("p01", type=Path)
+    repair_speakers.add_argument("output", type=Path)
     classify = subparsers.add_parser("classify-p02", help="generate deterministic P02 baseline")
     classify.add_argument("course_id")
     classify.add_argument("p01", type=Path)
@@ -204,6 +212,14 @@ def main() -> int:
             config=TranscriptNormalizerConfig(prompt_version=args.prompt_version),
         )
         print(f"P01 基线完成: {output}")
+    elif args.command == "repair-p01-speakers":
+        output = restore_p01_speaker_clusters(
+            args.course_id,
+            args.transcript,
+            args.p01,
+            args.output,
+        )
+        print(f"P01 说话人聚类恢复完成: {output}")
     elif args.command == "classify-p02":
         output = classify_p02_baseline(
             args.course_id,

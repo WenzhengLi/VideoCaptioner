@@ -63,7 +63,47 @@ class TranscriptNormalizerConfig:
 def _map_label(label: str, config: TranscriptNormalizerConfig) -> tuple[str, str]:
     if label.startswith(config.board_prefix):
         return "unknown", "board_ocr"
+    speaker_match = re.fullmatch(r"Speaker\s+(\d+)", label, flags=re.IGNORECASE)
+    if speaker_match:
+        return f"speaker_{speaker_match.group(1)}", "speech"
     return config.label_map.get(label, "unknown"), "speech"
+
+
+def restore_p01_speaker_clusters(
+    course_id: str,
+    transcript_path: Path,
+    p01_path: Path,
+    output_path: Path,
+) -> Path:
+    """Restore deterministic diarization cluster IDs without changing cleaned text."""
+    transcript_path = Path(transcript_path).resolve()
+    p01_path = Path(p01_path).resolve()
+    output_path = Path(output_path).resolve()
+    if output_path.exists():
+        raise FileExistsError(f"P01 说话人修复输出已存在，拒绝覆盖: {output_path}")
+    blocks = parse_transcript_blocks(transcript_path)
+    payload = json.loads(p01_path.read_text(encoding="utf-8"))
+    segments = payload.get("segments")
+    if not isinstance(segments, list) or len(segments) != len(blocks):
+        raise ValueError("P01 与原始转写段数不一致，无法恢复说话人聚类")
+    changed = 0
+    cluster_counts: dict[str, int] = {}
+    cfg = TranscriptNormalizerConfig()
+    for block, segment in zip(blocks, segments, strict=True):
+        expected, content_type = _map_label(str(block["label"]), cfg)
+        if content_type == "speech" and expected.startswith("speaker_"):
+            if segment.get("speaker") != expected:
+                segment["speaker"] = expected
+                changed += 1
+            cluster_counts[expected] = cluster_counts.get(expected, 0) + 1
+    payload["speaker_mapping_metrics"] = {
+        "restored_segment_count": changed,
+        "cluster_counts": cluster_counts,
+        "method": "raw_diarization_label_restore",
+    }
+    payload["source_ids"] = [course_id]
+    atomic_write_text(output_path, json.dumps(payload, ensure_ascii=False, indent=2))
+    return output_path
 
 
 def _normalize_speech(

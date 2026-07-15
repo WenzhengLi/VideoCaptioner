@@ -1,7 +1,10 @@
 import json
 from pathlib import Path
 
-from course_video_analyzer.knowledge.normalizer import normalize_transcript_p01
+from course_video_analyzer.knowledge.normalizer import (
+    normalize_transcript_p01,
+    restore_p01_speaker_clusters,
+)
 
 
 def test_normalizer_preserves_raw_and_applies_reusable_rules(tmp_path: Path) -> None:
@@ -68,3 +71,50 @@ def test_normalizer_includes_safe_rules_discovered_in_c004_review(tmp_path: Path
     payload = json.loads(output.read_text(encoding="utf-8"))
 
     assert payload["segments"][0]["normalized_text"] == "因为大家今天在家里约熊猫。"
+
+
+def test_normalizer_preserves_diarization_cluster_identity(tmp_path: Path) -> None:
+    transcript = tmp_path / "transcript.txt"
+    transcript.write_text(
+        "[00:00:00.000 -> 00:00:01.000] Speaker 2\n你好。\n",
+        encoding="utf-8",
+    )
+    output = tmp_path / "p01.json"
+
+    normalize_transcript_p01("C002", transcript, output)
+    payload = json.loads(output.read_text(encoding="utf-8"))
+
+    assert payload["segments"][0]["speaker"] == "speaker_2"
+
+
+def test_restore_p01_speaker_clusters_only_changes_speaker_field(tmp_path: Path) -> None:
+    transcript = tmp_path / "transcript.txt"
+    transcript.write_text(
+        "[00:00:00.000 -> 00:00:01.000] Speaker 1\n你好。\n",
+        encoding="utf-8",
+    )
+    source = tmp_path / "source.json"
+    source.write_text(
+        json.dumps(
+            {
+                "segments": [
+                    {
+                        "segment_id": "SEG-C002-000001",
+                        "raw_text": "你好。",
+                        "normalized_text": "你好。",
+                        "speaker": "unknown",
+                    }
+                ]
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    output = tmp_path / "repaired.json"
+
+    restore_p01_speaker_clusters("C002", transcript, source, output)
+    payload = json.loads(output.read_text(encoding="utf-8"))
+
+    assert payload["segments"][0]["speaker"] == "speaker_1"
+    assert payload["segments"][0]["normalized_text"] == "你好。"
+    assert payload["speaker_mapping_metrics"]["restored_segment_count"] == 1
