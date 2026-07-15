@@ -58,6 +58,9 @@ def validate_p06_output(
             valid_segment_ids.update(item.get(evidence_field, []))
     for review in (source.get("review") or {}).get("evidence_reviews", []):
         valid_segment_ids.update(review.get("supported_by_segment_ids", []))
+    for field in ("safety_flags", "unsafe_recommendation_candidates", "missing_context"):
+        for item in (source.get("review") or {}).get(field, []):
+            valid_segment_ids.update(item.get("evidence_segment_ids", []))
     entries = output.get("entries") if isinstance(output.get("entries"), list) else []
     entry_ids: list[str] = []
     invalid_entries: list[int] = []
