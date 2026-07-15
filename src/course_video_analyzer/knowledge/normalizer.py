@@ -11,10 +11,10 @@ from course_video_analyzer.jobs.workspace import atomic_write_text
 from course_video_analyzer.knowledge.cleaning_qa import parse_transcript_blocks
 
 DEFAULT_DISFLUENCY_RULES: tuple[tuple[str, str, str], ...] = (
-    (r"然后然后+", "然后", "disfluency_normalized"),
-    (r"你跟你跟+", "你跟", "disfluency_normalized"),
-    (r"人家人家+", "人家", "disfluency_normalized"),
-    (r"为什么为什么+", "为什么", "disfluency_normalized"),
+    (r"(?:然后){2,}", "然后", "disfluency_normalized"),
+    (r"(?:你跟){2,}", "你跟", "disfluency_normalized"),
+    (r"(?:人家){2,}", "人家", "disfluency_normalized"),
+    (r"(?:为什么){2,}", "为什么", "disfluency_normalized"),
     (r"怎么怎么样", "怎么样", "disfluency_normalized"),
     (r"中中层", "中层", "disfluency_normalized"),
     (r"回回家", "回家", "disfluency_normalized"),
@@ -23,6 +23,13 @@ DEFAULT_DISFLUENCY_RULES: tuple[tuple[str, str, str], ...] = (
     (r"什么么", "什么", "obvious_typo_fixed"),
     (r"会会加", "会加", "disfluency_normalized"),
     (r"直直回", "直回", "disfluency_normalized"),
+    (r"维维持", "维持", "disfluency_normalized"),
+    (r"一一起", "一起", "disfluency_normalized"),
+    (r"情情感", "情感", "disfluency_normalized"),
+    (r"就是是", "就是", "disfluency_normalized"),
+    (r"关关系", "关系", "disfluency_normalized"),
+    (r"原原因", "原因", "disfluency_normalized"),
+    (r"总总结", "总结", "disfluency_normalized"),
     (r"就{2,}", "就", "disfluency_normalized"),
     (r"很{2,}", "很", "disfluency_normalized"),
 )
