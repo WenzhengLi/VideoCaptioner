@@ -45,6 +45,8 @@ vision = [
 [project.scripts]
 course-video-web = "course_video_analyzer.web:main"
 course-video-benchmark = "benchmarks.run:main"
+course-knowledge = "course_video_analyzer.knowledge.cli:main"
+course-video-analyze = "course_video_analyzer.analysis_cli:main"
 
 [build-system]
 requires = ["hatchling"]
