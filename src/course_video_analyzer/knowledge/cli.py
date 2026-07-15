@@ -17,6 +17,7 @@ from course_video_analyzer.knowledge.normalizer import (
 from course_video_analyzer.knowledge.classifier import classify_p02_baseline
 from course_video_analyzer.knowledge.p02_review import build_p02_review_pack, apply_p02_review
 from course_video_analyzer.knowledge.case_segmentation import build_p03_timeline_input
+from course_video_analyzer.knowledge.extraction import build_p04_case_input, write_p04_qa
 from course_video_analyzer.knowledge.runs import archive_successful_job, write_run_qa
 
 
@@ -121,6 +122,18 @@ def build_parser() -> argparse.ArgumentParser:
     p03_input.add_argument("course_id")
     p03_input.add_argument("p02", type=Path)
     p03_input.add_argument("output", type=Path)
+    p04_input = subparsers.add_parser("build-p04-input", help="build one isolated P04 case bundle")
+    p04_input.add_argument("course_id")
+    p04_input.add_argument("case_id")
+    p04_input.add_argument("p02", type=Path)
+    p04_input.add_argument("p03", type=Path)
+    p04_input.add_argument("output", type=Path)
+    p04_qa = subparsers.add_parser("qa-p04", help="validate P04 evidence references")
+    p04_qa.add_argument("course_id")
+    p04_qa.add_argument("case_id")
+    p04_qa.add_argument("case_input", type=Path)
+    p04_qa.add_argument("output", type=Path)
+    p04_qa.add_argument("report", type=Path)
     return parser
 
 
@@ -263,6 +276,24 @@ def main() -> int:
     elif args.command == "build-p03-input":
         output = build_p03_timeline_input(args.course_id, args.p02, args.output)
         print(f"P03 紧凑时间线完成: {output}")
+    elif args.command == "build-p04-input":
+        output = build_p04_case_input(
+            args.course_id,
+            args.case_id,
+            args.p02,
+            args.p03,
+            args.output,
+        )
+        print(f"P04 单案例输入完成: {output}")
+    elif args.command == "qa-p04":
+        output = write_p04_qa(
+            args.course_id,
+            args.case_id,
+            args.case_input,
+            args.output,
+            args.report,
+        )
+        print(f"P04 QA 报告: {output}")
     return 0
 
 
