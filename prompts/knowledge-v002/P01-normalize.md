@@ -13,6 +13,21 @@ python -m course_video_analyzer.knowledge.cli normalize-p01 <course_id> <input> 
 
 若输出路径已经存在，不得覆盖；先验证现有结果或由外层调度器创建新版本路径。
 
+输入也可能是上述命令已经生成的 P01 baseline JSON。此时不要重新解析原始 TXT：逐段检查
+`normalized_text`，只增加有上下文证据的错字、同音字和规则例外修正；`raw_text`、时间戳、段数
+和 segment ID 必须保持不变。将最终 `prompt_version` 写为 `knowledge-v002-p01`，并增加：
+
+```json
+"review_metrics": {
+  "baseline_segment_count": 0,
+  "reviewed_segment_count": 0,
+  "additional_correction_count": 0,
+  "additional_uncertainty_count": 0
+}
+```
+
+`reviewed_segment_count` 必须等于全部段数。没有发现额外修改可以是 0，但必须完成全量结构检查。
+
 ## 不可违反的完整性约束
 
 1. 每个输入时间段必须对应一个输出 segment，顺序、`start_ms`、`end_ms` 不得改变。
