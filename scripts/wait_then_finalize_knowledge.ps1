@@ -3,12 +3,14 @@ param(
     [Parameter(Mandatory = $true)][string]$PythonExe,
     [string]$Workspace = "D:\Dev\VideoCaptioner",
     [string]$BatchId = "BATCH-20260715-001",
+    [string]$WaveId = "",
     [int]$PollSeconds = 30
 )
 
 $ErrorActionPreference = "Stop"
 $batchDir = Join-Path $DataRoot "batches\$BatchId"
-$p06Complete = Join-Path $batchDir "cursor-p06-knowledge-v002-complete.json"
+$waveSuffix = if ([string]::IsNullOrWhiteSpace($WaveId)) { "" } else { "-$WaveId" }
+$p06Complete = Join-Path $batchDir "cursor-p06-knowledge-v002$waveSuffix-complete.json"
 while (-not (Test-Path $p06Complete)) { Start-Sleep -Seconds $PollSeconds }
 $marker = Get-Content -Raw -Encoding utf8 $p06Complete | ConvertFrom-Json
 if ($marker.status -ne "complete") { throw "P06 batch marker is not complete" }
@@ -48,5 +50,5 @@ try {
     smoke_answer = $answer
     completed_at = [DateTime]::UtcNow.ToString("o")
 } | ConvertTo-Json -Depth 5 | Set-Content -Encoding utf8 (
-    Join-Path $batchDir "knowledge-pipeline-complete.json"
+    Join-Path $batchDir "knowledge-pipeline$waveSuffix-complete.json"
 )

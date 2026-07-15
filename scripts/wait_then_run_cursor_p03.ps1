@@ -3,6 +3,7 @@ param(
     [Parameter(Mandatory = $true)][string]$PythonExe,
     [string]$Workspace = "D:\Dev\VideoCaptioner",
     [string]$BatchId = "BATCH-20260715-001",
+    [string]$WaveId = "",
     [int]$StartCourse = 1,
     [int]$EndCourse = 5,
     [int]$PollSeconds = 30,
@@ -11,9 +12,10 @@ param(
 
 $ErrorActionPreference = "Stop"
 $batchDir = Join-Path $DataRoot "batches\$BatchId"
-$p02Complete = Join-Path $batchDir "cursor-p02-knowledge-v002-complete.json"
-$statusPath = Join-Path $batchDir "cursor-p03-knowledge-v002-status.jsonl"
-$failurePath = Join-Path $batchDir "cursor-p03-knowledge-v002-failures.jsonl"
+$waveSuffix = if ([string]::IsNullOrWhiteSpace($WaveId)) { "" } else { "-$WaveId" }
+$p02Complete = Join-Path $batchDir "cursor-p02-knowledge-v002$waveSuffix-complete.json"
+$statusPath = Join-Path $batchDir "cursor-p03-knowledge-v002$waveSuffix-status.jsonl"
+$failurePath = Join-Path $batchDir "cursor-p03-knowledge-v002$waveSuffix-failures.jsonl"
 
 function Add-JsonLine {
     param([string]$Path, [hashtable]$Value)
@@ -25,6 +27,8 @@ function Add-JsonLine {
 while (-not (Test-Path -LiteralPath $p02Complete)) {
     Start-Sleep -Seconds $PollSeconds
 }
+$p02Marker = Get-Content -Raw -Encoding utf8 -LiteralPath $p02Complete | ConvertFrom-Json
+if ($p02Marker.status -ne "complete") { throw "P02 wave marker is not complete" }
 
 $failedCourses = @()
 for ($ordinal = $StartCourse; $ordinal -le $EndCourse; $ordinal++) {
@@ -138,5 +142,5 @@ for ($ordinal = $StartCourse; $ordinal -le $EndCourse; $ordinal++) {
     failed_courses = $failedCourses
     completed_at = [DateTime]::UtcNow.ToString("o")
 } | ConvertTo-Json -Depth 5 | Set-Content -Encoding utf8 -LiteralPath (
-    Join-Path $batchDir "cursor-p03-knowledge-v002-complete.json"
+    Join-Path $batchDir "cursor-p03-knowledge-v002$waveSuffix-complete.json"
 )

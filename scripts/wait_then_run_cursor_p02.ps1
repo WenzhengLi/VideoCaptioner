@@ -3,6 +3,7 @@ param(
     [Parameter(Mandatory = $true)][string]$PythonExe,
     [string]$Workspace = "D:\Dev\VideoCaptioner",
     [string]$BatchId = "BATCH-20260715-001",
+    [string]$WaveId = "",
     [int]$StartCourse = 1,
     [int]$EndCourse = 5,
     [int]$PollSeconds = 30,
@@ -11,9 +12,10 @@ param(
 
 $ErrorActionPreference = "Stop"
 $batchDir = Join-Path $DataRoot "batches\$BatchId"
-$p01Complete = Join-Path $batchDir "cursor-p01-knowledge-v002-p01-complete.json"
-$statusPath = Join-Path $batchDir "cursor-p02-knowledge-v002-status.jsonl"
-$failurePath = Join-Path $batchDir "cursor-p02-knowledge-v002-failures.jsonl"
+$waveSuffix = if ([string]::IsNullOrWhiteSpace($WaveId)) { "" } else { "-$WaveId" }
+$p01Complete = Join-Path $batchDir "cursor-p01-knowledge-v002-p01$waveSuffix-complete.json"
+$statusPath = Join-Path $batchDir "cursor-p02-knowledge-v002$waveSuffix-status.jsonl"
+$failurePath = Join-Path $batchDir "cursor-p02-knowledge-v002$waveSuffix-failures.jsonl"
 
 function Add-JsonLine {
     param([string]$Path, [hashtable]$Value)
@@ -25,9 +27,13 @@ function Add-JsonLine {
 while (-not (Test-Path -LiteralPath $p01Complete)) {
     Start-Sleep -Seconds $PollSeconds
 }
+$p01Marker = Get-Content -Raw -Encoding utf8 -LiteralPath $p01Complete | ConvertFrom-Json
+if ($p01Marker.status -and $p01Marker.status -ne "complete") { throw "P01 wave marker is not complete" }
 
+$failedCourses = @()
 for ($ordinal = $StartCourse; $ordinal -le $EndCourse; $ordinal++) {
     $courseId = "C{0:D3}" -f $ordinal
+    $courseSucceeded = $false
     $p01 = Join-Path $DataRoot "courses\$courseId\02_normalized\P01-knowledge-v002.json"
     $p01QaCandidates = @(
         (Join-Path $DataRoot "courses\$courseId\qa\P01-knowledge-v002-qa.json"),
@@ -40,6 +46,7 @@ for ($ordinal = $StartCourse; $ordinal -le $EndCourse; $ordinal++) {
             at = [DateTime]::UtcNow.ToString("o"); course_id = $courseId
             error = "P01 output or QA missing"
         }
+        $failedCourses += $courseId
         continue
     }
     if ((Get-Content -Raw -Encoding utf8 -LiteralPath $p01Qa | ConvertFrom-Json).status -ne "pass") {
@@ -47,6 +54,7 @@ for ($ordinal = $StartCourse; $ordinal -le $EndCourse; $ordinal++) {
             at = [DateTime]::UtcNow.ToString("o"); course_id = $courseId
             error = "P01 QA did not pass"
         }
+        $failedCourses += $courseId
         continue
     }
 
@@ -60,6 +68,7 @@ for ($ordinal = $StartCourse; $ordinal -le $EndCourse; $ordinal++) {
                 at = [DateTime]::UtcNow.ToString("o"); course_id = $courseId
                 error = "P02 baseline failed"
             }
+            $failedCourses += $courseId
             continue
         }
     }
@@ -69,6 +78,7 @@ for ($ordinal = $StartCourse; $ordinal -le $EndCourse; $ordinal++) {
         try {
             Get-Content -Raw -Encoding utf8 -LiteralPath $output |
                 ConvertFrom-Json -ErrorAction Stop | Out-Null
+            $courseSucceeded = $true
             continue
         } catch {
             $stamp = [DateTime]::UtcNow.ToString("yyyyMMddTHHmmssZ")
@@ -85,6 +95,7 @@ for ($ordinal = $StartCourse; $ordinal -le $EndCourse; $ordinal++) {
                 at = [DateTime]::UtcNow.ToString("o"); course_id = $courseId
                 error = "P02 compact review pack failed"
             }
+            $failedCourses += $courseId
             continue
         }
     }
@@ -132,16 +143,21 @@ for ($ordinal = $StartCourse; $ordinal -le $EndCourse; $ordinal++) {
                 at = [DateTime]::UtcNow.ToString("o"); course_id = $courseId
                 attempt = $attempt; status = "succeeded"
             }
+            $courseSucceeded = $true
             break
         }
     }
+    if (-not $courseSucceeded) { $failedCourses += $courseId }
 }
 
 @{
     schema_version = "1.0"
     stage = "P02-review"
     prompt_version = "knowledge-v002-p02"
+    wave_id = $WaveId
+    status = if ($failedCourses.Count -eq 0) { "complete" } else { "needs_review" }
+    failed_courses = @($failedCourses | Select-Object -Unique)
     completed_at = [DateTime]::UtcNow.ToString("o")
-} | ConvertTo-Json | Set-Content -Encoding utf8 -LiteralPath (
-    Join-Path $batchDir "cursor-p02-knowledge-v002-complete.json"
+} | ConvertTo-Json -Depth 5 | Set-Content -Encoding utf8 -LiteralPath (
+    Join-Path $batchDir "cursor-p02-knowledge-v002$waveSuffix-complete.json"
 )

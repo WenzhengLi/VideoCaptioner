@@ -3,6 +3,7 @@ param(
     [Parameter(Mandatory = $true)][string]$PythonExe,
     [string]$Workspace = "D:\Dev\VideoCaptioner",
     [string]$BatchId = "BATCH-20260715-001",
+    [string]$WaveId = "",
     [int]$StartCourse = 1,
     [int]$EndCourse = 5,
     [int]$PollSeconds = 30,
@@ -11,9 +12,10 @@ param(
 
 $ErrorActionPreference = "Stop"
 $batchDir = Join-Path $DataRoot "batches\$BatchId"
-$p03Complete = Join-Path $batchDir "cursor-p03-knowledge-v002-complete.json"
-$statusPath = Join-Path $batchDir "cursor-p04-knowledge-v002-status.jsonl"
-$failurePath = Join-Path $batchDir "cursor-p04-knowledge-v002-failures.jsonl"
+$waveSuffix = if ([string]::IsNullOrWhiteSpace($WaveId)) { "" } else { "-$WaveId" }
+$p03Complete = Join-Path $batchDir "cursor-p03-knowledge-v002$waveSuffix-complete.json"
+$statusPath = Join-Path $batchDir "cursor-p04-knowledge-v002$waveSuffix-status.jsonl"
+$failurePath = Join-Path $batchDir "cursor-p04-knowledge-v002$waveSuffix-failures.jsonl"
 
 function Add-JsonLine {
     param([string]$Path, [hashtable]$Value)
@@ -143,5 +145,5 @@ for ($ordinal = $StartCourse; $ordinal -le $EndCourse; $ordinal++) {
     failed_cases = $failedCases
     completed_at = [DateTime]::UtcNow.ToString("o")
 } | ConvertTo-Json -Depth 5 | Set-Content -Encoding utf8 -LiteralPath (
-    Join-Path $batchDir "cursor-p04-knowledge-v002-complete.json"
+    Join-Path $batchDir "cursor-p04-knowledge-v002$waveSuffix-complete.json"
 )

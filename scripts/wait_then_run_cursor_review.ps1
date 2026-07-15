@@ -3,6 +3,8 @@ param(
     [Parameter(Mandatory = $true)][string]$PythonExe,
     [string]$Workspace = "D:\Dev\VideoCaptioner",
     [string]$BatchId = "BATCH-20260715-001",
+    [string]$WaveId = "",
+    [string]$RunVersion = "V001",
     [int]$StartCourse = 3,
     [int]$EndCourse = 5,
     [int]$PollSeconds = 30,
@@ -10,16 +12,10 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$runs = [ordered]@{
-    C001 = "RUN-20260715-BASELINE"
-    C002 = "RUN-20260715-V001"
-    C003 = "RUN-20260715-001-V001"
-    C004 = "RUN-20260715-001-V001"
-    C005 = "RUN-20260715-001-V001"
-}
 $batchDir = Join-Path $DataRoot "batches\$BatchId"
-$statusPath = Join-Path $batchDir "cursor-p01-review-v002-status.jsonl"
-$failurePath = Join-Path $batchDir "cursor-p01-review-v002-failures.jsonl"
+$waveSuffix = if ([string]::IsNullOrWhiteSpace($WaveId)) { "" } else { "-$WaveId" }
+$statusPath = Join-Path $batchDir "cursor-p01-review-v002$waveSuffix-status.jsonl"
+$failurePath = Join-Path $batchDir "cursor-p01-review-v002$waveSuffix-failures.jsonl"
 
 function Add-JsonLine {
     param([string]$Path, [hashtable]$Value)
@@ -28,13 +24,11 @@ function Add-JsonLine {
     )
 }
 
-foreach ($entry in $runs.GetEnumerator()) {
-    $courseId = $entry.Key
-    $ordinal = [int]$courseId.Substring(1)
-    if ($ordinal -lt $StartCourse -or $ordinal -gt $EndCourse) {
-        continue
-    }
-    $runId = $entry.Value
+$failedCourses = @()
+for ($ordinal = $StartCourse; $ordinal -le $EndCourse; $ordinal++) {
+    $courseId = "C{0:D3}" -f $ordinal
+    $courseSucceeded = $false
+    $runId = "RUN-$($BatchId -replace '^BATCH-', '')-$RunVersion"
     $transcript = Join-Path $DataRoot "courses\$courseId\01_raw\$runId\transcript.txt"
     $rawQa = Join-Path $DataRoot "courses\$courseId\qa\$runId.json"
     while (-not (Test-Path -LiteralPath $transcript) -or -not (Test-Path -LiteralPath $rawQa)) {
@@ -45,6 +39,7 @@ foreach ($entry in $runs.GetEnumerator()) {
             at = [DateTime]::UtcNow.ToString("o"); course_id = $courseId
             error = "raw QA did not pass"
         }
+        $failedCourses += $courseId
         continue
     }
 
@@ -58,6 +53,7 @@ foreach ($entry in $runs.GetEnumerator()) {
                 at = [DateTime]::UtcNow.ToString("o"); course_id = $courseId
                 error = "deterministic baseline failed"
             }
+            $failedCourses += $courseId
             continue
         }
     }
@@ -67,6 +63,7 @@ foreach ($entry in $runs.GetEnumerator()) {
         try {
             Get-Content -Raw -Encoding utf8 -LiteralPath $output |
                 ConvertFrom-Json -ErrorAction Stop | Out-Null
+            $courseSucceeded = $true
             continue
         } catch {
             $stamp = [DateTime]::UtcNow.ToString("yyyyMMddTHHmmssZ")
@@ -102,8 +99,12 @@ foreach ($entry in $runs.GetEnumerator()) {
                 at = [DateTime]::UtcNow.ToString("o"); course_id = $courseId
                 attempt = $attempt; status = "succeeded"
             }
+            $courseSucceeded = $true
             break
         }
+    }
+    if (-not $courseSucceeded) {
+        $failedCourses += $courseId
     }
 }
 
@@ -111,7 +112,10 @@ foreach ($entry in $runs.GetEnumerator()) {
     schema_version = "1.0"
     stage = "P01-review"
     prompt_version = "knowledge-v002-p01"
+    wave_id = $WaveId
+    status = if ($failedCourses.Count -eq 0) { "complete" } else { "failed" }
+    failed_courses = $failedCourses
     completed_at = [DateTime]::UtcNow.ToString("o")
 } | ConvertTo-Json | Set-Content -Encoding utf8 -LiteralPath (
-    Join-Path $batchDir "cursor-p01-review-v002-complete.json"
+    Join-Path $batchDir "cursor-p01-knowledge-v002-p01$waveSuffix-complete.json"
 )
