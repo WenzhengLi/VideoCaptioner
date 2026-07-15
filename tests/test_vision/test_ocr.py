@@ -222,6 +222,29 @@ def test_recognize_uses_fake_engine_and_writes_artifacts(tmp_path: Path) -> None
     assert meta["enhance"]["skipped"] is True
 
 
+def test_recognize_compacts_raw_and_reuses_cached_lines(tmp_path: Path) -> None:
+    image = _write_tiny_png(tmp_path / "board.png")
+    artifact_dir = tmp_path / "artifacts"
+    payload = [
+        {
+            "rec_texts": ["缓存"],
+            "rec_scores": [0.99],
+            "rec_polys": [_box(0, 0, 20, 20)],
+            "doc_preprocessor_res": {"output_img": [[1, 2], [3, 4]]},
+        }
+    ]
+    engine = FakePaddleEngine(payload)
+    ocr = PaddleBoardOcr(OcrConfig(skip_enhance=True), engine=engine)
+
+    first = ocr.recognize(image, artifact_dir)
+    second = ocr.recognize(image, artifact_dir)
+
+    assert [line.text for line in first] == [line.text for line in second] == ["缓存"]
+    assert len(engine.calls) == 1
+    saved = json.loads((artifact_dir / RAW_ARTIFACT_NAME).read_text(encoding="utf-8"))
+    assert "doc_preprocessor_res" not in saved[0]
+
+
 def test_recognize_runs_enhance_by_default(tmp_path: Path) -> None:
     image = _write_tiny_png(tmp_path / "board.png")
     artifact_dir = tmp_path / "artifacts"

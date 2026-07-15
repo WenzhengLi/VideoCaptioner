@@ -38,6 +38,7 @@ META_ARTIFACT_NAME = "ocr_meta.json"
 BODY_ARTIFACT_NAME = "board_body.txt"
 
 DeviceName = Literal["cpu", "gpu", "gpu:0", "gpu:1"]
+RawArtifactMode = Literal["compact", "full", "none"]
 
 
 class PaddleOcrNotAvailableError(RuntimeError):
@@ -68,6 +69,8 @@ class OcrConfig:
     skip_enhance: bool = False
     extra_engine_kwargs: dict[str, Any] = field(default_factory=dict)
     extra_predict_kwargs: dict[str, Any] = field(default_factory=dict)
+    raw_artifact_mode: RawArtifactMode = "compact"
+    prune_raw_larger_than_bytes: int = 16 * 1024 * 1024
 
 
 class PaddleBoardOcr:
@@ -98,6 +101,11 @@ class PaddleBoardOcr:
             raise FileNotFoundError(f"课板图像不存在: {image_path}")
 
         artifact_dir.mkdir(parents=True, exist_ok=True)
+
+        cached = self._load_cached_lines(artifact_dir)
+        if cached is not None:
+            self._prune_oversized_raw(artifact_dir)
+            return cached
 
         ocr_input_path = image_path
         enhance_meta: dict[str, Any] = {"skipped": True}
@@ -148,8 +156,11 @@ class PaddleBoardOcr:
                 f"PaddleOCR 推理失败 ({ocr_input_path.name}): {exc}"
             ) from exc
 
-        safe_raw = _json_safe(raw)
-        self._write_json(artifact_dir / RAW_ARTIFACT_NAME, safe_raw)
+        if self.config.raw_artifact_mode != "none":
+            safe_raw = _json_safe(raw)
+            if self.config.raw_artifact_mode == "compact":
+                safe_raw = _compact_paddle_raw(safe_raw)
+            self._write_json(artifact_dir / RAW_ARTIFACT_NAME, safe_raw)
 
         lines = parse_paddleocr_raw(
             raw,
@@ -174,10 +185,39 @@ class PaddleBoardOcr:
                 "ocr_input_image": str(ocr_input_path),
                 "line_count": len(lines),
                 "low_confidence_count": sum(1 for line in lines if line.low_confidence),
+                "raw_artifact_mode": self.config.raw_artifact_mode,
                 "enhance": enhance_meta,
             },
         )
         return lines
+
+    def _load_cached_lines(self, artifact_dir: Path) -> list[OcrLine] | None:
+        lines_path = artifact_dir / LINES_ARTIFACT_NAME
+        meta_path = artifact_dir / META_ARTIFACT_NAME
+        if not lines_path.is_file() or not meta_path.is_file():
+            return None
+        try:
+            payload = json.loads(lines_path.read_text(encoding="utf-8"))
+            if not isinstance(payload, list):
+                return None
+            return [OcrLine.model_validate(item) for item in payload]
+        except (OSError, json.JSONDecodeError, ValueError):
+            return None
+
+    def _prune_oversized_raw(self, artifact_dir: Path) -> None:
+        raw_path = artifact_dir / RAW_ARTIFACT_NAME
+        threshold = self.config.prune_raw_larger_than_bytes
+        if threshold <= 0 or not raw_path.is_file() or raw_path.stat().st_size <= threshold:
+            return
+        raw_path.unlink(missing_ok=True)
+        meta_path = artifact_dir / META_ARTIFACT_NAME
+        try:
+            meta = json.loads(meta_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            meta = {}
+        meta["raw_artifact_pruned"] = True
+        meta["raw_artifact_prune_threshold_bytes"] = threshold
+        self._write_json(meta_path, meta)
 
     def apply_corrections(
         self,
@@ -293,3 +333,29 @@ def _json_safe(value: Any) -> Any:
     if isinstance(value, (bytes, bytearray)):
         return value.decode("utf-8", errors="replace")
     return str(value)
+
+
+def _compact_paddle_raw(value: Any) -> Any:
+    """Drop embedded preprocessor images while preserving OCR evidence fields."""
+    keep = {
+        "input_path",
+        "page_index",
+        "dt_polys",
+        "model_settings",
+        "text_det_params",
+        "text_type",
+        "text_rec_score_thresh",
+        "return_word_box",
+        "rec_texts",
+        "rec_scores",
+        "rec_polys",
+        "textline_orientation_angles",
+        "rec_boxes",
+    }
+    if isinstance(value, list):
+        return [_compact_paddle_raw(item) for item in value]
+    if isinstance(value, dict):
+        if "rec_texts" in value or "rec_scores" in value:
+            return {key: item for key, item in value.items() if key in keep}
+        return {key: _compact_paddle_raw(item) for key, item in value.items()}
+    return value
