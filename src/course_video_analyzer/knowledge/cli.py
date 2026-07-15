@@ -19,6 +19,11 @@ from course_video_analyzer.knowledge.p02_review import build_p02_review_pack, ap
 from course_video_analyzer.knowledge.case_segmentation import build_p03_timeline_input
 from course_video_analyzer.knowledge.extraction import build_p04_case_input, write_p04_qa
 from course_video_analyzer.knowledge.safety_review import build_p05_input, write_p05_qa
+from course_video_analyzer.knowledge.tidy_entries import (
+    build_p06_input,
+    export_tidy_markdown,
+    write_p06_qa,
+)
 from course_video_analyzer.knowledge.runs import archive_successful_job, write_run_qa
 
 
@@ -147,6 +152,21 @@ def build_parser() -> argparse.ArgumentParser:
     p05_qa.add_argument("input", type=Path)
     p05_qa.add_argument("output", type=Path)
     p05_qa.add_argument("report", type=Path)
+    p06_input = subparsers.add_parser("build-p06-input", help="build P06 atomic entry bundle")
+    p06_input.add_argument("course_id")
+    p06_input.add_argument("case_id")
+    p06_input.add_argument("p04", type=Path)
+    p06_input.add_argument("p05", type=Path)
+    p06_input.add_argument("output", type=Path)
+    p06_qa = subparsers.add_parser("qa-p06", help="validate P06 atomic entries")
+    p06_qa.add_argument("course_id")
+    p06_qa.add_argument("case_id")
+    p06_qa.add_argument("input", type=Path)
+    p06_qa.add_argument("output", type=Path)
+    p06_qa.add_argument("report", type=Path)
+    tidy_export = subparsers.add_parser("export-tidy", help="export P06 entries as Markdown")
+    tidy_export.add_argument("p06", type=Path)
+    tidy_export.add_argument("output_dir", type=Path)
     return parser
 
 
@@ -325,6 +345,15 @@ def main() -> int:
             args.report,
         )
         print(f"P05 QA 报告: {output}")
+    elif args.command == "build-p06-input":
+        output = build_p06_input(args.course_id, args.case_id, args.p04, args.p05, args.output)
+        print(f"P06 原子条目输入完成: {output}")
+    elif args.command == "qa-p06":
+        output = write_p06_qa(args.course_id, args.case_id, args.input, args.output, args.report)
+        print(f"P06 QA 报告: {output}")
+    elif args.command == "export-tidy":
+        outputs = export_tidy_markdown(args.p06, args.output_dir)
+        print(f"Tidy Markdown 已输出: {len(outputs)}")
     return 0
 
 
