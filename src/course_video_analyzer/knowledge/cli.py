@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
 
 from course_video_analyzer.knowledge.catalog import initialize_knowledge_workspace
@@ -23,6 +24,11 @@ from course_video_analyzer.knowledge.tidy_entries import (
     build_p06_input,
     export_tidy_markdown,
     write_p06_qa,
+)
+from course_video_analyzer.knowledge.store import (
+    build_answer_context,
+    index_tidy_entries,
+    search_tidy_entries,
 )
 from course_video_analyzer.knowledge.runs import archive_successful_job, write_run_qa
 
@@ -167,6 +173,18 @@ def build_parser() -> argparse.ArgumentParser:
     tidy_export = subparsers.add_parser("export-tidy", help="export P06 entries as Markdown")
     tidy_export.add_argument("p06", type=Path)
     tidy_export.add_argument("output_dir", type=Path)
+    tidy_index = subparsers.add_parser("index-tidy", help="index all P06 entries into SQLite FTS")
+    tidy_index.add_argument("--data-root", type=Path, default=Path("data"))
+    tidy_index.add_argument("--database", type=Path, default=Path("data/tidy/knowledge.db"))
+    tidy_search = subparsers.add_parser("search-tidy", help="search the local knowledge index")
+    tidy_search.add_argument("query")
+    tidy_search.add_argument("--database", type=Path, default=Path("data/tidy/knowledge.db"))
+    tidy_search.add_argument("--limit", type=int, default=8)
+    answer_context = subparsers.add_parser("answer-context", help="build cited multi-option answer context")
+    answer_context.add_argument("query")
+    answer_context.add_argument("output", type=Path)
+    answer_context.add_argument("--database", type=Path, default=Path("data/tidy/knowledge.db"))
+    answer_context.add_argument("--limit", type=int, default=8)
     return parser
 
 
@@ -354,6 +372,18 @@ def main() -> int:
     elif args.command == "export-tidy":
         outputs = export_tidy_markdown(args.p06, args.output_dir)
         print(f"Tidy Markdown 已输出: {len(outputs)}")
+    elif args.command == "index-tidy":
+        result = index_tidy_entries(args.data_root, args.database)
+        print(json.dumps(result, ensure_ascii=False))
+    elif args.command == "search-tidy":
+        result = search_tidy_entries(args.database, args.query, limit=args.limit)
+        print(json.dumps(result, ensure_ascii=False, indent=2))
+    elif args.command == "answer-context":
+        result = build_answer_context(args.database, args.query, limit=args.limit)
+        from course_video_analyzer.jobs.workspace import atomic_write_text
+
+        atomic_write_text(args.output, json.dumps(result, ensure_ascii=False, indent=2))
+        print(f"多方案回答上下文已输出: {args.output}")
     return 0
 
 
