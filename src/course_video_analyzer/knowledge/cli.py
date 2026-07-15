@@ -30,6 +30,7 @@ from course_video_analyzer.knowledge.store import (
     index_tidy_entries,
     search_tidy_entries,
 )
+from course_video_analyzer.knowledge.answering import answer_tidy_query
 from course_video_analyzer.knowledge.runs import archive_successful_job, write_run_qa
 
 
@@ -64,7 +65,7 @@ def build_parser() -> argparse.ArgumentParser:
     batch.add_argument("--ffmpeg-bin", type=Path)
     cursor = subparsers.add_parser("cursor-stage", help="run one isolated Cursor cleaning stage")
     cursor.add_argument("course_id")
-    cursor.add_argument("stage", choices=["P01", "P02", "P03", "P04", "P05", "P06"])
+    cursor.add_argument("stage", choices=["P01", "P02", "P03", "P04", "P05", "P06", "ANSWER"])
     cursor.add_argument("input", type=Path)
     cursor.add_argument("output", type=Path)
     cursor.add_argument("--workspace", type=Path, default=Path.cwd())
@@ -185,6 +186,12 @@ def build_parser() -> argparse.ArgumentParser:
     answer_context.add_argument("output", type=Path)
     answer_context.add_argument("--database", type=Path, default=Path("data/tidy/knowledge.db"))
     answer_context.add_argument("--limit", type=int, default=8)
+    tidy_answer = subparsers.add_parser("answer-tidy", help="retrieve evidence and generate multi-option answer")
+    tidy_answer.add_argument("query")
+    tidy_answer.add_argument("output", type=Path)
+    tidy_answer.add_argument("--database", type=Path, default=Path("data/tidy/knowledge.db"))
+    tidy_answer.add_argument("--workspace", type=Path, default=Path.cwd())
+    tidy_answer.add_argument("--limit", type=int, default=8)
     return parser
 
 
@@ -384,6 +391,15 @@ def main() -> int:
 
         atomic_write_text(args.output, json.dumps(result, ensure_ascii=False, indent=2))
         print(f"多方案回答上下文已输出: {args.output}")
+    elif args.command == "answer-tidy":
+        output, qa = answer_tidy_query(
+            args.query,
+            args.database,
+            args.output,
+            args.workspace,
+            limit=args.limit,
+        )
+        print(f"知识库多方案回答完成: {output}; QA={qa}")
     return 0
 
 

@@ -15,6 +15,7 @@ STAGE_PROMPTS = {
     "P04": "P04-extract.md",
     "P05": "P05-review.md",
     "P06": "P06-tidy.md",
+    "ANSWER": "ANSWER-coach.md",
 }
 
 
@@ -82,8 +83,9 @@ def run_cursor_stage(
     )
     # Keep this as a single physical line. On Windows the .cmd/PowerShell
     # wrapper can truncate multiline prompt arguments at the first paragraph.
+    task_kind = "知识库问答任务" if stage == "ANSWER" else "课程清洗任务"
     instruction = (
-        "使用 Flow 工作方式执行一次独立且不继承上下文的课程清洗任务；"
+        f"使用 Flow 工作方式执行一次独立且不继承上下文的{task_kind}；"
         f"完整读取任务清单 {task_path}，严格按清单中的 rule_file、input_file、"
         "output_file 和 requirements 执行；不要自行寻找其他待办；完成后只输出 "
         "CURSOR_STAGE_COMPLETED。"
