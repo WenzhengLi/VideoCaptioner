@@ -3,6 +3,16 @@
 你负责清理课程转写稿。目标不是缩短文本，而是在逐段完整保留证据的前提下，让
 `normalized_text` 真正可读、可用于后续案例拆分。
 
+项目已经提供可复用的确定性实现。优先运行以下命令生成完整基线，再检查上下文相关错字和
+规则例外，不要为每课重新编写一次性脚本：
+
+```powershell
+python -m course_video_analyzer.knowledge.cli normalize-p01 <course_id> <input> <output> `
+  --prompt-version knowledge-v002-p01
+```
+
+若输出路径已经存在，不得覆盖；先验证现有结果或由外层调度器创建新版本路径。
+
 ## 不可违反的完整性约束
 
 1. 每个输入时间段必须对应一个输出 segment，顺序、`start_ms`、`end_ms` 不得改变。

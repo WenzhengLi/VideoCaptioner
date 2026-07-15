@@ -9,6 +9,10 @@ from course_video_analyzer.knowledge.catalog import initialize_knowledge_workspa
 from course_video_analyzer.knowledge.batch import mark_batch_item, run_batch
 from course_video_analyzer.knowledge.cursor_runner import CursorStageConfig, run_cursor_stage
 from course_video_analyzer.knowledge.cleaning_qa import write_p01_qa, write_p02_qa
+from course_video_analyzer.knowledge.normalizer import (
+    TranscriptNormalizerConfig,
+    normalize_transcript_p01,
+)
 from course_video_analyzer.knowledge.runs import archive_successful_job, write_run_qa
 
 
@@ -74,6 +78,11 @@ def build_parser() -> argparse.ArgumentParser:
     p02_qa.add_argument("output", type=Path)
     p02_qa.add_argument("report", type=Path)
     p02_qa.add_argument("--prompt-version", default="knowledge-v002-p02")
+    normalize = subparsers.add_parser("normalize-p01", help="generate deterministic P01 baseline")
+    normalize.add_argument("course_id")
+    normalize.add_argument("transcript", type=Path)
+    normalize.add_argument("output", type=Path)
+    normalize.add_argument("--prompt-version", default="knowledge-v002-p01")
     return parser
 
 
@@ -166,6 +175,14 @@ def main() -> int:
             expected_prompt_version=args.prompt_version,
         )
         print(f"P02 QA 报告: {report}")
+    elif args.command == "normalize-p01":
+        output = normalize_transcript_p01(
+            args.course_id,
+            args.transcript,
+            args.output,
+            config=TranscriptNormalizerConfig(prompt_version=args.prompt_version),
+        )
+        print(f"P01 基线完成: {output}")
     return 0
 
 
