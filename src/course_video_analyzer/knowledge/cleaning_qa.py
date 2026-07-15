@@ -24,6 +24,23 @@ ALLOWED_SPEAKERS = {
     "unknown",
 }
 ALLOWED_CONTENT_TYPES = {"speech", "board_ocr", "pdf_text", "image_ocr"}
+ALLOWED_SOURCE_ROLES = {
+    "instructor_explanation",
+    "actual_chat",
+    "student_question",
+    "board",
+    "pdf",
+    "marketing",
+    "unknown",
+}
+ALLOWED_EPISTEMIC_TYPES = {
+    "observation",
+    "instructor_claim",
+    "quoted_statement",
+    "model_inference",
+    "unknown",
+}
+ALLOWED_RELEVANCE = {"core", "supporting", "boilerplate", "uncertain"}
 
 
 def _timestamp_ms(value: str) -> int:
@@ -162,4 +179,107 @@ def write_p01_qa(
         report_path,
         json.dumps(report, ensure_ascii=False, indent=2),
     )
+    return Path(report_path)
+
+
+def validate_p02_output(
+    course_id: str,
+    p01_path: Path,
+    output_path: Path,
+    *,
+    expected_prompt_version: str = "knowledge-v002-p02",
+) -> dict[str, Any]:
+    source = json.loads(Path(p01_path).read_text(encoding="utf-8"))
+    output = json.loads(Path(output_path).read_text(encoding="utf-8"))
+    source_segments = source.get("segments") if isinstance(source.get("segments"), list) else []
+    output_segments = output.get("segments") if isinstance(output.get("segments"), list) else []
+    preserved_fields = (
+        "segment_id",
+        "start_ms",
+        "end_ms",
+        "speaker",
+        "content_type",
+        "raw_text",
+        "normalized_text",
+        "edit_notes",
+        "confidence",
+    )
+    preservation_mismatches: list[int] = []
+    invalid_source_roles: list[int] = []
+    invalid_epistemic_types: list[int] = []
+    invalid_relevance: list[int] = []
+    invalid_confidence: list[int] = []
+    missing_reasons: list[int] = []
+    for index, (before, after) in enumerate(zip(source_segments, output_segments, strict=False)):
+        if not isinstance(before, dict) or not isinstance(after, dict):
+            preservation_mismatches.append(index)
+            continue
+        if any(before.get(field) != after.get(field) for field in preserved_fields):
+            preservation_mismatches.append(index)
+        if after.get("source_role") not in ALLOWED_SOURCE_ROLES:
+            invalid_source_roles.append(index)
+        if after.get("epistemic_type") not in ALLOWED_EPISTEMIC_TYPES:
+            invalid_epistemic_types.append(index)
+        if after.get("relevance") not in ALLOWED_RELEVANCE:
+            invalid_relevance.append(index)
+        confidence = after.get("classification_confidence")
+        if not isinstance(confidence, (int, float)) or not 0 <= confidence <= 1:
+            invalid_confidence.append(index)
+        reasons = after.get("classification_reasons")
+        if not isinstance(reasons, list) or not reasons:
+            missing_reasons.append(index)
+    checks = {
+        "schema_version": output.get("schema_version") == "1.0",
+        "prompt_version": output.get("prompt_version") == expected_prompt_version,
+        "source_id": output.get("source_ids") == [course_id],
+        "segment_count": len(source_segments) == len(output_segments) and len(source_segments) > 0,
+        "p01_fields_preserved": not preservation_mismatches,
+        "source_role_contract": not invalid_source_roles,
+        "epistemic_type_contract": not invalid_epistemic_types,
+        "relevance_contract": not invalid_relevance,
+        "classification_confidence_contract": not invalid_confidence,
+        "classification_reasons_present": not missing_reasons,
+    }
+    return {
+        "schema_version": "1.0",
+        "course_id": course_id,
+        "stage": "P02",
+        "status": "pass" if all(checks.values()) else "needs_review",
+        "checks": checks,
+        "metrics": {
+            "input_segment_count": len(source_segments),
+            "output_segment_count": len(output_segments),
+            "preservation_mismatch_count": len(preservation_mismatches),
+            "invalid_source_role_count": len(invalid_source_roles),
+            "invalid_epistemic_type_count": len(invalid_epistemic_types),
+            "invalid_relevance_count": len(invalid_relevance),
+            "invalid_classification_confidence_count": len(invalid_confidence),
+            "missing_classification_reasons_count": len(missing_reasons),
+        },
+        "samples": {
+            "preservation_mismatch_indexes": preservation_mismatches[:20],
+            "invalid_source_role_indexes": invalid_source_roles[:20],
+            "invalid_epistemic_type_indexes": invalid_epistemic_types[:20],
+            "invalid_relevance_indexes": invalid_relevance[:20],
+            "invalid_classification_confidence_indexes": invalid_confidence[:20],
+            "missing_classification_reasons_indexes": missing_reasons[:20],
+        },
+    }
+
+
+def write_p02_qa(
+    course_id: str,
+    p01_path: Path,
+    output_path: Path,
+    report_path: Path,
+    *,
+    expected_prompt_version: str = "knowledge-v002-p02",
+) -> Path:
+    report = validate_p02_output(
+        course_id,
+        p01_path,
+        output_path,
+        expected_prompt_version=expected_prompt_version,
+    )
+    atomic_write_text(report_path, json.dumps(report, ensure_ascii=False, indent=2))
     return Path(report_path)
