@@ -43,6 +43,8 @@ def build_p05_input(
         ("alternative_explanations", "basis_evidence_segment_ids"),
         ("outcomes", "evidence_segment_ids"),
         ("quoted_expressions", "evidence_segment_ids"),
+        ("uncertainties", "evidence_segment_ids"),
+        ("evidence_spans", "segment_ids"),
     ):
         for item in p04.get(field, []):
             referenced_ids.update(item.get(evidence_field, []))
