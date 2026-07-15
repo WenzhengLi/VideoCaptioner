@@ -8,6 +8,7 @@ from pathlib import Path
 from course_video_analyzer.knowledge.catalog import initialize_knowledge_workspace
 from course_video_analyzer.knowledge.batch import mark_batch_item, run_batch
 from course_video_analyzer.knowledge.cursor_runner import CursorStageConfig, run_cursor_stage
+from course_video_analyzer.knowledge.cleaning_qa import write_p01_qa
 from course_video_analyzer.knowledge.runs import archive_successful_job, write_run_qa
 
 
@@ -60,6 +61,11 @@ def build_parser() -> argparse.ArgumentParser:
     mark.add_argument("--run-id")
     mark.add_argument("--error")
     mark.add_argument("--data-root", type=Path, default=Path("data"))
+    clean_qa = subparsers.add_parser("qa-p01", help="validate P01 completeness and schema")
+    clean_qa.add_argument("course_id")
+    clean_qa.add_argument("transcript", type=Path)
+    clean_qa.add_argument("output", type=Path)
+    clean_qa.add_argument("report", type=Path)
     return parser
 
 
@@ -133,6 +139,9 @@ def main() -> int:
             error=args.error,
         )
         print(f"批次状态已更新: {args.course_id} -> {args.status}")
+    elif args.command == "qa-p01":
+        report = write_p01_qa(args.course_id, args.transcript, args.output, args.report)
+        print(f"P01 QA 报告: {report}")
     return 0
 
 

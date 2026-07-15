@@ -77,6 +77,31 @@ foreach ($entry in $runs.GetEnumerator()) {
             --model auto `
             --timeout-seconds 7200
         if ($LASTEXITCODE -eq 0) {
+            $qaOutputPath = Join-Path $DataRoot "courses\$courseId\qa\P01-knowledge-v001.json"
+            & $PythonExe -m course_video_analyzer.knowledge.cli qa-p01 `
+                $courseId $inputPath $outputPath $qaOutputPath
+            if ($LASTEXITCODE -ne 0) {
+                Add-JsonLine -Path $failurePath -Value @{
+                    at = [DateTime]::UtcNow.ToString("o")
+                    course_id = $courseId
+                    stage = "P01"
+                    attempt = $attempt
+                    error = "P01 deterministic QA command failed"
+                }
+                continue
+            }
+            $qaResult = Get-Content -Raw -Encoding utf8 -LiteralPath $qaOutputPath |
+                ConvertFrom-Json
+            if ($qaResult.status -ne "pass") {
+                Add-JsonLine -Path $failurePath -Value @{
+                    at = [DateTime]::UtcNow.ToString("o")
+                    course_id = $courseId
+                    stage = "P01"
+                    attempt = $attempt
+                    error = "P01 deterministic QA needs review"
+                }
+                continue
+            }
             $succeeded = $true
             Add-JsonLine -Path $statusPath -Value @{
                 at = [DateTime]::UtcNow.ToString("o")
