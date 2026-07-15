@@ -1,0 +1,207 @@
+{
+  "schema_version": "1.0",
+  "start_course": "C001",
+  "end_course": "C005",
+  "output_version": "knowledge-v002",
+  "totals": {
+    "segment_count": 21160,
+    "case_count": 12,
+    "p06_entry_count": 232,
+    "p05_risk_count": 0,
+    "markdown_count": 232
+  },
+  "courses": [
+    {
+      "course_id": "C001",
+      "segment_count": 3459,
+      "speaker_distribution": {
+        "student": 1228,
+        "teacher_a": 2040,
+        "unknown": 191
+      },
+      "unknown_ratio": 0.0552,
+      "case_count": 3,
+      "unassigned_segment_count": 206,
+      "unassigned_ratio": 1.0,
+      "p05_risk_count": 0,
+      "p05_risk_types": {},
+      "p06_entry_count": 40,
+      "markdown_count": 40,
+      "qa": {
+        "raw": "pass",
+        "P01": "missing",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "case_qa": {
+        "P04": {
+          "CASE-C001-001": "pass",
+          "CASE-C001-002": "pass",
+          "CASE-C001-003": "pass"
+        },
+        "P05": {
+          "CASE-C001-001": "pass",
+          "CASE-C001-002": "pass",
+          "CASE-C001-003": "pass"
+        },
+        "P06": {
+          "CASE-C001-001": "pass",
+          "CASE-C001-002": "pass",
+          "CASE-C001-003": "pass"
+        }
+      }
+    },
+    {
+      "course_id": "C002",
+      "segment_count": 4272,
+      "speaker_distribution": {
+        "speaker_0": 4059,
+        "speaker_1": 13,
+        "speaker_2": 3,
+        "unknown": 197
+      },
+      "unknown_ratio": 0.0461,
+      "case_count": 3,
+      "unassigned_segment_count": 843,
+      "unassigned_ratio": 1.0,
+      "p05_risk_count": 0,
+      "p05_risk_types": {},
+      "p06_entry_count": 54,
+      "markdown_count": 54,
+      "qa": {
+        "raw": "pass",
+        "P01": "pass",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "case_qa": {
+        "P04": {
+          "CASE-C002-001": "pass",
+          "CASE-C002-002": "pass",
+          "CASE-C002-003": "pass"
+        },
+        "P05": {
+          "CASE-C002-001": "pass",
+          "CASE-C002-002": "pass",
+          "CASE-C002-003": "pass"
+        },
+        "P06": {
+          "CASE-C002-001": "pass",
+          "CASE-C002-002": "pass",
+          "CASE-C002-003": "pass"
+        }
+      }
+    },
+    {
+      "course_id": "C003",
+      "segment_count": 4679,
+      "speaker_distribution": {
+        "speaker_0": 3485,
+        "speaker_1": 897,
+        "unknown": 297
+      },
+      "unknown_ratio": 0.0635,
+      "case_count": 2,
+      "unassigned_segment_count": 1891,
+      "unassigned_ratio": 1.0,
+      "p05_risk_count": 0,
+      "p05_risk_types": {},
+      "p06_entry_count": 46,
+      "markdown_count": 46,
+      "qa": {
+        "raw": "pass",
+        "P01": "pass",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "case_qa": {
+        "P04": {
+          "CASE-C003-001": "pass",
+          "CASE-C003-002": "pass"
+        },
+        "P05": {
+          "CASE-C003-001": "pass",
+          "CASE-C003-002": "pass"
+        },
+        "P06": {
+          "CASE-C003-001": "pass",
+          "CASE-C003-002": "pass"
+        }
+      }
+    },
+    {
+      "course_id": "C004",
+      "segment_count": 5161,
+      "speaker_distribution": {
+        "speaker_0": 3453,
+        "speaker_1": 1083,
+        "speaker_2": 314,
+        "unknown": 311
+      },
+      "unknown_ratio": 0.0603,
+      "case_count": 2,
+      "unassigned_segment_count": 642,
+      "unassigned_ratio": 1.0,
+      "p05_risk_count": 0,
+      "p05_risk_types": {},
+      "p06_entry_count": 45,
+      "markdown_count": 45,
+      "qa": {
+        "raw": "pass",
+        "P01": "pass",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "case_qa": {
+        "P04": {
+          "CASE-C004-001": "pass",
+          "CASE-C004-002": "pass"
+        },
+        "P05": {
+          "CASE-C004-001": "pass",
+          "CASE-C004-002": "pass"
+        },
+        "P06": {
+          "CASE-C004-001": "pass",
+          "CASE-C004-002": "pass"
+        }
+      }
+    },
+    {
+      "course_id": "C005",
+      "segment_count": 3589,
+      "speaker_distribution": {
+        "speaker_0": 3362,
+        "unknown": 227
+      },
+      "unknown_ratio": 0.0632,
+      "case_count": 2,
+      "unassigned_segment_count": 138,
+      "unassigned_ratio": 1.0,
+      "p05_risk_count": 0,
+      "p05_risk_types": {},
+      "p06_entry_count": 47,
+      "markdown_count": 47,
+      "qa": {
+        "raw": "pass",
+        "P01": "pass",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "case_qa": {
+        "P04": {
+          "CASE-C005-001": "pass",
+          "CASE-C005-002": "pass"
+        },
+        "P05": {
+          "CASE-C005-001": "pass",
+          "CASE-C005-002": "pass"
+        },
+        "P06": {
+          "CASE-C005-001": "pass",
+          "CASE-C005-002": "pass"
+        }
+      }
+    }
+  ]
+}

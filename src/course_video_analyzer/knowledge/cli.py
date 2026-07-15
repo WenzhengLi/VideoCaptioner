@@ -177,6 +177,11 @@ def build_parser() -> argparse.ArgumentParser:
     tidy_index = subparsers.add_parser("index-tidy", help="index all P06 entries into SQLite FTS")
     tidy_index.add_argument("--data-root", type=Path, default=Path("data"))
     tidy_index.add_argument("--database", type=Path, default=Path("data/tidy/knowledge.db"))
+    tidy_index.add_argument(
+        "--output-version",
+        default="knowledge-v002",
+        help="P06 output directory suffix, e.g. knowledge-v002 or knowledge-v003",
+    )
     tidy_search = subparsers.add_parser("search-tidy", help="search the local knowledge index")
     tidy_search.add_argument("query")
     tidy_search.add_argument("--database", type=Path, default=Path("data/tidy/knowledge.db"))
@@ -192,6 +197,12 @@ def build_parser() -> argparse.ArgumentParser:
     tidy_answer.add_argument("--database", type=Path, default=Path("data/tidy/knowledge.db"))
     tidy_answer.add_argument("--workspace", type=Path, default=Path.cwd())
     tidy_answer.add_argument("--limit", type=int, default=8)
+    tidy_answer.add_argument(
+        "--prompt-root",
+        type=Path,
+        default=Path("prompts/knowledge-v002"),
+        help="Prompt directory used by Cursor answer stage",
+    )
     return parser
 
 
@@ -380,7 +391,11 @@ def main() -> int:
         outputs = export_tidy_markdown(args.p06, args.output_dir)
         print(f"Tidy Markdown 已输出: {len(outputs)}")
     elif args.command == "index-tidy":
-        result = index_tidy_entries(args.data_root, args.database)
+        result = index_tidy_entries(
+            args.data_root,
+            args.database,
+            output_version=args.output_version,
+        )
         print(json.dumps(result, ensure_ascii=False))
     elif args.command == "search-tidy":
         result = search_tidy_entries(args.database, args.query, limit=args.limit)
@@ -397,6 +412,7 @@ def main() -> int:
             args.database,
             args.output,
             args.workspace,
+            prompt_root=args.prompt_root,
             limit=args.limit,
         )
         print(f"知识库多方案回答完成: {output}; QA={qa}")

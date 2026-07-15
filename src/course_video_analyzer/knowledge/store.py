@@ -50,13 +50,18 @@ def _entry_body(entry: dict[str, Any]) -> str:
     return "\n".join(value for value in values if value)
 
 
-def index_tidy_entries(data_root: Path, database_path: Path) -> dict[str, int]:
+def index_tidy_entries(
+    data_root: Path,
+    database_path: Path,
+    *,
+    output_version: str = "knowledge-v002",
+) -> dict[str, int]:
     data_root = Path(data_root).resolve()
     database_path = Path(database_path).resolve()
     database_path.parent.mkdir(parents=True, exist_ok=True)
     sources = sorted(
         path
-        for path in data_root.glob("courses/*/05_tidy/P06-knowledge-v002/*.json")
+        for path in data_root.glob(f"courses/*/05_tidy/P06-{output_version}/*.json")
         if not path.name.endswith(".cursor-task.json") and ".invalid-" not in path.name
     )
     indexed = 0
