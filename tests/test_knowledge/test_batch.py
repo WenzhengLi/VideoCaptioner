@@ -1,7 +1,12 @@
 import json
 from pathlib import Path
 
-from course_video_analyzer.knowledge.batch import _load_source_paths
+from course_video_analyzer.knowledge.batch import _load_source_paths, mark_batch_item
+from course_video_analyzer.knowledge.models import (
+    BatchItem,
+    BatchManifest,
+    CourseStatus,
+)
 
 
 def test_load_source_paths_from_jsonl(tmp_path: Path) -> None:
@@ -18,3 +23,27 @@ def test_load_source_paths_from_jsonl(tmp_path: Path) -> None:
     result = _load_source_paths(tmp_path)
 
     assert result == {"C001": source}
+
+
+def test_mark_batch_item_reconciles_external_run(tmp_path: Path) -> None:
+    batch_dir = tmp_path / "batches/BATCH-TEST"
+    batch_dir.mkdir(parents=True)
+    manifest = BatchManifest(
+        batch_id="BATCH-TEST",
+        created_at="2026-01-01T00:00:00+00:00",
+        prompt_version="v1",
+        items=[BatchItem(course_id="C001", source_id="C001")],
+    )
+    (batch_dir / "manifest.json").write_text(manifest.model_dump_json(indent=2), encoding="utf-8")
+
+    updated = mark_batch_item(
+        "BATCH-TEST",
+        "C001",
+        CourseStatus.SUCCEEDED,
+        tmp_path,
+        run_id="RUN-001",
+    )
+
+    assert updated.items[0].status is CourseStatus.SUCCEEDED
+    assert updated.items[0].last_run_id == "RUN-001"
+    assert (batch_dir / "status.jsonl").is_file()

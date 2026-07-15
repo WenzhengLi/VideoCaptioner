@@ -34,6 +34,39 @@ def _load_source_paths(data_root: Path) -> dict[str, Path]:
     return result
 
 
+def mark_batch_item(
+    batch_id: str,
+    course_id: str,
+    status: CourseStatus,
+    data_root: Path,
+    *,
+    run_id: str | None = None,
+    error: str | None = None,
+) -> BatchManifest:
+    """Reconcile manually imported or separately executed courses into a batch."""
+    manifest_path = Path(data_root).resolve() / "batches" / batch_id / "manifest.json"
+    manifest = BatchManifest.model_validate_json(manifest_path.read_text(encoding="utf-8"))
+    item = next((entry for entry in manifest.items if entry.course_id == course_id), None)
+    if item is None:
+        raise KeyError(f"批次中不存在课程: {course_id}")
+    item.status = status
+    item.last_run_id = run_id or item.last_run_id
+    item.error = error
+    atomic_write_text(manifest_path, manifest.model_dump_json(indent=2))
+    _append_jsonl(
+        manifest_path.parent / "status.jsonl",
+        {
+            "at": _utc_now(),
+            "course_id": course_id,
+            "run_id": item.last_run_id,
+            "event": "reconciled",
+            "status": status.value,
+            "error": error,
+        },
+    )
+    return manifest
+
+
 def run_batch(
     batch_id: str,
     data_root: Path,

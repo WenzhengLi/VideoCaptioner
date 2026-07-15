@@ -6,7 +6,7 @@ import argparse
 from pathlib import Path
 
 from course_video_analyzer.knowledge.catalog import initialize_knowledge_workspace
-from course_video_analyzer.knowledge.batch import run_batch
+from course_video_analyzer.knowledge.batch import mark_batch_item, run_batch
 from course_video_analyzer.knowledge.cursor_runner import CursorStageConfig, run_cursor_stage
 from course_video_analyzer.knowledge.runs import archive_successful_job, write_run_qa
 
@@ -53,6 +53,13 @@ def build_parser() -> argparse.ArgumentParser:
     )
     cursor.add_argument("--model", default="auto")
     cursor.add_argument("--timeout-seconds", type=int, default=3600)
+    mark = subparsers.add_parser("mark-batch", help="reconcile one course into a batch")
+    mark.add_argument("batch_id")
+    mark.add_argument("course_id")
+    mark.add_argument("status", choices=["pending", "running", "succeeded", "failed", "needs_review"])
+    mark.add_argument("--run-id")
+    mark.add_argument("--error")
+    mark.add_argument("--data-root", type=Path, default=Path("data"))
     return parser
 
 
@@ -114,6 +121,18 @@ def main() -> int:
             ),
         )
         print(f"Cursor 阶段完成: {result}")
+    elif args.command == "mark-batch":
+        from course_video_analyzer.knowledge.models import CourseStatus
+
+        mark_batch_item(
+            args.batch_id,
+            args.course_id,
+            CourseStatus(args.status),
+            args.data_root,
+            run_id=args.run_id,
+            error=args.error,
+        )
+        print(f"批次状态已更新: {args.course_id} -> {args.status}")
     return 0
 
 
