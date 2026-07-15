@@ -52,7 +52,11 @@ def index_tidy_entries(data_root: Path, database_path: Path) -> dict[str, int]:
     data_root = Path(data_root).resolve()
     database_path = Path(database_path).resolve()
     database_path.parent.mkdir(parents=True, exist_ok=True)
-    sources = sorted(data_root.glob("courses/*/05_tidy/P06-knowledge-v002/*.json"))
+    sources = sorted(
+        path
+        for path in data_root.glob("courses/*/05_tidy/P06-knowledge-v002/*.json")
+        if not path.name.endswith(".cursor-task.json") and ".invalid-" not in path.name
+    )
     indexed = 0
     with sqlite3.connect(database_path) as connection:
         connection.executescript(SCHEMA)
