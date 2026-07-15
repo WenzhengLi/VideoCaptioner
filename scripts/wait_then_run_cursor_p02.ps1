@@ -1,4 +1,4 @@
-param(
+﻿param(
     [Parameter(Mandatory = $true)][string]$DataRoot,
     [Parameter(Mandatory = $true)][string]$PythonExe,
     [string]$Workspace = "D:\Dev\VideoCaptioner",
@@ -7,15 +7,18 @@ param(
     [int]$StartCourse = 1,
     [int]$EndCourse = 5,
     [int]$PollSeconds = 30,
-    [int]$MaxAttempts = 2
+    [int]$MaxAttempts = 2,
+    [string]$OutputVersion = "knowledge-v002",
+    [string]$PromptRoot = "prompts\knowledge-v002",
+    [string]$CompactPromptRoot = "prompts\knowledge-v002-compact"
 )
 
 $ErrorActionPreference = "Stop"
 $batchDir = Join-Path $DataRoot "batches\$BatchId"
 $waveSuffix = if ([string]::IsNullOrWhiteSpace($WaveId)) { "" } else { "-$WaveId" }
-$p01Complete = Join-Path $batchDir "cursor-p01-knowledge-v002-p01$waveSuffix-complete.json"
-$statusPath = Join-Path $batchDir "cursor-p02-knowledge-v002$waveSuffix-status.jsonl"
-$failurePath = Join-Path $batchDir "cursor-p02-knowledge-v002$waveSuffix-failures.jsonl"
+$p01Complete = Join-Path $batchDir "cursor-p01-${OutputVersion}-p01$waveSuffix-complete.json"
+$statusPath = Join-Path $batchDir "cursor-p02-${OutputVersion}$waveSuffix-status.jsonl"
+$failurePath = Join-Path $batchDir "cursor-p02-${OutputVersion}$waveSuffix-failures.jsonl"
 
 function Add-JsonLine {
     param([string]$Path, [hashtable]$Value)
@@ -34,10 +37,10 @@ $failedCourses = @()
 for ($ordinal = $StartCourse; $ordinal -le $EndCourse; $ordinal++) {
     $courseId = "C{0:D3}" -f $ordinal
     $courseSucceeded = $false
-    $p01 = Join-Path $DataRoot "courses\$courseId\02_normalized\P01-knowledge-v002.json"
+    $p01 = Join-Path $DataRoot "courses\$courseId\02_normalized\P01-${OutputVersion}.json"
     $p01QaCandidates = @(
-        (Join-Path $DataRoot "courses\$courseId\qa\P01-knowledge-v002-qa.json"),
-        (Join-Path $DataRoot "courses\$courseId\qa\P01-knowledge-v002.json")
+        (Join-Path $DataRoot "courses\$courseId\qa\P01-${OutputVersion}-qa.json"),
+        (Join-Path $DataRoot "courses\$courseId\qa\P01-${OutputVersion}.json")
     )
     $p01Qa = $p01QaCandidates | Where-Object { Test-Path -LiteralPath $_ } |
         Select-Object -First 1
@@ -58,11 +61,11 @@ for ($ordinal = $StartCourse; $ordinal -le $EndCourse; $ordinal++) {
         continue
     }
 
-    $baseline = Join-Path $DataRoot "courses\$courseId\02_normalized\P02-baseline-knowledge-v002.json"
+    $baseline = Join-Path $DataRoot "courses\$courseId\02_normalized\P02-baseline-${OutputVersion}.json"
     if (-not (Test-Path -LiteralPath $baseline)) {
         & $PythonExe -m course_video_analyzer.knowledge.cli classify-p02 `
             $courseId $p01 $baseline `
-            --prompt-version knowledge-v002-p02-baseline
+            --prompt-version "${OutputVersion}-p02-baseline"
         if ($LASTEXITCODE -ne 0) {
             Add-JsonLine $failurePath @{
                 at = [DateTime]::UtcNow.ToString("o"); course_id = $courseId
@@ -73,7 +76,7 @@ for ($ordinal = $StartCourse; $ordinal -le $EndCourse; $ordinal++) {
         }
     }
 
-    $output = Join-Path $DataRoot "courses\$courseId\02_normalized\P02-knowledge-v002.json"
+    $output = Join-Path $DataRoot "courses\$courseId\02_normalized\P02-${OutputVersion}.json"
     if (Test-Path -LiteralPath $output) {
         try {
             Get-Content -Raw -Encoding utf8 -LiteralPath $output |
@@ -86,7 +89,7 @@ for ($ordinal = $StartCourse; $ordinal -le $EndCourse; $ordinal++) {
         }
     }
 
-    $reviewPack = Join-Path $DataRoot "courses\$courseId\02_normalized\P02-review-pack-knowledge-v002.json"
+    $reviewPack = Join-Path $DataRoot "courses\$courseId\02_normalized\P02-review-pack-${OutputVersion}.json"
     if (-not (Test-Path -LiteralPath $reviewPack)) {
         & $PythonExe -m course_video_analyzer.knowledge.cli build-p02-review `
             $courseId $baseline $reviewPack
@@ -99,7 +102,7 @@ for ($ordinal = $StartCourse; $ordinal -le $EndCourse; $ordinal++) {
             continue
         }
     }
-    $reviewDecision = Join-Path $DataRoot "courses\$courseId\02_normalized\P02-review-decisions-knowledge-v002.json"
+    $reviewDecision = Join-Path $DataRoot "courses\$courseId\02_normalized\P02-review-decisions-${OutputVersion}.json"
 
     for ($attempt = 1; $attempt -le $MaxAttempts; $attempt++) {
         Add-JsonLine $statusPath @{
@@ -113,7 +116,7 @@ for ($ordinal = $StartCourse; $ordinal -le $EndCourse; $ordinal++) {
         & $PythonExe -m course_video_analyzer.knowledge.cli cursor-stage `
             $courseId P02 $reviewPack $reviewDecision `
             --workspace $Workspace --model auto `
-            --prompt-root prompts\knowledge-v002-compact --timeout-seconds 1200 `
+            --prompt-root $CompactPromptRoot --timeout-seconds 1200 `
             --finish-on-stable-output --output-stability-seconds 30
         if ($LASTEXITCODE -ne 0) {
             Add-JsonLine $failurePath @{
@@ -131,10 +134,10 @@ for ($ordinal = $StartCourse; $ordinal -le $EndCourse; $ordinal++) {
             }
             continue
         }
-        $qaOutput = Join-Path $DataRoot "courses\$courseId\qa\P02-knowledge-v002-qa.json"
+        $qaOutput = Join-Path $DataRoot "courses\$courseId\qa\P02-${OutputVersion}-qa.json"
         & $PythonExe -m course_video_analyzer.knowledge.cli qa-p02 `
             $courseId $p01 $output $qaOutput `
-            --prompt-version knowledge-v002-p02
+            --prompt-version "${OutputVersion}-p02"
         if ($LASTEXITCODE -eq 0 -and (
             Get-Content -Raw -Encoding utf8 -LiteralPath $qaOutput |
                 ConvertFrom-Json
@@ -153,11 +156,11 @@ for ($ordinal = $StartCourse; $ordinal -le $EndCourse; $ordinal++) {
 @{
     schema_version = "1.0"
     stage = "P02-review"
-    prompt_version = "knowledge-v002-p02"
+    prompt_version = "${OutputVersion}-p02"
     wave_id = $WaveId
     status = if ($failedCourses.Count -eq 0) { "complete" } else { "needs_review" }
     failed_courses = @($failedCourses | Select-Object -Unique)
     completed_at = [DateTime]::UtcNow.ToString("o")
 } | ConvertTo-Json -Depth 5 | Set-Content -Encoding utf8 -LiteralPath (
-    Join-Path $batchDir "cursor-p02-knowledge-v002$waveSuffix-complete.json"
+    Join-Path $batchDir "cursor-p02-${OutputVersion}$waveSuffix-complete.json"
 )

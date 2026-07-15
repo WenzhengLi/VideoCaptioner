@@ -4,13 +4,15 @@ param(
     [string]$Workspace = "D:\Dev\VideoCaptioner",
     [string]$BatchId = "BATCH-20260715-001",
     [string]$WaveId = "",
-    [int]$PollSeconds = 30
+    [int]$PollSeconds = 30,
+    [string]$OutputVersion = "knowledge-v002",
+    [string]$PromptRoot = "prompts\knowledge-v002"
 )
 
 $ErrorActionPreference = "Stop"
 $batchDir = Join-Path $DataRoot "batches\$BatchId"
 $waveSuffix = if ([string]::IsNullOrWhiteSpace($WaveId)) { "" } else { "-$WaveId" }
-$p06Complete = Join-Path $batchDir "cursor-p06-knowledge-v002$waveSuffix-complete.json"
+$p06Complete = Join-Path $batchDir "cursor-p06-${OutputVersion}$waveSuffix-complete.json"
 while (-not (Test-Path $p06Complete)) { Start-Sleep -Seconds $PollSeconds }
 $marker = Get-Content -Raw -Encoding utf8 $p06Complete | ConvertFrom-Json
 if ($marker.status -ne "complete") { throw "P06 batch marker is not complete" }
@@ -19,7 +21,7 @@ $tidyDir = Join-Path $DataRoot "tidy"
 New-Item -ItemType Directory -Force -Path $tidyDir | Out-Null
 $database = Join-Path $tidyDir "knowledge.db"
 & $PythonExe -m course_video_analyzer.knowledge.cli index-tidy `
-    --data-root $DataRoot --database $database
+    --data-root $DataRoot --database $database --output-version $OutputVersion
 if ($LASTEXITCODE -ne 0) { throw "Tidy index failed" }
 
 $answer = Join-Path $tidyDir "smoke-answer.json"
@@ -28,11 +30,11 @@ if (Test-Path $answer) {
     Move-Item $answer "$answer.previous-$stamp"
 }
 $query = Get-Content -Raw -Encoding utf8 (
-    Join-Path $Workspace "prompts\knowledge-v002\smoke-query.txt"
+    Join-Path $Workspace (Join-Path $PromptRoot "smoke-query.txt")
 )
 & $PythonExe -m course_video_analyzer.knowledge.cli answer-tidy `
     $query `
-    $answer --database $database --workspace $Workspace --limit 8
+    $answer --database $database --workspace $Workspace --limit 8 --prompt-root $PromptRoot
 if ($LASTEXITCODE -ne 0) { throw "Knowledge answer smoke test failed" }
 
 Push-Location $Workspace

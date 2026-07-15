@@ -1,4 +1,4 @@
-param(
+﻿param(
     [Parameter(Mandatory = $true)][string]$DataRoot,
     [Parameter(Mandatory = $true)][string]$PythonExe,
     [string]$Workspace = "D:\Dev\VideoCaptioner",
@@ -8,7 +8,9 @@ param(
     [int]$StartCourse = 3,
     [int]$EndCourse = 5,
     [int]$PollSeconds = 30,
-    [int]$MaxAttempts = 2
+    [int]$MaxAttempts = 2,
+    [string]$OutputVersion = "knowledge-v002",
+    [string]$PromptRoot = "prompts\knowledge-v002"
 )
 
 $ErrorActionPreference = "Stop"
@@ -43,11 +45,11 @@ for ($ordinal = $StartCourse; $ordinal -le $EndCourse; $ordinal++) {
         continue
     }
 
-    $baseline = Join-Path $DataRoot "courses\$courseId\02_normalized\P01-baseline-knowledge-v002.json"
+    $baseline = Join-Path $DataRoot "courses\$courseId\02_normalized\P01-baseline-${OutputVersion}.json"
     if (-not (Test-Path -LiteralPath $baseline)) {
         & $PythonExe -m course_video_analyzer.knowledge.cli normalize-p01 `
             $courseId $transcript $baseline `
-            --prompt-version knowledge-v002-p01-baseline
+            --prompt-version "${OutputVersion}-p01-baseline"
         if ($LASTEXITCODE -ne 0) {
             Add-JsonLine $failurePath @{
                 at = [DateTime]::UtcNow.ToString("o"); course_id = $courseId
@@ -58,7 +60,7 @@ for ($ordinal = $StartCourse; $ordinal -le $EndCourse; $ordinal++) {
         }
     }
 
-    $output = Join-Path $DataRoot "courses\$courseId\02_normalized\P01-knowledge-v002.json"
+    $output = Join-Path $DataRoot "courses\$courseId\02_normalized\P01-${OutputVersion}.json"
     if (Test-Path -LiteralPath $output) {
         try {
             Get-Content -Raw -Encoding utf8 -LiteralPath $output |
@@ -79,7 +81,7 @@ for ($ordinal = $StartCourse; $ordinal -le $EndCourse; $ordinal++) {
         & $PythonExe -m course_video_analyzer.knowledge.cli cursor-stage `
             $courseId P01 $baseline $output `
             --workspace $Workspace --model auto `
-            --prompt-root prompts\knowledge-v002 --timeout-seconds 3600
+            --prompt-root $PromptRoot --timeout-seconds 3600
         if ($LASTEXITCODE -ne 0) {
             Add-JsonLine $failurePath @{
                 at = [DateTime]::UtcNow.ToString("o"); course_id = $courseId
@@ -87,10 +89,10 @@ for ($ordinal = $StartCourse; $ordinal -le $EndCourse; $ordinal++) {
             }
             continue
         }
-        $qaOutput = Join-Path $DataRoot "courses\$courseId\qa\P01-knowledge-v002-qa.json"
+        $qaOutput = Join-Path $DataRoot "courses\$courseId\qa\P01-${OutputVersion}-qa.json"
         & $PythonExe -m course_video_analyzer.knowledge.cli qa-p01 `
             $courseId $transcript $output $qaOutput `
-            --prompt-version knowledge-v002-p01
+            --prompt-version "${OutputVersion}-p01"
         if ($LASTEXITCODE -eq 0 -and (
             Get-Content -Raw -Encoding utf8 -LiteralPath $qaOutput |
                 ConvertFrom-Json
@@ -111,11 +113,11 @@ for ($ordinal = $StartCourse; $ordinal -le $EndCourse; $ordinal++) {
 @{
     schema_version = "1.0"
     stage = "P01-review"
-    prompt_version = "knowledge-v002-p01"
+    prompt_version = "${OutputVersion}-p01"
     wave_id = $WaveId
     status = if ($failedCourses.Count -eq 0) { "complete" } else { "failed" }
     failed_courses = $failedCourses
     completed_at = [DateTime]::UtcNow.ToString("o")
 } | ConvertTo-Json | Set-Content -Encoding utf8 -LiteralPath (
-    Join-Path $batchDir "cursor-p01-knowledge-v002-p01$waveSuffix-complete.json"
+    Join-Path $batchDir "cursor-p01-${OutputVersion}-p01$waveSuffix-complete.json"
 )
