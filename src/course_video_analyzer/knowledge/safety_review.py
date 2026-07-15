@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 from typing import Any
 
@@ -17,6 +18,10 @@ REVIEW_TARGET_FIELDS = {
 }
 ALLOWED_REVIEW_STATUS = {"supported", "partially_supported", "unsupported", "contradicted"}
 ALLOWED_CASE_REVIEW_STATUS = {"pass", "needs_revision", "blocked"}
+SAFETY_RE = re.compile(
+    r"(拒绝|不舒服|不愿意|不要|别|停|报警|警察|威胁|强迫|施压|"
+    r"害怕|恐惧|隐私|身份证|未成年|年龄|喝醉|酒后|意识不清|睡着|拉黑|删除)"
+)
 
 
 def build_p05_input(
@@ -28,13 +33,39 @@ def build_p05_input(
 ) -> Path:
     case_input = json.loads(Path(case_input_path).read_text(encoding="utf-8"))
     p04 = json.loads(Path(p04_path).read_text(encoding="utf-8"))
+    segments = case_input.get("segments", [])
+    referenced_ids: set[str] = set()
+    for field, evidence_field in (
+        ("participants", "evidence_segment_ids"),
+        ("timeline", "evidence_segment_ids"),
+        ("observations", "evidence_segment_ids"),
+        ("instructor_claims", "evidence_segment_ids"),
+        ("alternative_explanations", "basis_evidence_segment_ids"),
+        ("outcomes", "evidence_segment_ids"),
+        ("quoted_expressions", "evidence_segment_ids"),
+    ):
+        for item in p04.get(field, []):
+            referenced_ids.update(item.get(evidence_field, []))
+    selected_indexes: set[int] = set()
+    for index, segment in enumerate(segments):
+        if segment.get("segment_id") in referenced_ids or SAFETY_RE.search(
+            str(segment.get("text", ""))
+        ):
+            selected_indexes.update(range(max(0, index - 2), min(len(segments), index + 3)))
+    selected_segments = [segments[index] for index in sorted(selected_indexes)]
     payload = {
         "schema_version": "1.0",
         "prompt_version": "knowledge-v002-p05-input",
         "source_ids": [course_id],
         "course_id": course_id,
         "case_id": case_id,
-        "case_segments": case_input.get("segments", []),
+        "case_segments": selected_segments,
+        "selection_metrics": {
+            "original_segment_count": len(segments),
+            "selected_segment_count": len(selected_segments),
+            "referenced_segment_count": len(referenced_ids),
+            "method": "p04_evidence_plus_safety_candidates_with_context",
+        },
         "extraction": p04,
     }
     atomic_write_text(output_path, json.dumps(payload, ensure_ascii=False, indent=2))
