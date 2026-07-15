@@ -56,6 +56,19 @@ course-knowledge run-batch BATCH-20260715-001 `
 调度器为每课启动独立 Python 进程，默认单课超时 4 小时、最多尝试 2 次。失败写入
 `failures.jsonl` 后继续下一课，重复执行会跳过已成功归档的课程。
 
+## Cursor 独立清洗
+
+```powershell
+course-knowledge cursor-stage C001 P01 `
+  data/courses/C001/01_raw/RUN-20260715-BASELINE/transcript.txt `
+  data/courses/C001/02_normalized/P01-knowledge-v001.json
+```
+
+每次命令都会创建全新的 Cursor Agent 上下文，不使用 `--resume`。调用固定使用
+`--force --sandbox disabled --approve-mcps --trust --print`，避免批处理中途等待授权；默认模型为
+`auto`。当前账户的显式高级模型额度已用完，硬编码 `composer-2.5`、Kimi、GLM 等模型会立即
+失败；`auto` 已验证仍可运行。超时后程序会终止完整 Cursor 进程树，避免残留阻塞任务。
+
 ## Prompt 阶段
 
 Prompt 位于 `prompts/knowledge-v001/`。每个 Cursor 命令只处理一课的一个阶段，并使用全新
