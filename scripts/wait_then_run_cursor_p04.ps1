@@ -113,7 +113,8 @@ for ($ordinal = $StartCourse; $ordinal -le $EndCourse; $ordinal++) {
                 continue
             }
             & $PythonExe -m course_video_analyzer.knowledge.cli qa-p04 `
-                $courseId $caseId $caseInput $output $qaOutput
+                $courseId $caseId $caseInput $output $qaOutput `
+                --prompt-version "${OutputVersion}-p04"
             if ($LASTEXITCODE -eq 0 -and (
                 Get-Content -Raw -Encoding utf8 $qaOutput | ConvertFrom-Json
             ).status -eq "pass") {
