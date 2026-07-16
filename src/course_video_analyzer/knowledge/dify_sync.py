@@ -7,6 +7,7 @@ offline regression index and must never be described as Dify ingestion.
 from __future__ import annotations
 
 import json
+import hashlib
 import os
 import time
 import urllib.error
@@ -116,6 +117,34 @@ def create_document_by_text(
     return _request(cfg, "POST", f"/datasets/{dataset_id}/document/create-by-text", payload=payload)
 
 
+def update_document_by_text(
+    cfg: DifyConfig,
+    *,
+    dataset_id: str,
+    document_id: str,
+    name: str,
+    text: str,
+    metadata: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    payload: dict[str, Any] = {
+        "name": name,
+        "text": text,
+        "process_rule": {"mode": "automatic"},
+    }
+    if metadata:
+        payload["doc_metadata"] = [
+            {"name": key, "value": value}
+            for key, value in metadata.items()
+            if value is not None and value != ""
+        ]
+    return _request(
+        cfg,
+        "POST",
+        f"/datasets/{dataset_id}/documents/{document_id}/update-by-text",
+        payload=payload,
+    )
+
+
 def get_indexing_status(cfg: DifyConfig, *, dataset_id: str, batch: str) -> dict[str, Any]:
     return _request(cfg, "GET", f"/datasets/{dataset_id}/documents/{batch}/indexing-status")
 
@@ -140,12 +169,22 @@ def _metadata_from_markdown(path: Path, text: str) -> dict[str, Any]:
             continue
         key, _, value = line.partition(":")
         key = key.strip().lstrip("#- ").lower()
-        value = value.strip()
+        value = value.strip().strip('"\'')
         if key in {
+            "knowledge_id",
             "course_id",
             "case_id",
+            "content_type",
+            "rights_status",
+            "fidelity_status",
+            "publication_class",
+            "generalization_level",
+            "pipeline_version",
             "type",
             "prompt_version",
+            "source_start_ms",
+            "source_end_ms",
+            "input_hash",
             "confidence",
             "source_ids",
             "evidence_spans",
@@ -175,35 +214,57 @@ def sync_markdown_dir(
     if limit is not None:
         files = files[:limit]
     created = 0
+    updated = 0
     skipped = 0
     failed: list[dict[str, str]] = []
     for path in files:
-        knowledge_id = path.stem
-        existing = docs.get(knowledge_id)
-        if existing and existing.get("document_id"):
-            skipped += 1
-            continue
         text = path.read_text(encoding="utf-8")
         meta = _metadata_from_markdown(path, text)
+        knowledge_id = str(meta.get("knowledge_id") or path.stem)
+        digest = hashlib.sha256(text.encode("utf-8")).hexdigest()
+        existing = docs.get(knowledge_id)
+        if (
+            existing
+            and existing.get("document_id")
+            and existing.get("content_sha256") == digest
+        ):
+            skipped += 1
+            continue
         try:
-            result = create_document_by_text(
-                cfg,
-                dataset_id=dataset_id,
-                name=knowledge_id,
-                text=text,
-                metadata=meta,
-            )
+            if existing and existing.get("document_id"):
+                result = update_document_by_text(
+                    cfg,
+                    dataset_id=dataset_id,
+                    document_id=str(existing["document_id"]),
+                    name=knowledge_id,
+                    text=text,
+                    metadata=meta,
+                )
+                updated += 1
+            else:
+                result = create_document_by_text(
+                    cfg,
+                    dataset_id=dataset_id,
+                    name=knowledge_id,
+                    text=text,
+                    metadata=meta,
+                )
+                created += 1
             document = result.get("document") or result
-            document_id = str(document.get("id") or "")
+            document_id = str(
+                document.get("id")
+                or (existing or {}).get("document_id")
+                or ""
+            )
             batch = str(result.get("batch") or document.get("batch") or "")
             docs[knowledge_id] = {
                 "document_id": document_id,
                 "batch": batch,
                 "source_path": str(path),
+                "content_sha256": digest,
                 "metadata": meta,
                 "synced_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
             }
-            created += 1
             if poll_indexing and batch:
                 _wait_indexing(cfg, dataset_id=dataset_id, batch=batch, timeout=poll_timeout, interval=poll_seconds)
         except DifyApiError as exc:
@@ -214,6 +275,7 @@ def sync_markdown_dir(
     return {
         "dataset_id": dataset_id,
         "created": created,
+        "updated": updated,
         "skipped": skipped,
         "failed": failed,
         "map_path": str(map_path),

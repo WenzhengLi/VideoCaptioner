@@ -52,7 +52,12 @@ def test_sync_markdown_is_idempotent(tmp_path: Path, monkeypatch: pytest.MonkeyP
     cfg = DifyConfig.from_env(require_dataset=True)
     md_dir = tmp_path / "markdown"
     md_dir.mkdir()
-    (md_dir / "KNOW-C001-CASE001-001.md").write_text("# title\ncourse_id: C001\n", encoding="utf-8")
+    document_path = md_dir / "file-name-does-not-control-id.md"
+    document_path.write_text(
+        "---\nknowledge_id: KNOW-C001-CASE001-001\ncourse_id: C001\n"
+        "fidelity_status: passed\n---\n# title\n",
+        encoding="utf-8",
+    )
     map_path = tmp_path / "map.json"
 
     class _Resp:
@@ -68,8 +73,16 @@ def test_sync_markdown_is_idempotent(tmp_path: Path, monkeypatch: pytest.MonkeyP
     with patch("urllib.request.urlopen", return_value=_Resp()):
         first = sync_markdown_dir(cfg, md_dir, map_path)
         second = sync_markdown_dir(cfg, md_dir, map_path)
+        document_path.write_text(
+            document_path.read_text(encoding="utf-8") + "\n更新内容\n",
+            encoding="utf-8",
+        )
+        third = sync_markdown_dir(cfg, md_dir, map_path)
     assert first["created"] == 1
+    assert first["updated"] == 0
     assert second["created"] == 0
     assert second["skipped"] == 1
+    assert third["updated"] == 1
     mapping = json.loads(map_path.read_text(encoding="utf-8"))
     assert mapping["documents"]["KNOW-C001-CASE001-001"]["document_id"] == "doc-1"
+    assert len(mapping["documents"]["KNOW-C001-CASE001-001"]["content_sha256"]) == 64

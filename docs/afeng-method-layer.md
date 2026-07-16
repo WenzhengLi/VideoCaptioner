@@ -234,3 +234,7 @@ python scripts/build_afeng_dify_bundle.py `
 
 当前三课离线包包含 5 个文档，自动排除 C006/CASE-C006-001 人工复核案例。该步骤不代表 Dify
 已经部署或入库；真实同步仍需 Dataset、索引状态轮询和检索验收。
+
+通用 Dify Markdown 同步已使用内容 SHA-256 做幂等判断：首次创建、内容相同跳过、内容变化调用
+`update-by-text`。本地 document map 保存 knowledge ID、Dify document ID、内容哈希和 metadata。
+阿峰 metadata 从 frontmatter 读取 fidelity、发布分类、泛化等级、课程/案例和源时间范围。
