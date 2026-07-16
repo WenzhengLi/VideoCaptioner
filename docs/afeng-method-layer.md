@@ -210,3 +210,27 @@ evidence 100% 覆盖的同时，可明显降低外发上下文。
 
 下一扩展门槛是 Cursor 完成并冻结 C001–C020 P04 evidence baseline。冻结前不批量覆盖三课之外
 的正式方法产物；已完成的三课试验作为 `mimo-method-v002` 固定回归集。
+
+## Dify 发布边界
+
+阿峰方法不能直接对整个运行目录执行通配上传。先生成离线发布包：
+
+```powershell
+python scripts/build_afeng_dify_bundle.py `
+  data/afeng/model-runs/C003-C006-C010-baseline-v001/c003-v002/model-run-summary.json `
+  data/afeng/model-runs/C003-C006-C010-baseline-v001/c006-v002/model-run-summary.json `
+  data/afeng/model-runs/C003-C006-C010-baseline-v001/c010-v002/model-run-summary.json `
+  --output-dir data/dify/afeng-release-v002.1/documents `
+  --manifest data/dify/afeng-release-v002.1/manifest.json
+```
+
+构建器只收集：
+
+- run `status=published`；
+- approved method `draft_fidelity_status=reviewed`；
+- fidelity audit `pass` 且 `release_allowed=true`；
+- publication `publishable=true` 且分类不是 `reject`；
+- 身份字段完全一致的 Markdown。
+
+当前三课离线包包含 5 个文档，自动排除 C006/CASE-C006-001 人工复核案例。该步骤不代表 Dify
+已经部署或入库；真实同步仍需 Dataset、索引状态轮询和检索验收。
