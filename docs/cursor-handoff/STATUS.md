@@ -1,41 +1,45 @@
 ﻿# Cursor Flow 状态
 
-最后更新：2026-07-16 09:54 CST（UTC+8）  
-审计会话：独立读取 `docs/CURSOR-HANDOFF.md` 接管，**未重启任何任务**。
+最后更新：2026-07-16 10:05 CST（UTC+8）  
+审计来源：`docs/CURSOR-HANDOFF.md` 独立接管；**全程未重复启动** run-batch / watcher。
 
-## 平台纠错（重要）
+## 平台纠错
 
-- 目标知识库产品是 **Dify**（官方 Docker Compose + Dataset API），**不是 Tidy**。
-- 仓库内 `index-tidy` / `search-tidy` / `data/tidy/knowledge.db` 仅为本地 SQLite 回归索引（已加别名 `local-index-*`）。
-- 截至本审计：`docker ps` 仅有 `cpa`（Up）；**无 Dify 容器**；Dify 未安装、未入库。
-- 已新增：`deploy/dify/`（钉选官方 tag `1.15.0`）与 CLI `dify-create-dataset` / `dify-sync-markdown` / `dify-status`（OCR 高峰**未**执行 `compose up`）。
+- 目标产品：**Dify**（非 Tidy）。本地 SQLite 仅回归索引（`local-index-*` 别名）。
+- `docker ps`：仅 `cpa`；无 Dify 容器。已落地 `deploy/dify/`（官方 tag **1.15.0**）与 `dify-*` CLI，**未**在 OCR 高峰 `compose up`。
+- Git：`323c6d2` 等本地领先 origin 约 4 commit；GitHub 443 失败，提交已保留待重试 push。
 
-## 当前阶段
+## 阶段 A：C011–C015（进行中）
 
-- 阶段 A：**接管并完成 C011–C015**（监控既有进程）
-- WaveId（知识）：`C011-C015` / `knowledge-v002`
-- Git：本地领先 origin（含交接/STATUS/Dify 骨架）；GitHub `443` 连接失败，提交已保留，稍后重试 push
+### 视频
 
-## 进程审计（持续有效，禁止副本）
-
-| 角色 | PID | 说明 |
-| --- | ---: | --- |
-| run-batch | 36448 / 32544 / 20268 | `--start 11 --end 15` |
-| analysis_cli C013 | 16948 / 23000 | `C013-RUN-20260715-001-V001` |
-| P01–P06 + final watchers | 44300 等 7 个 | WaveId=`C011-C015` |
-
-## 视频进度（09:53）
-
-| 课 | manifest | 阶段 |
+| 课 | manifest | 备注 |
 | --- | --- | --- |
-| C011 | succeeded | 归档+raw QA pass；P01 pass |
-| C012 | succeeded | 归档+raw QA pass；P01 pass |
-| C013 | running | **board_ocr running**（产物持续更新） |
-| C014–C015 | pending | 等串行 |
+| C011 | succeeded | 归档+raw QA pass |
+| C012 | succeeded | 归档+raw QA pass |
+| C013 | succeeded | 归档+raw QA pass（10:04） |
+| C014 | running | **transcript running**；analysis_cli PID 3436/43836；同批 run-batch 自动启动 |
+| C015 | pending | — |
+
+### 知识 WaveId=`C011-C015` / v002
+
+| 课 | P01 | 备注 |
+| --- | --- | --- |
+| C011 | pass | 等整波 P01 complete |
+| C012 | pass | 同上 |
+| C013 | **cursor-stage 进行中** | baseline 已有 |
+| C014–C015 | 等待视频 | — |
+
+P02–P06 watcher 仍在，等待整波 P01 complete 标记。
+
+### 监控
+
+- 后台日志：`data/batches/BATCH-20260715-001/flow-c011-c015-monitor.log`
+- run-batch PID：36448 / 32544 / 20268（自 08:09，未重启）
 
 ## 下一动作
 
-1. 只监控至 C013 export/归档 → C014 → C015  
-2. 整波 P01 complete 后由既有 watcher 进 P02–P06  
-3. 资源窗口再 `deploy/dify/scripts/bootstrap.ps1` + `up.ps1`  
-4. 重试 `git push origin master`
+1. 监控 C014→C015 至归档；C013 P01 QA  
+2. 整波 P01 完成后由既有守护进入 P02–P06  
+3. 网络恢复后 `git push origin master`  
+4. 视频高峰过后再 bootstrap/up Dify
