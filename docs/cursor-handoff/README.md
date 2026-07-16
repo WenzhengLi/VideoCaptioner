@@ -18,7 +18,8 @@
 - `TASK-03-C011-C015.md`：完成第 11–15 课并迭代 Prompt。
 - `TASK-04-C016-C020.md`：完成第 16–20 课、冻结 Prompt。
 - `TASK-05-FULL-CORPUS-PDF.md`：处理全部唯一视频和 PDF。
-- `TASK-06-TIDY-AND-ANSWERING.md`：完成知识库存储、检索和多方案回答验收。
+- `TASK-06-TIDY-AND-ANSWERING.md`：安装并接入 Dify，完成知识库导入、检索和多方案回答验收。
+- `DIFY-CORRECTION.md`：重要纠错；说明 Dify 才是目标，SQLite 只可作为本地暂存/回归索引。
 - `TASK-07-FINAL-AUDIT.md`：最终逐项审计、清理、测试、提交和推送。
 
 固定工作区：`D:\Dev\VideoCaptioner`。
@@ -30,4 +31,3 @@ Cursor Agent 非交互调用固定参数：
 ```
 
 禁止使用 `--resume` 继承其他课程上下文。每课、每案例、每阶段必须使用独立上下文。
-
