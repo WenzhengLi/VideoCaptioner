@@ -114,7 +114,7 @@ def classify_p02_baseline(
                 cluster_counts[speaker] = cluster_counts.get(speaker, 0) + 1
     cluster_roles: dict[str, str] = {}
     if cluster_counts:
-        dominant_cluster = max(cluster_counts, key=cluster_counts.get)
+        dominant_cluster = max(cluster_counts, key=lambda speaker: cluster_counts[speaker])
         cluster_roles = {
             speaker: (
                 "instructor_explanation"

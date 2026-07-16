@@ -1,0 +1,87 @@
+{
+  "$defs": {
+    "PublicationClass": {
+      "enum": [
+        "verified_method",
+        "case_derived_method",
+        "course_claim",
+        "reported_outcome",
+        "partial_method",
+        "insufficient_evidence",
+        "reject"
+      ],
+      "title": "PublicationClass",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "pipeline_version": {
+      "default": "afeng-method-v001",
+      "title": "Pipeline Version",
+      "type": "string"
+    },
+    "prompt_version": {
+      "default": "mimo-method-v001",
+      "title": "Prompt Version",
+      "type": "string"
+    },
+    "knowledge_id": {
+      "title": "Knowledge Id",
+      "type": "string"
+    },
+    "course_id": {
+      "title": "Course Id",
+      "type": "string"
+    },
+    "case_id": {
+      "title": "Case Id",
+      "type": "string"
+    },
+    "publication_class": {
+      "$ref": "#/$defs/PublicationClass"
+    },
+    "generalization_level": {
+      "enum": [
+        "course_explicit",
+        "single_case",
+        "partial",
+        "none"
+      ],
+      "title": "Generalization Level",
+      "type": "string"
+    },
+    "classification_rationale": {
+      "title": "Classification Rationale",
+      "type": "string"
+    },
+    "evidence_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence Ids",
+      "type": "array"
+    },
+    "publishable": {
+      "title": "Publishable",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "knowledge_id",
+    "course_id",
+    "case_id",
+    "publication_class",
+    "generalization_level",
+    "classification_rationale",
+    "evidence_ids",
+    "publishable"
+  ],
+  "title": "PublicationRecord",
+  "type": "object"
+}

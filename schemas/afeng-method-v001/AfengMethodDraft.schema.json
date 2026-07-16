@@ -1,0 +1,341 @@
+{
+  "$defs": {
+    "CourseSignal": {
+      "additionalProperties": false,
+      "properties": {
+        "signal": {
+          "title": "Signal",
+          "type": "string"
+        },
+        "course_interpretation": {
+          "title": "Course Interpretation",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "signal",
+        "course_interpretation",
+        "evidence_ids"
+      ],
+      "title": "CourseSignal",
+      "type": "object"
+    },
+    "ExampleExpression": {
+      "additionalProperties": false,
+      "properties": {
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "source": {
+          "enum": [
+            "course_quote",
+            "direct_adaptation",
+            "course_combination"
+          ],
+          "title": "Source",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "text",
+        "source",
+        "evidence_ids"
+      ],
+      "title": "ExampleExpression",
+      "type": "object"
+    },
+    "MethodLogic": {
+      "additionalProperties": false,
+      "properties": {
+        "content": {
+          "title": "Content",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "evidence_level": {
+          "enum": [
+            "explicit",
+            "direct_summary",
+            "insufficient"
+          ],
+          "title": "Evidence Level",
+          "type": "string"
+        }
+      },
+      "required": [
+        "content",
+        "evidence_ids",
+        "evidence_level"
+      ],
+      "title": "MethodLogic",
+      "type": "object"
+    },
+    "MethodStep": {
+      "additionalProperties": false,
+      "properties": {
+        "order": {
+          "minimum": 1,
+          "title": "Order",
+          "type": "integer"
+        },
+        "action": {
+          "title": "Action",
+          "type": "string"
+        },
+        "purpose_according_to_course": {
+          "default": "",
+          "title": "Purpose According To Course",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "order",
+        "action",
+        "evidence_ids"
+      ],
+      "title": "MethodStep",
+      "type": "object"
+    },
+    "ReportedOutcome": {
+      "additionalProperties": false,
+      "properties": {
+        "content": {
+          "default": "",
+          "title": "Content",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "evidence_level": {
+          "default": "unknown",
+          "enum": [
+            "observed",
+            "instructor_claimed",
+            "unknown"
+          ],
+          "title": "Evidence Level",
+          "type": "string"
+        }
+      },
+      "title": "ReportedOutcome",
+      "type": "object"
+    },
+    "SourceTimeRange": {
+      "additionalProperties": false,
+      "properties": {
+        "start_ms": {
+          "minimum": 0,
+          "title": "Start Ms",
+          "type": "integer"
+        },
+        "end_ms": {
+          "minimum": 0,
+          "title": "End Ms",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "start_ms",
+        "end_ms"
+      ],
+      "title": "SourceTimeRange",
+      "type": "object"
+    },
+    "SupportedCondition": {
+      "additionalProperties": false,
+      "properties": {
+        "condition": {
+          "title": "Condition",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "condition",
+        "evidence_ids"
+      ],
+      "title": "SupportedCondition",
+      "type": "object"
+    },
+    "SupportedText": {
+      "additionalProperties": false,
+      "properties": {
+        "content": {
+          "title": "Content",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "content",
+        "evidence_ids"
+      ],
+      "title": "SupportedText",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "pipeline_version": {
+      "default": "afeng-method-v001",
+      "title": "Pipeline Version",
+      "type": "string"
+    },
+    "prompt_version": {
+      "default": "mimo-method-v001",
+      "title": "Prompt Version",
+      "type": "string"
+    },
+    "knowledge_id": {
+      "title": "Knowledge Id",
+      "type": "string"
+    },
+    "course_id": {
+      "title": "Course Id",
+      "type": "string"
+    },
+    "case_id": {
+      "title": "Case Id",
+      "type": "string"
+    },
+    "method_name": {
+      "title": "Method Name",
+      "type": "string"
+    },
+    "problem_addressed": {
+      "$ref": "#/$defs/SupportedText"
+    },
+    "course_perspective": {
+      "$ref": "#/$defs/SupportedText"
+    },
+    "applicable_conditions": {
+      "items": {
+        "$ref": "#/$defs/SupportedCondition"
+      },
+      "title": "Applicable Conditions",
+      "type": "array"
+    },
+    "not_applicable_conditions": {
+      "items": {
+        "$ref": "#/$defs/SupportedCondition"
+      },
+      "title": "Not Applicable Conditions",
+      "type": "array"
+    },
+    "core_logic": {
+      "$ref": "#/$defs/MethodLogic"
+    },
+    "steps": {
+      "items": {
+        "$ref": "#/$defs/MethodStep"
+      },
+      "title": "Steps",
+      "type": "array"
+    },
+    "signals_used_by_course": {
+      "items": {
+        "$ref": "#/$defs/CourseSignal"
+      },
+      "title": "Signals Used By Course",
+      "type": "array"
+    },
+    "example_expressions": {
+      "items": {
+        "$ref": "#/$defs/ExampleExpression"
+      },
+      "title": "Example Expressions",
+      "type": "array"
+    },
+    "course_reported_outcome": {
+      "$ref": "#/$defs/ReportedOutcome"
+    },
+    "course_stated_limits": {
+      "items": {
+        "$ref": "#/$defs/SupportedText"
+      },
+      "title": "Course Stated Limits",
+      "type": "array"
+    },
+    "insufficient_course_evidence": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Insufficient Course Evidence",
+      "type": "array"
+    },
+    "source_time_range": {
+      "$ref": "#/$defs/SourceTimeRange"
+    },
+    "draft_fidelity_status": {
+      "default": "pending_review",
+      "enum": [
+        "pending_review",
+        "reviewed"
+      ],
+      "title": "Draft Fidelity Status",
+      "type": "string"
+    }
+  },
+  "required": [
+    "knowledge_id",
+    "course_id",
+    "case_id",
+    "method_name",
+    "problem_addressed",
+    "course_perspective",
+    "core_logic",
+    "source_time_range"
+  ],
+  "title": "AfengMethodDraft",
+  "type": "object"
+}

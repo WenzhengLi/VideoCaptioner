@@ -32,10 +32,11 @@ def validate_answer_output(context_path: Path, output_path: Path) -> dict[str, A
             invalid_plans.append(index)
             continue
         replies = plan.get("reply_options")
+        reply_items = replies if isinstance(replies, list) else []
         styles = {
             str(item.get("style"))
-            for item in replies
-            if isinstance(replies, list) and isinstance(item, dict)
+            for item in reply_items
+            if isinstance(item, dict)
         }
         if (
             not isinstance(replies, list)

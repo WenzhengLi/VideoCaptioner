@@ -21,6 +21,8 @@
 - 提供 Gradio 本地网页，适合没有 AI 人工介入的日常批处理。
 - 提供 P01–P06 课程知识流水线：完整规范化、来源分类、案例边界、证据提取、安全审查和
   Tidy 兼容原子知识条目。
+- 提供独立的“阿峰方法层”：从 P04/P05 证据字段生成课程方法，经过忠实度审查和发布分类后
+  输出可追溯 Markdown；该分支不消费旧 P06，也不执行课程安全评价。
 - 将 WeSpeaker 的 `Speaker N` 声纹簇原样保留为 `speaker_N`，避免身份未知时丢失说话人区分。
 
 ## 架构
@@ -172,6 +174,15 @@ python -m course_video_analyzer.knowledge.cli answer-context "聊天问题" `
 
 完整目录、Prompt 迭代和批次规则见 [知识库流水线](docs/knowledge-pipeline.md)。
 
+新的阿峰方法分支为：
+
+```text
+P04/P05 evidence fields -> 方法提炼 -> 忠实度审查 -> 发布分类 -> Markdown -> Dify
+```
+
+其中 Markdown 由程序确定性渲染，主要判断、步骤和表达必须引用当前案例 segment ID。实现、
+CLI 和硬性发布闸门见 [阿峰方法层 v001](docs/afeng-method-layer.md)。
+
 ## 开发与质量检查
 
 ```powershell
@@ -208,6 +219,7 @@ uv run pytest -q -m integration
 - [Web 使用说明](docs/web.md)
 - [开发环境](docs/environment.md)
 - [评估方法](docs/evaluation.md)
+- [阿峰方法层 v001](docs/afeng-method-layer.md)
 
 ## 来源与许可证
 

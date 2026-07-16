@@ -1,0 +1,347 @@
+{
+  "$defs": {
+    "EvidenceReview": {
+      "additionalProperties": false,
+      "properties": {
+        "target_type": {
+          "title": "Target Type",
+          "type": "string"
+        },
+        "target_id": {
+          "title": "Target Id",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/EvidenceStatus"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "note": {
+          "default": "",
+          "title": "Note",
+          "type": "string"
+        }
+      },
+      "required": [
+        "target_type",
+        "target_id",
+        "status",
+        "evidence_ids"
+      ],
+      "title": "EvidenceReview",
+      "type": "object"
+    },
+    "EvidenceSegment": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "segment_id": {
+          "title": "Segment Id",
+          "type": "string"
+        },
+        "start_ms": {
+          "minimum": 0,
+          "title": "Start Ms",
+          "type": "integer"
+        },
+        "end_ms": {
+          "minimum": 0,
+          "title": "End Ms",
+          "type": "integer"
+        },
+        "source_type": {
+          "title": "Source Type",
+          "type": "string"
+        },
+        "speaker_role": {
+          "title": "Speaker Role",
+          "type": "string"
+        },
+        "epistemic_type": {
+          "default": "unknown",
+          "title": "Epistemic Type",
+          "type": "string"
+        },
+        "raw_text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Raw Text"
+        },
+        "normalized_text": {
+          "title": "Normalized Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "segment_id",
+        "start_ms",
+        "end_ms",
+        "source_type",
+        "speaker_role",
+        "normalized_text"
+      ],
+      "title": "EvidenceSegment",
+      "type": "object"
+    },
+    "EvidenceStatement": {
+      "additionalProperties": false,
+      "properties": {
+        "statement_id": {
+          "title": "Statement Id",
+          "type": "string"
+        },
+        "statement_type": {
+          "enum": [
+            "observation",
+            "instructor_claim",
+            "alternative_explanation",
+            "claimed_outcome",
+            "quoted_expression"
+          ],
+          "title": "Statement Type",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "evidence_status": {
+          "$ref": "#/$defs/EvidenceStatus",
+          "default": "not_reviewed"
+        },
+        "review_note": {
+          "default": "",
+          "title": "Review Note",
+          "type": "string"
+        },
+        "attributes": {
+          "additionalProperties": true,
+          "title": "Attributes",
+          "type": "object"
+        }
+      },
+      "required": [
+        "statement_id",
+        "statement_type",
+        "text",
+        "evidence_ids"
+      ],
+      "title": "EvidenceStatement",
+      "type": "object"
+    },
+    "EvidenceStatus": {
+      "enum": [
+        "supported",
+        "partially_supported",
+        "unsupported",
+        "contradicted",
+        "not_reviewed"
+      ],
+      "title": "EvidenceStatus",
+      "type": "string"
+    },
+    "RightsStatus": {
+      "enum": [
+        "research_only",
+        "authorized"
+      ],
+      "title": "RightsStatus",
+      "type": "string"
+    },
+    "SourceTimeRange": {
+      "additionalProperties": false,
+      "properties": {
+        "start_ms": {
+          "minimum": 0,
+          "title": "Start Ms",
+          "type": "integer"
+        },
+        "end_ms": {
+          "minimum": 0,
+          "title": "End Ms",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "start_ms",
+        "end_ms"
+      ],
+      "title": "SourceTimeRange",
+      "type": "object"
+    },
+    "SourceWarning": {
+      "additionalProperties": false,
+      "properties": {
+        "warning_type": {
+          "enum": [
+            "uncertainty",
+            "missing_context",
+            "required_correction"
+          ],
+          "title": "Warning Type",
+          "type": "string"
+        },
+        "field": {
+          "default": "",
+          "title": "Field",
+          "type": "string"
+        },
+        "target_type": {
+          "default": "",
+          "title": "Target Type",
+          "type": "string"
+        },
+        "target_id": {
+          "default": "",
+          "title": "Target Id",
+          "type": "string"
+        },
+        "action": {
+          "default": "",
+          "title": "Action",
+          "type": "string"
+        },
+        "note": {
+          "title": "Note",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "warning_type",
+        "note"
+      ],
+      "title": "SourceWarning",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "pipeline_version": {
+      "default": "afeng-method-v001",
+      "title": "Pipeline Version",
+      "type": "string"
+    },
+    "prompt_version": {
+      "default": "mimo-method-v001",
+      "title": "Prompt Version",
+      "type": "string"
+    },
+    "source_pipeline_version": {
+      "title": "Source Pipeline Version",
+      "type": "string"
+    },
+    "course_id": {
+      "title": "Course Id",
+      "type": "string"
+    },
+    "course_title": {
+      "default": "",
+      "title": "Course Title",
+      "type": "string"
+    },
+    "case_id": {
+      "title": "Case Id",
+      "type": "string"
+    },
+    "case_title": {
+      "default": "",
+      "title": "Case Title",
+      "type": "string"
+    },
+    "case_summary": {
+      "default": "",
+      "title": "Case Summary",
+      "type": "string"
+    },
+    "rights_status": {
+      "$ref": "#/$defs/RightsStatus",
+      "default": "research_only"
+    },
+    "course_context": {
+      "default": "",
+      "title": "Course Context",
+      "type": "string"
+    },
+    "source_time_range": {
+      "$ref": "#/$defs/SourceTimeRange"
+    },
+    "segments": {
+      "items": {
+        "$ref": "#/$defs/EvidenceSegment"
+      },
+      "title": "Segments",
+      "type": "array"
+    },
+    "statements": {
+      "items": {
+        "$ref": "#/$defs/EvidenceStatement"
+      },
+      "title": "Statements",
+      "type": "array"
+    },
+    "evidence_reviews": {
+      "items": {
+        "$ref": "#/$defs/EvidenceReview"
+      },
+      "title": "Evidence Reviews",
+      "type": "array"
+    },
+    "source_warnings": {
+      "items": {
+        "$ref": "#/$defs/SourceWarning"
+      },
+      "title": "Source Warnings",
+      "type": "array"
+    },
+    "input_hash": {
+      "title": "Input Hash",
+      "type": "string"
+    }
+  },
+  "required": [
+    "source_pipeline_version",
+    "course_id",
+    "case_id",
+    "source_time_range",
+    "segments",
+    "statements",
+    "input_hash"
+  ],
+  "title": "AfengEvidencePackage",
+  "type": "object"
+}

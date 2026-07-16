@@ -37,6 +37,24 @@ from course_video_analyzer.knowledge.dify_sync import (
     create_dataset,
     sync_markdown_dir,
 )
+from course_video_analyzer.knowledge.afeng import (
+    build_afeng_evidence_package,
+    build_afeng_course_evidence_packages,
+    export_afeng_schemas,
+    validate_fidelity_audit,
+    validate_evidence_package,
+    validate_method_draft,
+    write_afeng_markdown,
+    write_approved_method,
+    write_external_payload,
+)
+from course_video_analyzer.knowledge.afeng_models import (
+    AfengEvidencePackage,
+    AfengMethodDraft,
+    FidelityAudit,
+    RightsStatus,
+)
+from course_video_analyzer.jobs.workspace import atomic_write_text
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -258,6 +276,78 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         default=Path("data/dify/document-map.json"),
     )
+    afeng_schemas = subparsers.add_parser(
+        "afeng-export-schemas", help="export afeng-method-v001 JSON Schemas"
+    )
+    afeng_schemas.add_argument(
+        "output_dir", type=Path, nargs="?", default=Path("schemas/afeng-method-v001")
+    )
+    afeng_evidence = subparsers.add_parser(
+        "afeng-build-evidence", help="build one Afeng case evidence package from P04/P05"
+    )
+    afeng_evidence.add_argument("course_id")
+    afeng_evidence.add_argument("case_id")
+    afeng_evidence.add_argument("case_input", type=Path)
+    afeng_evidence.add_argument("p04", type=Path)
+    afeng_evidence.add_argument("output", type=Path)
+    afeng_evidence.add_argument("--p05", type=Path)
+    afeng_evidence.add_argument("--source", type=Path)
+    afeng_evidence.add_argument(
+        "--rights-status",
+        choices=[item.value for item in RightsStatus],
+        default=RightsStatus.RESEARCH_ONLY.value,
+    )
+    afeng_evidence.add_argument("--source-pipeline-version")
+    afeng_course = subparsers.add_parser(
+        "afeng-build-course-evidence", help="build all Afeng evidence packages for one course"
+    )
+    afeng_course.add_argument("course_id")
+    afeng_course.add_argument("--data-root", type=Path, default=Path("data"))
+    afeng_course.add_argument("--p04-version", required=True)
+    afeng_course.add_argument("--p05-version")
+    afeng_course.add_argument("--output-version", default="v001")
+    afeng_course.add_argument(
+        "--rights-status",
+        choices=[item.value for item in RightsStatus],
+        default=RightsStatus.RESEARCH_ONLY.value,
+    )
+    afeng_external = subparsers.add_parser(
+        "afeng-build-external-payload", help="redact an evidence package for an external model"
+    )
+    afeng_external.add_argument("evidence", type=Path)
+    afeng_external.add_argument("output", type=Path)
+    afeng_evidence_qa = subparsers.add_parser(
+        "afeng-qa-evidence", help="validate an Afeng evidence package and its input hash"
+    )
+    afeng_evidence_qa.add_argument("evidence", type=Path)
+    afeng_evidence_qa.add_argument("report", type=Path)
+    afeng_draft_qa = subparsers.add_parser(
+        "afeng-qa-draft", help="validate an Afeng method draft against its evidence package"
+    )
+    afeng_draft_qa.add_argument("evidence", type=Path)
+    afeng_draft_qa.add_argument("draft", type=Path)
+    afeng_draft_qa.add_argument("report", type=Path)
+    afeng_audit_qa = subparsers.add_parser(
+        "afeng-qa-audit", help="validate an Afeng fidelity audit"
+    )
+    afeng_audit_qa.add_argument("evidence", type=Path)
+    afeng_audit_qa.add_argument("draft", type=Path)
+    afeng_audit_qa.add_argument("audit", type=Path)
+    afeng_audit_qa.add_argument("report", type=Path)
+    afeng_approve = subparsers.add_parser(
+        "afeng-approve", help="mark a method reviewed after a passing fidelity audit"
+    )
+    afeng_approve.add_argument("draft", type=Path)
+    afeng_approve.add_argument("audit", type=Path)
+    afeng_approve.add_argument("output", type=Path)
+    afeng_render = subparsers.add_parser(
+        "afeng-render", help="deterministically render an approved Afeng method as Markdown"
+    )
+    afeng_render.add_argument("evidence", type=Path)
+    afeng_render.add_argument("method", type=Path)
+    afeng_render.add_argument("audit", type=Path)
+    afeng_render.add_argument("publication", type=Path)
+    afeng_render.add_argument("output", type=Path)
     return parser
 
 
@@ -457,8 +547,6 @@ def main() -> int:
         print(json.dumps(result, ensure_ascii=False, indent=2))
     elif args.command == "answer-context":
         result = build_answer_context(args.database, args.query, limit=args.limit)
-        from course_video_analyzer.jobs.workspace import atomic_write_text
-
         atomic_write_text(args.output, json.dumps(result, ensure_ascii=False, indent=2))
         print(f"多方案回答上下文已输出: {args.output}")
     elif args.command in {"answer-tidy", "local-index-answer"}:
@@ -524,6 +612,65 @@ def main() -> int:
                 indent=2,
             )
         )
+    elif args.command == "afeng-export-schemas":
+        outputs = export_afeng_schemas(args.output_dir)
+        print(f"阿峰方法层 Schema 已输出: {len(outputs)} -> {args.output_dir}")
+    elif args.command == "afeng-build-evidence":
+        output = build_afeng_evidence_package(
+            args.course_id,
+            args.case_id,
+            args.case_input,
+            args.p04,
+            args.output,
+            p05_path=args.p05,
+            source_path=args.source,
+            rights_status=RightsStatus(args.rights_status),
+            source_pipeline_version=args.source_pipeline_version,
+        )
+        print(f"阿峰案例证据包已输出: {output}")
+    elif args.command == "afeng-build-course-evidence":
+        outputs = build_afeng_course_evidence_packages(
+            args.course_id,
+            args.data_root,
+            p04_version=args.p04_version,
+            p05_version=args.p05_version,
+            output_version=args.output_version,
+            rights_status=RightsStatus(args.rights_status),
+        )
+        print(f"阿峰课程证据包已输出: {args.course_id} -> {len(outputs)} cases")
+    elif args.command == "afeng-build-external-payload":
+        output = write_external_payload(args.evidence, args.output)
+        print(f"外部模型脱敏载荷已输出: {output}")
+    elif args.command == "afeng-qa-evidence":
+        package = AfengEvidencePackage.model_validate_json(args.evidence.read_text(encoding="utf-8"))
+        report = validate_evidence_package(package)
+        atomic_write_text(args.report, json.dumps(report, ensure_ascii=False, indent=2))
+        print(f"阿峰证据包 QA: {args.report} -> {report['status']}")
+    elif args.command == "afeng-qa-draft":
+        package = AfengEvidencePackage.model_validate_json(args.evidence.read_text(encoding="utf-8"))
+        draft = AfengMethodDraft.model_validate_json(args.draft.read_text(encoding="utf-8"))
+        report = validate_method_draft(package, draft)
+        atomic_write_text(args.report, json.dumps(report, ensure_ascii=False, indent=2))
+        print(f"阿峰方法草稿 QA: {args.report} -> {report['status']}")
+    elif args.command == "afeng-qa-audit":
+        package = AfengEvidencePackage.model_validate_json(args.evidence.read_text(encoding="utf-8"))
+        draft = AfengMethodDraft.model_validate_json(args.draft.read_text(encoding="utf-8"))
+        audit = FidelityAudit.model_validate_json(args.audit.read_text(encoding="utf-8"))
+        report = validate_fidelity_audit(package, draft, audit)
+        atomic_write_text(args.report, json.dumps(report, ensure_ascii=False, indent=2))
+        print(f"阿峰忠实度审查 QA: {args.report} -> {report['status']}")
+    elif args.command == "afeng-approve":
+        output = write_approved_method(args.draft, args.audit, args.output)
+        print(f"阿峰方法已通过忠实度闸门: {output}")
+    elif args.command == "afeng-render":
+        output = write_afeng_markdown(
+            args.evidence,
+            args.method,
+            args.audit,
+            args.publication,
+            args.output,
+        )
+        print(f"阿峰方法 Markdown 已输出: {output}")
     return 0
 
 
