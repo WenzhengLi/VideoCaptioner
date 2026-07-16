@@ -80,12 +80,32 @@ def test_analyze_course_uses_segmentation_metrics_and_top_level_safety(
         encoding="utf-8",
     )
 
+    (course / "04_knowledge" / "P04-knowledge-v003").mkdir(parents=True)
+    (course / "04_knowledge" / "P04-knowledge-v003" / "CASE-C099-001.json").write_text(
+        json.dumps({"case_id": "CASE-C099-001", "evidence_spans": []}),
+        encoding="utf-8",
+    )
+    (course / "qa" / "P04-CASE-C099-001-knowledge-v003-qa.json").write_text(
+        json.dumps(
+            {
+                "status": "pass",
+                "checks": {"evidence_in_case_range": True},
+                "metrics": {"invalid_evidence_count": 0},
+            }
+        ),
+        encoding="utf-8",
+    )
+
     result = analyze_course(tmp_path, "C099", "knowledge-v003")
     assert result["segment_count"] == 4
     assert result["unknown_ratio"] == 0.25
     assert result["unassigned_ratio"] == 0.25
+    assert result["p04_case_file_count"] == 1
     assert result["p05_risk_count"] == 2
     assert result["p05_risk_types"]["explicit_refusal_or_pause"] == 1
     assert result["p06_entry_count"] == 2
     assert result["markdown_count"] == 1
     assert result["qa"]["P03"] == "pass"
+    assert result["case_qa"]["P04"]["CASE-C099-001"] == "pass"
+    assert "high_unassigned_gt_20pct" in result["flags"]
+    assert "high_unknown_speaker" in result["flags"]

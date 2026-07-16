@@ -1,0 +1,1295 @@
+{
+  "schema_version": "1.1",
+  "report_focus": "fact_and_evidence_layer",
+  "start_course": "C001",
+  "end_course": "C015",
+  "output_version": "knowledge-v002",
+  "batch_id": "BATCH-20260715-001",
+  "totals": {
+    "segment_count": 64184,
+    "case_count": 29,
+    "p04_case_file_count": 29,
+    "p06_entry_count": 616,
+    "p05_risk_count": 230,
+    "markdown_count": 616,
+    "ocr_call_count": 8485,
+    "ocr_cache_hits": 0,
+    "failure_count": 0,
+    "flagged_course_count": 6,
+    "evidence_qa_all_pass": true
+  },
+  "courses": [
+    {
+      "course_id": "C001",
+      "run_id": "RUN-20260715-BASELINE",
+      "segment_count": 3459,
+      "speaker_distribution": {
+        "student": 1228,
+        "teacher_a": 2040,
+        "unknown": 191
+      },
+      "unknown_ratio": 0.0552,
+      "case_count": 3,
+      "unassigned_segment_count": 206,
+      "unassigned_ratio": 0.0596,
+      "p04_case_file_count": 3,
+      "stage_timings_seconds": {
+        "media": 2.0,
+        "transcript": 214.0,
+        "diarization": 282.0,
+        "alignment": 1.0,
+        "board_detect": 21.0,
+        "board_track": 46.0,
+        "board_ocr": 1459.0,
+        "merge": 1.0,
+        "export": 2.0
+      },
+      "ocr": {
+        "ocr_call_count": null,
+        "ocr_cache_hits": null,
+        "ocr_dedup_image_count": null,
+        "frame_count": null,
+        "sampling_mode": null
+      },
+      "board_count": null,
+      "attempts": 0,
+      "failure_count": 0,
+      "batch_status": "pending",
+      "p05_risk_count": 17,
+      "p05_risk_types": {
+        "derogatory_gendered_language": 1,
+        "appearance_based_unequal_treatment_advice": 1,
+        "manipulation_framing_brainwashing": 1,
+        "privacy_surveillance_suggestion": 1,
+        "pressure_value_display": 1,
+        "soft_refusal_reframed_as_test": 1,
+        "guilt_and_pressure_tactics": 2,
+        "obedience_traffic_light_framework": 1,
+        "deceptive_resource_persona": 1,
+        "alcohol_and_sexualized_meetup_script": 1,
+        "privacy_location_exposure": 1,
+        "age_unverifiable": 2,
+        "objectifying_sexual_language": 1,
+        "soft_refusal_reframed_as_pressure_target": 1,
+        "privacy_and_covert_meetup_risk": 1
+      },
+      "p06_entry_count": 40,
+      "markdown_count": 40,
+      "qa": {
+        "raw": "pass",
+        "P01": "pass",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "case_qa": {
+        "P04": {
+          "CASE-C001-001": "pass",
+          "CASE-C001-002": "pass",
+          "CASE-C001-003": "pass"
+        },
+        "P05": {
+          "CASE-C001-001": "pass",
+          "CASE-C001-002": "pass",
+          "CASE-C001-003": "pass"
+        },
+        "P06": {
+          "CASE-C001-001": "pass",
+          "CASE-C001-002": "pass",
+          "CASE-C001-003": "pass"
+        }
+      },
+      "p04_out_of_range_cases": [],
+      "version_fields_present": {
+        "p01": true,
+        "p03": true
+      },
+      "flags": [],
+      "evidence_qa_ok": true
+    },
+    {
+      "course_id": "C002",
+      "run_id": "RUN-20260715-V001",
+      "segment_count": 4272,
+      "speaker_distribution": {
+        "speaker_0": 4059,
+        "speaker_1": 13,
+        "speaker_2": 3,
+        "unknown": 197
+      },
+      "unknown_ratio": 0.0461,
+      "case_count": 3,
+      "unassigned_segment_count": 843,
+      "unassigned_ratio": 0.1973,
+      "p04_case_file_count": 3,
+      "stage_timings_seconds": {
+        "media": 3.0,
+        "transcript": 359.0,
+        "diarization": 403.0,
+        "alignment": 2.0,
+        "board_detect": 33.0,
+        "board_track": 83.0,
+        "board_ocr": 1097.0,
+        "merge": 1.0,
+        "export": 1.0
+      },
+      "ocr": {
+        "ocr_call_count": 610,
+        "ocr_cache_hits": 0,
+        "ocr_dedup_image_count": 341,
+        "frame_count": 800,
+        "sampling_mode": "fixed"
+      },
+      "board_count": 341,
+      "attempts": 0,
+      "failure_count": 0,
+      "batch_status": "pending",
+      "p05_risk_count": 20,
+      "p05_risk_types": {
+        "boundary_discomfort_not_a_test": 1,
+        "distress_and_conflict_signals": 1,
+        "soft_noncommit_reframed_as_opportunity": 1,
+        "alcohol_meetup_and_impairment_context": 1,
+        "age_unverifiable_and_sexualized_profiling": 1,
+        "conquest_framing_and_outcome_glorification": 1,
+        "deception_accusation_context": 1,
+        "privacy_exposure_on_board": 1,
+        "impaired_consciousness_alcohol_signal": 1,
+        "privacy_id_and_income_disclosure": 1,
+        "age_context_unclear_exam_girlfriend": 1,
+        "instrumental_mutual_play_framing": 1,
+        "late_night_meetup_while_possibly_impaired": 1,
+        "third_party_photo_privacy": 1,
+        "privacy_income_and_investor_disclosure": 1,
+        "privacy_third_party_moments_and_wechat": 1,
+        "instrumental_conquest_framing": 1,
+        "overnight_outcome_without_consent_evidence": 1,
+        "social_proof_pickup_tactic": 1,
+        "age_context_unclear_meimei_label": 1
+      },
+      "p06_entry_count": 54,
+      "markdown_count": 54,
+      "qa": {
+        "raw": "pass",
+        "P01": "pass",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "case_qa": {
+        "P04": {
+          "CASE-C002-001": "pass",
+          "CASE-C002-002": "pass",
+          "CASE-C002-003": "pass"
+        },
+        "P05": {
+          "CASE-C002-001": "pass",
+          "CASE-C002-002": "pass",
+          "CASE-C002-003": "pass"
+        },
+        "P06": {
+          "CASE-C002-001": "pass",
+          "CASE-C002-002": "pass",
+          "CASE-C002-003": "pass"
+        }
+      },
+      "p04_out_of_range_cases": [],
+      "version_fields_present": {
+        "p01": true,
+        "p03": true
+      },
+      "flags": [],
+      "evidence_qa_ok": true
+    },
+    {
+      "course_id": "C003",
+      "run_id": "RUN-20260715-001-V001",
+      "segment_count": 4679,
+      "speaker_distribution": {
+        "speaker_0": 3485,
+        "speaker_1": 897,
+        "unknown": 297
+      },
+      "unknown_ratio": 0.0635,
+      "case_count": 2,
+      "unassigned_segment_count": 1891,
+      "unassigned_ratio": 0.4041,
+      "p04_case_file_count": 2,
+      "stage_timings_seconds": {
+        "media": 4.0,
+        "transcript": 359.0,
+        "diarization": 413.0,
+        "alignment": 4.0,
+        "board_detect": 33.0,
+        "board_track": 38.0,
+        "board_ocr": 1199.0,
+        "merge": 2.0,
+        "export": 4.0
+      },
+      "ocr": {
+        "ocr_call_count": 624,
+        "ocr_cache_hits": 0,
+        "ocr_dedup_image_count": 338,
+        "frame_count": 800,
+        "sampling_mode": "fixed"
+      },
+      "board_count": 338,
+      "attempts": 1,
+      "failure_count": 0,
+      "batch_status": "succeeded",
+      "p05_risk_count": 14,
+      "p05_risk_types": {
+        "fear_discomfort_as_asd_test": 1,
+        "age_uncertainty": 2,
+        "alcohol_impairment_context": 1,
+        "location_privacy_pressure": 1,
+        "deceptive_residence_script": 1,
+        "sexualized_nightlife_framing": 1,
+        "intimate_detail_retell_privacy": 1,
+        "alcohol_impairment_and_pickup": 1,
+        "intimacy_after_alcohol_inferred": 1,
+        "location_privacy_exposure": 1,
+        "discarding_third_party_to_meet": 1,
+        "persuasion_as_conquest_framing": 1,
+        "gift_pressure_transactional_dynamics": 1
+      },
+      "p06_entry_count": 46,
+      "markdown_count": 46,
+      "qa": {
+        "raw": "pass",
+        "P01": "pass",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "case_qa": {
+        "P04": {
+          "CASE-C003-001": "pass",
+          "CASE-C003-002": "pass"
+        },
+        "P05": {
+          "CASE-C003-001": "pass",
+          "CASE-C003-002": "pass"
+        },
+        "P06": {
+          "CASE-C003-001": "pass",
+          "CASE-C003-002": "pass"
+        }
+      },
+      "p04_out_of_range_cases": [],
+      "version_fields_present": {
+        "p01": true,
+        "p03": true
+      },
+      "flags": [
+        "high_unassigned_gt_20pct"
+      ],
+      "evidence_qa_ok": true
+    },
+    {
+      "course_id": "C004",
+      "run_id": "RUN-20260715-001-V001",
+      "segment_count": 5161,
+      "speaker_distribution": {
+        "speaker_0": 3453,
+        "speaker_1": 1083,
+        "speaker_2": 314,
+        "unknown": 311
+      },
+      "unknown_ratio": 0.0603,
+      "case_count": 2,
+      "unassigned_segment_count": 642,
+      "unassigned_ratio": 0.1244,
+      "p04_case_file_count": 2,
+      "stage_timings_seconds": {
+        "media": 4.0,
+        "transcript": 398.0,
+        "diarization": 440.0,
+        "alignment": 4.0,
+        "board_detect": 31.0,
+        "board_track": 33.0,
+        "board_ocr": 990.0,
+        "merge": 2.0,
+        "export": 2.0
+      },
+      "ocr": {
+        "ocr_call_count": 602,
+        "ocr_cache_hits": 0,
+        "ocr_dedup_image_count": 341,
+        "frame_count": 800,
+        "sampling_mode": "fixed"
+      },
+      "board_count": 341,
+      "attempts": 1,
+      "failure_count": 0,
+      "batch_status": "succeeded",
+      "p05_risk_count": 16,
+      "p05_risk_types": {
+        "pace_boundary_reframed_as_嘴炮": 1,
+        "age_uncertainty_speculation": 1,
+        "privacy_location_disclosure": 2,
+        "same_day_meetup_pressure": 1,
+        "sexual_intent_presumption": 2,
+        "deceptive_exit_script": 1,
+        "stranger_overnight_framing": 1,
+        "occupation_profiling": 1,
+        "first_meetup_home_boundary_bypassed": 1,
+        "exit_signal_pressure": 1,
+        "location_sharing_as_consent_test": 1,
+        "deceptive_delay_cover": 1,
+        "same_night_meetup_pressure": 1,
+        "alcohol_emotional_rapport": 1
+      },
+      "p06_entry_count": 45,
+      "markdown_count": 45,
+      "qa": {
+        "raw": "pass",
+        "P01": "pass",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "case_qa": {
+        "P04": {
+          "CASE-C004-001": "pass",
+          "CASE-C004-002": "pass"
+        },
+        "P05": {
+          "CASE-C004-001": "pass",
+          "CASE-C004-002": "pass"
+        },
+        "P06": {
+          "CASE-C004-001": "pass",
+          "CASE-C004-002": "pass"
+        }
+      },
+      "p04_out_of_range_cases": [],
+      "version_fields_present": {
+        "p01": true,
+        "p03": true
+      },
+      "flags": [],
+      "evidence_qa_ok": true
+    },
+    {
+      "course_id": "C005",
+      "run_id": "RUN-20260715-001-V001",
+      "segment_count": 3589,
+      "speaker_distribution": {
+        "speaker_0": 3362,
+        "unknown": 227
+      },
+      "unknown_ratio": 0.0632,
+      "case_count": 2,
+      "unassigned_segment_count": 138,
+      "unassigned_ratio": 0.0385,
+      "p04_case_file_count": 2,
+      "stage_timings_seconds": {
+        "media": 2.0,
+        "transcript": 291.0,
+        "diarization": 330.0,
+        "alignment": 1.0,
+        "board_detect": 23.0,
+        "board_track": 35.0,
+        "board_ocr": 924.0,
+        "merge": 1.0,
+        "export": 2.0
+      },
+      "ocr": {
+        "ocr_call_count": 517,
+        "ocr_cache_hits": 0,
+        "ocr_dedup_image_count": 262,
+        "frame_count": 800,
+        "sampling_mode": "fixed"
+      },
+      "board_count": 262,
+      "attempts": 1,
+      "failure_count": 0,
+      "batch_status": "succeeded",
+      "p05_risk_count": 18,
+      "p05_risk_types": {
+        "pace_boundary_reframed_as_yellow_light": 1,
+        "sustained_pressure_despite_refusal": 1,
+        "fear_signal_minimized_with_narrowing_script": 1,
+        "deceptive_action_theater": 1,
+        "same_day_home_invite_pressure": 1,
+        "stranger_overnight_framing": 1,
+        "manipulative_importance_framing": 1,
+        "privacy_account_watermark": 2,
+        "age_uncertainty": 2,
+        "home_destination_boundary_reframed_as_sd": 1,
+        "sustained_pressure_despite_refusal_or_fatigue": 1,
+        "verbal_refusal_overridden_to_enter_room": 1,
+        "coercive_temper_and_physical_escalation": 1,
+        "deceptive_location_and_parallel_partner_concealment": 1,
+        "consent_signals_reframed_as_passed_tests": 1,
+        "alcohol_context_first_meet_invite": 1
+      },
+      "p06_entry_count": 47,
+      "markdown_count": 47,
+      "qa": {
+        "raw": "pass",
+        "P01": "pass",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "case_qa": {
+        "P04": {
+          "CASE-C005-001": "pass",
+          "CASE-C005-002": "pass"
+        },
+        "P05": {
+          "CASE-C005-001": "pass",
+          "CASE-C005-002": "pass"
+        },
+        "P06": {
+          "CASE-C005-001": "pass",
+          "CASE-C005-002": "pass"
+        }
+      },
+      "p04_out_of_range_cases": [],
+      "version_fields_present": {
+        "p01": true,
+        "p03": true
+      },
+      "flags": [],
+      "evidence_qa_ok": true
+    },
+    {
+      "course_id": "C006",
+      "run_id": "RUN-20260715-001-V001",
+      "segment_count": 5620,
+      "speaker_distribution": {
+        "speaker_0": 3162,
+        "speaker_1": 2092,
+        "unknown": 366
+      },
+      "unknown_ratio": 0.0651,
+      "case_count": 2,
+      "unassigned_segment_count": 261,
+      "unassigned_ratio": 0.0464,
+      "p04_case_file_count": 2,
+      "stage_timings_seconds": {
+        "media": 4.0,
+        "transcript": 506.0,
+        "diarization": 441.0,
+        "alignment": 4.0,
+        "board_detect": 30.0,
+        "board_track": 41.0,
+        "board_ocr": 1901.0,
+        "merge": 4.0,
+        "export": 4.0
+      },
+      "ocr": {
+        "ocr_call_count": 681,
+        "ocr_cache_hits": 0,
+        "ocr_dedup_image_count": 424,
+        "frame_count": 800,
+        "sampling_mode": "fixed"
+      },
+      "board_count": 424,
+      "attempts": 1,
+      "failure_count": 0,
+      "batch_status": "succeeded",
+      "p05_risk_count": 17,
+      "p05_risk_types": {
+        "hesitation_or_soft_refusal_reframed_as_test": 1,
+        "pace_and_commitment_pressure": 1,
+        "private_escalation_without_board_consent_trail": 1,
+        "home_invite_after_hygiene_objection": 1,
+        "dismissing_boundary_probe": 1,
+        "enthusiastic_expression_pushback": 1,
+        "age_and_identity_unknown": 1,
+        "explicit_overnight_refusal": 1,
+        "discomfort_at_sexual_joke": 1,
+        "bar_preference_refusal": 1,
+        "time_bound_visit_limit": 1,
+        "fear_in_strange_city_instructor_framing": 1,
+        "privacy_location_leakage": 1,
+        "family_conflict_after_arrival": 1,
+        "period_reframed_as_loyalty_test": 1,
+        "age_unverified": 1,
+        "pressure_toward_overnight_and_home_invite": 1
+      },
+      "p06_entry_count": 49,
+      "markdown_count": 49,
+      "qa": {
+        "raw": "pass",
+        "P01": "pass",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "case_qa": {
+        "P04": {
+          "CASE-C006-001": "pass",
+          "CASE-C006-002": "pass"
+        },
+        "P05": {
+          "CASE-C006-001": "pass",
+          "CASE-C006-002": "pass"
+        },
+        "P06": {
+          "CASE-C006-001": "pass",
+          "CASE-C006-002": "pass"
+        }
+      },
+      "p04_out_of_range_cases": [],
+      "version_fields_present": {
+        "p01": true,
+        "p03": true
+      },
+      "flags": [],
+      "evidence_qa_ok": true
+    },
+    {
+      "course_id": "C007",
+      "run_id": "RUN-20260715-001-V001",
+      "segment_count": 3738,
+      "speaker_distribution": {
+        "speaker_0": 1664,
+        "speaker_1": 1601,
+        "speaker_2": 15,
+        "unknown": 458
+      },
+      "unknown_ratio": 0.1225,
+      "case_count": 1,
+      "unassigned_segment_count": 525,
+      "unassigned_ratio": 0.1404,
+      "p04_case_file_count": 1,
+      "stage_timings_seconds": {
+        "media": 2.0,
+        "transcript": 705.0,
+        "diarization": 779.0,
+        "alignment": 4.0,
+        "board_detect": 39.0,
+        "board_track": 66.0,
+        "board_ocr": 2468.0,
+        "merge": 3.0,
+        "export": 20.0
+      },
+      "ocr": {
+        "ocr_call_count": 645,
+        "ocr_cache_hits": 0,
+        "ocr_dedup_image_count": 428,
+        "frame_count": 800,
+        "sampling_mode": "fixed"
+      },
+      "board_count": 428,
+      "attempts": 1,
+      "failure_count": 0,
+      "batch_status": "succeeded",
+      "p05_risk_count": 8,
+      "p05_risk_types": {
+        "deception_cover_story": 1,
+        "alcohol_risk": 1,
+        "emotional_pressure": 1,
+        "unclear_consent_sexual_outcome": 1,
+        "age_unknown": 1,
+        "privacy_third_party_posts": 1,
+        "time_pressure_meetup_norm": 1,
+        "dependency_fear_signal": 1
+      },
+      "p06_entry_count": 22,
+      "markdown_count": 22,
+      "qa": {
+        "raw": "pass",
+        "P01": "pass",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "case_qa": {
+        "P04": {
+          "CASE-C007-001": "pass"
+        },
+        "P05": {
+          "CASE-C007-001": "pass"
+        },
+        "P06": {
+          "CASE-C007-001": "pass"
+        }
+      },
+      "p04_out_of_range_cases": [],
+      "version_fields_present": {
+        "p01": true,
+        "p03": true
+      },
+      "flags": [
+        "high_unknown_speaker",
+        "case_boundaries_possibly_too_wide"
+      ],
+      "evidence_qa_ok": true
+    },
+    {
+      "course_id": "C008",
+      "run_id": "RUN-20260715-001-V001",
+      "segment_count": 3823,
+      "speaker_distribution": {
+        "speaker_0": 2131,
+        "speaker_1": 1460,
+        "unknown": 232
+      },
+      "unknown_ratio": 0.0607,
+      "case_count": 2,
+      "unassigned_segment_count": 995,
+      "unassigned_ratio": 0.2603,
+      "p04_case_file_count": 2,
+      "stage_timings_seconds": {
+        "media": 3.0,
+        "transcript": 689.0,
+        "diarization": 784.0,
+        "alignment": 4.0,
+        "board_detect": 36.0,
+        "board_track": 60.0,
+        "board_ocr": 1753.0,
+        "merge": 2.0,
+        "export": 5.0
+      },
+      "ocr": {
+        "ocr_call_count": 623,
+        "ocr_cache_hits": 0,
+        "ocr_dedup_image_count": 240,
+        "frame_count": 800,
+        "sampling_mode": "fixed"
+      },
+      "board_count": 240,
+      "attempts": 1,
+      "failure_count": 0,
+      "batch_status": "succeeded",
+      "p05_risk_count": 18,
+      "p05_risk_types": {
+        "explicit_refusal_or_pause": 2,
+        "pace_boundary_reframed_as_manipulation": 1,
+        "sexual_conquest_framing": 1,
+        "alcohol_venue_risk": 2,
+        "deceptive_headcount": 1,
+        "privacy_location_share": 2,
+        "age_unknown": 2,
+        "coercion_or_disregard_of_pua_alert": 1,
+        "possible_in_scene_stop_signal_oral": 1,
+        "family_surveillance_boundary": 1,
+        "safety_concern_dismissed": 1,
+        "pressure_after_boundary": 1,
+        "hostile_appearance_policing": 1,
+        "deceptive_or_manipulative_framing": 1
+      },
+      "p06_entry_count": 46,
+      "markdown_count": 46,
+      "qa": {
+        "raw": "pass",
+        "P01": "pass",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "case_qa": {
+        "P04": {
+          "CASE-C008-001": "pass",
+          "CASE-C008-002": "pass"
+        },
+        "P05": {
+          "CASE-C008-001": "pass",
+          "CASE-C008-002": "pass"
+        },
+        "P06": {
+          "CASE-C008-001": "pass",
+          "CASE-C008-002": "pass"
+        }
+      },
+      "p04_out_of_range_cases": [],
+      "version_fields_present": {
+        "p01": true,
+        "p03": true
+      },
+      "flags": [
+        "high_unassigned_gt_20pct"
+      ],
+      "evidence_qa_ok": true
+    },
+    {
+      "course_id": "C009",
+      "run_id": "RUN-20260715-001-V001",
+      "segment_count": 5870,
+      "speaker_distribution": {
+        "speaker_0": 3394,
+        "speaker_1": 2182,
+        "unknown": 294
+      },
+      "unknown_ratio": 0.0501,
+      "case_count": 1,
+      "unassigned_segment_count": 1124,
+      "unassigned_ratio": 0.1915,
+      "p04_case_file_count": 1,
+      "stage_timings_seconds": {
+        "media": 4.0,
+        "transcript": 1023.0,
+        "diarization": 1213.0,
+        "alignment": 9.0,
+        "board_detect": 57.0,
+        "board_track": 67.0,
+        "board_ocr": 2255.0,
+        "merge": 4.0,
+        "export": 7.0
+      },
+      "ocr": {
+        "ocr_call_count": 695,
+        "ocr_cache_hits": 0,
+        "ocr_dedup_image_count": 333,
+        "frame_count": 800,
+        "sampling_mode": "fixed"
+      },
+      "board_count": 333,
+      "attempts": 1,
+      "failure_count": 0,
+      "batch_status": "succeeded",
+      "p05_risk_count": 9,
+      "p05_risk_types": {
+        "explicit_refusal_or_discomfort": 1,
+        "pace_boundary_reframed_as_obstacle": 1,
+        "emotional_pressure": 1,
+        "deception_travel_story": 1,
+        "unclear_consent_sexual_outcome": 1,
+        "sexual_conquest_framing": 1,
+        "neglect_while_pursuing_others": 1,
+        "privacy_location_and_account": 1,
+        "age_unknown": 1
+      },
+      "p06_entry_count": 22,
+      "markdown_count": 22,
+      "qa": {
+        "raw": "pass",
+        "P01": "pass",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "case_qa": {
+        "P04": {
+          "CASE-C009-001": "pass"
+        },
+        "P05": {
+          "CASE-C009-001": "pass"
+        },
+        "P06": {
+          "CASE-C009-001": "pass"
+        }
+      },
+      "p04_out_of_range_cases": [],
+      "version_fields_present": {
+        "p01": true,
+        "p03": true
+      },
+      "flags": [],
+      "evidence_qa_ok": true
+    },
+    {
+      "course_id": "C010",
+      "run_id": "RUN-20260715-001-V001",
+      "segment_count": 3338,
+      "speaker_distribution": {
+        "speaker_0": 1919,
+        "speaker_1": 1179,
+        "unknown": 240
+      },
+      "unknown_ratio": 0.0719,
+      "case_count": 1,
+      "unassigned_segment_count": 354,
+      "unassigned_ratio": 0.1061,
+      "p04_case_file_count": 1,
+      "stage_timings_seconds": {
+        "media": 2.0,
+        "transcript": 604.0,
+        "diarization": 729.0,
+        "alignment": 3.0,
+        "board_detect": 37.0,
+        "board_track": 90.0,
+        "board_ocr": 2094.0,
+        "merge": 2.0,
+        "export": 4.0
+      },
+      "ocr": {
+        "ocr_call_count": 593,
+        "ocr_cache_hits": 0,
+        "ocr_dedup_image_count": 252,
+        "frame_count": 800,
+        "sampling_mode": "fixed"
+      },
+      "board_count": 252,
+      "attempts": 1,
+      "failure_count": 0,
+      "batch_status": "succeeded",
+      "p05_risk_count": 9,
+      "p05_risk_types": {
+        "trust_conflict_deletion_threat": 1,
+        "pressure_after_boundary_signal": 1,
+        "deception_coaching_zodiac": 1,
+        "sexual_framing_and_cohabitation_pressure": 1,
+        "privacy_id_phone_wechat_watermark": 1,
+        "age_and_identity_unverified_before_meetup": 1,
+        "minor_mentioned_in_sexualized_pursuit": 1,
+        "side_thread_married_target_sexualized": 1,
+        "emotional_pace_labeling": 1
+      },
+      "p06_entry_count": 22,
+      "markdown_count": 22,
+      "qa": {
+        "raw": "pass",
+        "P01": "pass",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "case_qa": {
+        "P04": {
+          "CASE-C010-001": "pass"
+        },
+        "P05": {
+          "CASE-C010-001": "pass"
+        },
+        "P06": {
+          "CASE-C010-001": "pass"
+        }
+      },
+      "p04_out_of_range_cases": [],
+      "version_fields_present": {
+        "p01": true,
+        "p03": true
+      },
+      "flags": [
+        "case_boundaries_possibly_too_wide"
+      ],
+      "evidence_qa_ok": true
+    },
+    {
+      "course_id": "C011",
+      "run_id": "RUN-20260715-001-V001",
+      "segment_count": 3577,
+      "speaker_distribution": {
+        "speaker_0": 2451,
+        "speaker_1": 37,
+        "speaker_2": 797,
+        "speaker_3": 16,
+        "speaker_4": 8,
+        "speaker_5": 2,
+        "speaker_6": 5,
+        "unknown": 261
+      },
+      "unknown_ratio": 0.073,
+      "case_count": 3,
+      "unassigned_segment_count": 665,
+      "unassigned_ratio": 0.1859,
+      "p04_case_file_count": 3,
+      "stage_timings_seconds": {
+        "media": 2.0,
+        "transcript": 264.0,
+        "diarization": 304.0,
+        "alignment": 2.0,
+        "board_detect": 21.0,
+        "board_track": 42.0,
+        "board_ocr": 1437.0,
+        "merge": 2.0,
+        "export": 4.0
+      },
+      "ocr": {
+        "ocr_call_count": 637,
+        "ocr_cache_hits": 0,
+        "ocr_dedup_image_count": 275,
+        "frame_count": 800,
+        "sampling_mode": "fixed"
+      },
+      "board_count": 275,
+      "attempts": 1,
+      "failure_count": 0,
+      "batch_status": "succeeded",
+      "p05_risk_count": 26,
+      "p05_risk_types": {
+        "sexual_boundary_and_stop_signal": 1,
+        "fear_of_deception_after_sex": 1,
+        "instructor_reframes_boundary_as_attraction": 1,
+        "deceptive_anti_persona_script": 1,
+        "objectifying_sexual_language": 1,
+        "alcohol_and_cohabitation_push": 1,
+        "privacy_wechat_watermark_exposure": 3,
+        "age_and_identity_unverified": 3,
+        "lockdown_isolation_meetup_pressure": 1,
+        "side_thread_misogynistic_framing": 1,
+        "deceptive_parallel_pursuit_while_partnered": 1,
+        "private_call_recording_without_consent_evidence": 1,
+        "player_script_non_initiation_non_refusal": 1,
+        "instrumentalizing_girlfriend_as_social_proof": 1,
+        "discomfort_signal_not_stop_framed": 1,
+        "misogynistic_side_board_framing": 1,
+        "late_night_meetup_push_context": 1,
+        "privacy_partial_avatar_identification": 1,
+        "objectifying_sexual_conquest_metrics": 1,
+        "targeting_high_status_women_for_extraction": 1,
+        "persistence_and_group_pressure_framing": 1,
+        "unverified_outcome_presented_as_proof": 1
+      },
+      "p06_entry_count": 61,
+      "markdown_count": 61,
+      "qa": {
+        "raw": "pass",
+        "P01": "pass",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "case_qa": {
+        "P04": {
+          "CASE-C011-001": "pass",
+          "CASE-C011-002": "pass",
+          "CASE-C011-003": "pass"
+        },
+        "P05": {
+          "CASE-C011-001": "pass",
+          "CASE-C011-002": "pass",
+          "CASE-C011-003": "pass"
+        },
+        "P06": {
+          "CASE-C011-001": "pass",
+          "CASE-C011-002": "pass",
+          "CASE-C011-003": "pass"
+        }
+      },
+      "p04_out_of_range_cases": [],
+      "version_fields_present": {
+        "p01": true,
+        "p03": true
+      },
+      "flags": [],
+      "evidence_qa_ok": true
+    },
+    {
+      "course_id": "C012",
+      "run_id": "RUN-20260715-001-V001",
+      "segment_count": 2952,
+      "speaker_distribution": {
+        "speaker_0": 1971,
+        "speaker_1": 27,
+        "speaker_2": 779,
+        "unknown": 175
+      },
+      "unknown_ratio": 0.0593,
+      "case_count": 1,
+      "unassigned_segment_count": 1595,
+      "unassigned_ratio": 0.5403,
+      "p04_case_file_count": 1,
+      "stage_timings_seconds": {
+        "media": 2.0,
+        "transcript": 206.0,
+        "diarization": 251.0,
+        "alignment": 1.0,
+        "board_detect": 22.0,
+        "board_track": 67.0,
+        "board_ocr": 1368.0,
+        "merge": 1.0,
+        "export": 1.0
+      },
+      "ocr": {
+        "ocr_call_count": 506,
+        "ocr_cache_hits": 0,
+        "ocr_dedup_image_count": 237,
+        "frame_count": 715,
+        "sampling_mode": "fixed"
+      },
+      "board_count": 237,
+      "attempts": 1,
+      "failure_count": 0,
+      "batch_status": "succeeded",
+      "p05_risk_count": 11,
+      "p05_risk_types": {
+        "privacy_wechat_watermark_exposure": 1,
+        "privacy_precise_location_exposure": 1,
+        "deceptive_mirroring_as_customer_needs": 1,
+        "fish_farming_delete_block_framing": 1,
+        "objectifying_appearance_tiering": 1,
+        "alcohol_in_meetup_script": 1,
+        "group_blast_invite_and_night_refusal": 1,
+        "lockdown_isolation_pursuit": 1,
+        "templated_pasteboard_invite_script": 1,
+        "age_self_reported_unverified": 1,
+        "promotion_contact_noise_exposure": 1
+      },
+      "p06_entry_count": 22,
+      "markdown_count": 22,
+      "qa": {
+        "raw": "pass",
+        "P01": "pass",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "case_qa": {
+        "P04": {
+          "CASE-C012-001": "pass"
+        },
+        "P05": {
+          "CASE-C012-001": "pass"
+        },
+        "P06": {
+          "CASE-C012-001": "pass"
+        }
+      },
+      "p04_out_of_range_cases": [],
+      "version_fields_present": {
+        "p01": true,
+        "p03": true
+      },
+      "flags": [
+        "high_unassigned_gt_20pct",
+        "case_boundaries_possibly_too_narrow"
+      ],
+      "evidence_qa_ok": true
+    },
+    {
+      "course_id": "C013",
+      "run_id": "RUN-20260715-001-V001",
+      "segment_count": 4151,
+      "speaker_distribution": {
+        "speaker_0": 2128,
+        "speaker_1": 1803,
+        "unknown": 220
+      },
+      "unknown_ratio": 0.053,
+      "case_count": 2,
+      "unassigned_segment_count": 375,
+      "unassigned_ratio": 0.0903,
+      "p04_case_file_count": 2,
+      "stage_timings_seconds": {
+        "media": 2.0,
+        "transcript": 308.0,
+        "diarization": 356.0,
+        "alignment": 3.0,
+        "board_detect": 25.0,
+        "board_track": 40.0,
+        "board_ocr": 2070.0,
+        "merge": 2.0,
+        "export": 6.0
+      },
+      "ocr": {
+        "ocr_call_count": 644,
+        "ocr_cache_hits": 0,
+        "ocr_dedup_image_count": 250,
+        "frame_count": 800,
+        "sampling_mode": "fixed"
+      },
+      "board_count": 250,
+      "attempts": 1,
+      "failure_count": 0,
+      "batch_status": "succeeded",
+      "p05_risk_count": 18,
+      "p05_risk_types": {
+        "privacy_wechat_watermark_exposure": 1,
+        "privacy_precise_location_and_unit_exposure": 1,
+        "multi_line_deception_and_delay": 1,
+        "instructor_reframes_refusal_as_not_real": 1,
+        "objectifying_consume_framing": 1,
+        "alcohol_private_space_script": 1,
+        "overnight_sexual_outcome_claimed": 1,
+        "relationship_ambiguity_post_sex_pressure": 1,
+        "travel_deadline_home_invite_pressure": 1,
+        "refusal_or_pace_boundary_override": 1,
+        "physical_resistance_ignored": 1,
+        "post_sex_excuse_discard": 1,
+        "alcohol_home_invite_pressure": 1,
+        "concurrent_partner_deception_risk": 1,
+        "humiliation_or_downer_tactics": 1,
+        "privacy_exposure_classroom_display": 1,
+        "age_unknown": 1,
+        "transactional_intimacy_framing": 1
+      },
+      "p06_entry_count": 45,
+      "markdown_count": 45,
+      "qa": {
+        "raw": "pass",
+        "P01": "pass",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "case_qa": {
+        "P04": {
+          "CASE-C013-001": "pass",
+          "CASE-C013-002": "pass"
+        },
+        "P05": {
+          "CASE-C013-001": "pass",
+          "CASE-C013-002": "pass"
+        },
+        "P06": {
+          "CASE-C013-001": "pass",
+          "CASE-C013-002": "pass"
+        }
+      },
+      "p04_out_of_range_cases": [],
+      "version_fields_present": {
+        "p01": true,
+        "p03": true
+      },
+      "flags": [],
+      "evidence_qa_ok": true
+    },
+    {
+      "course_id": "C014",
+      "run_id": "RUN-20260715-001-V001",
+      "segment_count": 4757,
+      "speaker_distribution": {
+        "speaker_0": 8,
+        "speaker_1": 2997,
+        "speaker_2": 1557,
+        "speaker_3": 18,
+        "unknown": 177
+      },
+      "unknown_ratio": 0.0372,
+      "case_count": 2,
+      "unassigned_segment_count": 246,
+      "unassigned_ratio": 0.0517,
+      "p04_case_file_count": 2,
+      "stage_timings_seconds": {
+        "media": 3.0,
+        "transcript": 791.0,
+        "diarization": 999.0,
+        "alignment": 5.0,
+        "board_detect": 71.0,
+        "board_track": 102.0,
+        "board_ocr": 2263.0,
+        "merge": 3.0,
+        "export": 3.0
+      },
+      "ocr": {
+        "ocr_call_count": 516,
+        "ocr_cache_hits": 0,
+        "ocr_dedup_image_count": 223,
+        "frame_count": 800,
+        "sampling_mode": "fixed"
+      },
+      "board_count": 223,
+      "attempts": 1,
+      "failure_count": 0,
+      "batch_status": "succeeded",
+      "p05_risk_count": 15,
+      "p05_risk_types": {
+        "alcohol_impairment_intoxication_and_wheelchair_removal": 1,
+        "impaired_or_post_sleep_sexual_operation_denying_exploitation": 1,
+        "privacy_precise_location_and_room_exposure": 1,
+        "privacy_wechat_watermark_and_contact_exposure": 1,
+        "dual_line_scheduling_deception": 1,
+        "age_uncertainty": 2,
+        "positive_framing_of_intoxication_outcome": 1,
+        "explicit_pace_boundary_and_discomfort_dismissed_as_green_light": 1,
+        "deception_reframed_as_respect_and_exclusive_claim": 1,
+        "illness_context_meeting_and_intimacy_pressure": 1,
+        "privacy_id_number_and_contact_watermark_exposure": 1,
+        "same_day_relationship_confirm_ticket_and_cohabitation_push": 1,
+        "dating_app_logout_cost_gaming_and_pie_drawing": 1,
+        "destination_expectation_mismatch_chaoshan_vs_chengdu": 1
+      },
+      "p06_entry_count": 51,
+      "markdown_count": 51,
+      "qa": {
+        "raw": "pass",
+        "P01": "pass",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "case_qa": {
+        "P04": {
+          "CASE-C014-001": "pass",
+          "CASE-C014-002": "pass"
+        },
+        "P05": {
+          "CASE-C014-001": "pass",
+          "CASE-C014-002": "pass"
+        },
+        "P06": {
+          "CASE-C014-001": "pass",
+          "CASE-C014-002": "pass"
+        }
+      },
+      "p04_out_of_range_cases": [],
+      "version_fields_present": {
+        "p01": true,
+        "p03": true
+      },
+      "flags": [],
+      "evidence_qa_ok": true
+    },
+    {
+      "course_id": "C015",
+      "run_id": "RUN-20260715-001-V001",
+      "segment_count": 5198,
+      "speaker_distribution": {
+        "speaker_0": 3340,
+        "speaker_1": 1682,
+        "speaker_2": 3,
+        "speaker_3": 6,
+        "unknown": 167
+      },
+      "unknown_ratio": 0.0321,
+      "case_count": 2,
+      "unassigned_segment_count": 1530,
+      "unassigned_ratio": 0.2943,
+      "p04_case_file_count": 2,
+      "stage_timings_seconds": {
+        "media": 3.0,
+        "transcript": 928.0,
+        "diarization": 1145.0,
+        "alignment": 6.0,
+        "board_detect": 59.0,
+        "board_track": 65.0,
+        "board_ocr": 2053.0,
+        "merge": 5.0,
+        "export": 5.0
+      },
+      "ocr": {
+        "ocr_call_count": 592,
+        "ocr_cache_hits": 0,
+        "ocr_dedup_image_count": 174,
+        "frame_count": 800,
+        "sampling_mode": "fixed"
+      },
+      "board_count": 174,
+      "attempts": 1,
+      "failure_count": 0,
+      "batch_status": "succeeded",
+      "p05_risk_count": 14,
+      "p05_risk_types": {
+        "explicit_refusal_pickup": 1,
+        "alcohol_impaired_consent_capacity": 1,
+        "privacy_location_phone_photo": 2,
+        "pressure_fast_intercept_after_soft_boundary": 1,
+        "age_unknown": 1,
+        "deceptive_delay_reply_tactic": 1,
+        "third_party_situation_framing_as_rescue": 1,
+        "explicit_refusal_overnight_and_first_meet_sex": 1,
+        "pressure_override_delay_to_same_night": 1,
+        "alcohol_coercion_language": 1,
+        "age_unknown_young_framing": 1,
+        "teach_break_or_copy_ASD_boundary": 1,
+        "objectifying_easy_target_framing": 1
+      },
+      "p06_entry_count": 44,
+      "markdown_count": 44,
+      "qa": {
+        "raw": "pass",
+        "P01": "pass",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "case_qa": {
+        "P04": {
+          "CASE-C015-001": "pass",
+          "CASE-C015-002": "pass"
+        },
+        "P05": {
+          "CASE-C015-001": "pass",
+          "CASE-C015-002": "pass"
+        },
+        "P06": {
+          "CASE-C015-001": "pass",
+          "CASE-C015-002": "pass"
+        }
+      },
+      "p04_out_of_range_cases": [],
+      "version_fields_present": {
+        "p01": true,
+        "p03": true
+      },
+      "flags": [
+        "high_unassigned_gt_20pct",
+        "ocr_ratio_high_vs_boards"
+      ],
+      "evidence_qa_ok": true
+    }
+  ]
+}

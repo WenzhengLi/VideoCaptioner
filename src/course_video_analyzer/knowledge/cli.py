@@ -48,6 +48,11 @@ from course_video_analyzer.knowledge.afeng import (
     write_approved_method,
     write_external_payload,
 )
+from course_video_analyzer.knowledge.evidence_wave import (
+    build_evidence_baseline,
+    finalize_evidence_wave,
+    write_evidence_baseline,
+)
 from course_video_analyzer.knowledge.afeng_models import (
     AfengEvidencePackage,
     AfengMethodDraft,
@@ -276,6 +281,34 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         default=Path("data/dify/document-map.json"),
     )
+    evidence_finalize = subparsers.add_parser(
+        "finalize-evidence-wave",
+        help="validate P01-P04 QA and write evidence-pipeline complete marker (never P05/P06)",
+    )
+    evidence_finalize.add_argument("--data-root", type=Path, default=Path("data"))
+    evidence_finalize.add_argument("--batch-id", required=True)
+    evidence_finalize.add_argument("--wave-id", required=True)
+    evidence_finalize.add_argument("--start", type=int, required=True)
+    evidence_finalize.add_argument("--end", type=int, required=True)
+    evidence_finalize.add_argument("--output-version", default="knowledge-v003")
+    evidence_finalize.add_argument(
+        "--through-stage",
+        default="P04",
+        choices=["P01", "P02", "P03", "P04"],
+    )
+    evidence_baseline = subparsers.add_parser(
+        "build-evidence-baseline",
+        help="write evidence-baseline manifest for a course range",
+    )
+    evidence_baseline.add_argument("--data-root", type=Path, default=Path("data"))
+    evidence_baseline.add_argument("--start", type=int, required=True)
+    evidence_baseline.add_argument("--end", type=int, required=True)
+    evidence_baseline.add_argument("--output", type=Path, required=True)
+    evidence_baseline.add_argument("--p01-version", default="knowledge-v002")
+    evidence_baseline.add_argument("--p02-version", default="knowledge-v002")
+    evidence_baseline.add_argument("--p03-version", default="knowledge-v003")
+    evidence_baseline.add_argument("--p04-version", default="knowledge-v003")
+    evidence_baseline.add_argument("--previous-p03-version", default="knowledge-v002")
     afeng_schemas = subparsers.add_parser(
         "afeng-export-schemas", help="export afeng-method-v001 JSON Schemas"
     )
@@ -612,6 +645,30 @@ def main() -> int:
                 indent=2,
             )
         )
+    elif args.command == "finalize-evidence-wave":
+        output = finalize_evidence_wave(
+            args.data_root,
+            args.batch_id,
+            args.wave_id,
+            start_ordinal=args.start,
+            end_ordinal=args.end,
+            output_version=args.output_version,
+            through_stage=args.through_stage,
+        )
+        print(f"证据层波次完成标记: {output}")
+    elif args.command == "build-evidence-baseline":
+        payload = build_evidence_baseline(
+            args.data_root,
+            start_ordinal=args.start,
+            end_ordinal=args.end,
+            p01_version=args.p01_version,
+            p02_version=args.p02_version,
+            p03_version=args.p03_version,
+            p04_version=args.p04_version,
+            previous_p03_version=args.previous_p03_version,
+        )
+        output = write_evidence_baseline(args.output, payload)
+        print(f"证据基线清单: {output}")
     elif args.command == "afeng-export-schemas":
         outputs = export_afeng_schemas(args.output_dir)
         print(f"阿峰方法层 Schema 已输出: {len(outputs)} -> {args.output_dir}")
