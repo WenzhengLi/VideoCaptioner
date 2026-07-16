@@ -235,6 +235,32 @@ python scripts/build_afeng_dify_bundle.py `
 当前三课离线包包含 5 个文档，自动排除 C006/CASE-C006-001 人工复核案例。该步骤不代表 Dify
 已经部署或入库；真实同步仍需 Dataset、索引状态轮询和检索验收。
 
+## 五课正式扩展结果
+
+冻结 baseline：`data/catalog/evidence-baseline-C001-C020.json`。正式五课集合为
+`C003,C006,C007,C010,C012`，共 8 个案例。新 pilot 使用独立目录，不覆盖旧预检和三课运行：
+
+```text
+data/afeng/pilots/C003-C006-C007-C010-C012-baseline-C020-v002/
+data/afeng/model-runs/C003-C006-C007-C010-C012-baseline-C020-v002/new-courses-v002/
+```
+
+C003/C006/C010 的 6 个 evidence package 与既有正式三课逐文件 SHA-256 完全一致，因此直接复用；
+只对新增 C007/C012 调用模型。结果：
+
+- 8 案例，7 published，1 manual_review，0 failed；
+- C007 首轮通过；
+- C012 首轮审查未通过，经一轮修订后发布；
+- C006/CASE-C006-001 继续保留 manual_review；
+- 所有 7 个发布方法均为 `case_derived_method`；
+- 完整报告：`docs/evaluation/afeng-five-course-v002.md/.json`。
+
+多运行汇总已沉淀到 `scripts/summarize_afeng_model_run.py`：既兼容单个 summary，也能聚合多个
+互不重叠的运行；发现重复 course/case 时直接报错，避免重复计数。
+
+新的 Dify 离线包为 `data/dify/afeng-release-v002.2/`，包含 7 个文档并自动排除 1 个
+manual_review 案例。离线包仍不等于 Dify 已在线部署或完成索引。
+
 通用 Dify Markdown 同步已使用内容 SHA-256 做幂等判断：首次创建、内容相同跳过、内容变化调用
 `update-by-text`。本地 document map 保存 knowledge ID、Dify document ID、内容哈希和 metadata。
 阿峰 metadata 从 frontmatter 读取 fidelity、发布分类、泛化等级、课程/案例和源时间范围。

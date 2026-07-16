@@ -92,3 +92,17 @@ P04 版本。
 - C006 人工复核问题是否在 C007/C012 重现。
 
 只有 5 课没有出现系统性漏证据或错误发布，才进入 15 课扩展。
+
+## 正式执行结果
+
+已基于冻结的 `evidence-baseline-C001-C020.json` 重新生成正式 pilot，并确认旧三课 6 个 evidence
+package 与既有正式运行逐文件 SHA-256 一致，因此只新增运行 C007/C012。
+
+- 8 案例：7 published、1 manual_review、0 failed；
+- C007 首轮发布；
+- C012 一轮修订后发布；
+- C006/CASE-C006-001 继续保留 manual_review；
+- 完整报告：`docs/evaluation/afeng-five-course-v002.md/.json`；
+- Dify 离线包：`data/dify/afeng-release-v002.2/`，7 文档、排除 1 案例。
+
+进入 15 课前仍需完成五课人工忠实度抽检；离线发布包不代表 Dify 已在线入库。

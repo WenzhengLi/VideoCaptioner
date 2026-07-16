@@ -15,12 +15,25 @@ from course_video_analyzer.knowledge.afeng_models import AfengRunManifest, Publi
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("model_run_summary", type=Path)
+    parser.add_argument("model_run_summaries", type=Path, nargs="+")
+    parser.add_argument("--report-id")
     parser.add_argument("--json-output", type=Path, required=True)
     parser.add_argument("--markdown-output", type=Path, required=True)
     args = parser.parse_args()
-    source = json.loads(args.model_run_summary.read_text(encoding="utf-8"))
-    manifests = [AfengRunManifest.model_validate(item) for item in source.get("results") or []]
+    sources = [
+        json.loads(path.read_text(encoding="utf-8"))
+        for path in args.model_run_summaries
+    ]
+    manifests: list[AfengRunManifest] = []
+    seen_cases: set[tuple[str, str]] = set()
+    for source in sources:
+        for item in source.get("results") or []:
+            manifest = AfengRunManifest.model_validate(item)
+            key = (manifest.course_id, manifest.case_id)
+            if key in seen_cases:
+                raise ValueError(f"duplicate case across summaries: {key[0]}/{key[1]}")
+            seen_cases.add(key)
+            manifests.append(manifest)
     status_counts = Counter(item.status for item in manifests)
     publication_counts: Counter[str] = Counter()
     total_prompt_tokens = 0
@@ -68,13 +81,20 @@ def main() -> int:
                 "model_duration_ms": duration_ms,
             }
         )
+    failures = [failure for source in sources for failure in source.get("failures") or []]
+    pilot_ids = list(dict.fromkeys(str(source.get("pilot_id") or "") for source in sources))
+    models = list(dict.fromkeys(str(source.get("model") or "") for source in sources))
+    statuses = [str(source.get("status") or "unknown") for source in sources]
+    report_id = args.report_id or (pilot_ids[0] if len(pilot_ids) == 1 else "+".join(pilot_ids))
     report = {
         "schema_version": "1.0",
-        "pilot_id": source.get("pilot_id"),
-        "model": source.get("model"),
-        "status": source.get("status"),
+        "pilot_id": report_id,
+        "source_pilot_ids": pilot_ids,
+        "source_summaries": [str(path.resolve()) for path in args.model_run_summaries],
+        "model": models[0] if len(models) == 1 else models,
+        "status": "complete" if all(status == "complete" for status in statuses) and not failures else "needs_review",
         "case_count": len(manifests),
-        "failure_count": len(source.get("failures") or []),
+        "failure_count": len(failures),
         "status_counts": dict(status_counts),
         "publication_class_counts": dict(publication_counts),
         "prompt_tokens": total_prompt_tokens,
@@ -83,7 +103,7 @@ def main() -> int:
         "estimated_cost": round(total_cost, 8),
         "model_duration_ms": total_model_duration_ms,
         "cases": case_rows,
-        "failures": source.get("failures") or [],
+        "failures": failures,
     }
     atomic_write_text(args.json_output, json.dumps(report, ensure_ascii=False, indent=2))
     lines = [

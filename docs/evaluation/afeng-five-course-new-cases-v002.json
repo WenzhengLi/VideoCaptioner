@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "pilot_id": "afeng-five-course-new-cases-v002",
+  "source_pilot_ids": [
+    "C003-C006-C007-C010-C012-baseline-C020-v002"
+  ],
+  "source_summaries": [
+    "D:\\Dev\\VideoCaptioner\\data\\afeng\\model-runs\\C003-C006-C007-C010-C012-baseline-C020-v002\\new-courses-v002\\model-run-summary.json"
+  ],
+  "model": "mimo-v2.5-pro",
+  "status": "complete",
+  "case_count": 2,
+  "failure_count": 0,
+  "status_counts": {
+    "published": 2
+  },
+  "publication_class_counts": {
+    "case_derived_method": 2
+  },
+  "prompt_tokens": 638212,
+  "completion_tokens": 34023,
+  "total_tokens": 672235,
+  "estimated_cost": 4.098211,
+  "model_duration_ms": 560737,
+  "cases": [
+    {
+      "course_id": "C007",
+      "case_id": "CASE-C007-001",
+      "status": "published",
+      "revision_count": 0,
+      "publication_class": "case_derived_method",
+      "prompt_tokens": 172934,
+      "completion_tokens": 13588,
+      "estimated_cost": 1.205394,
+      "model_duration_ms": 207613
+    },
+    {
+      "course_id": "C012",
+      "case_id": "CASE-C012-001",
+      "status": "published",
+      "revision_count": 1,
+      "publication_class": "case_derived_method",
+      "prompt_tokens": 465278,
+      "completion_tokens": 20435,
+      "estimated_cost": 2.892817,
+      "model_duration_ms": 353124
+    }
+  ],
+  "failures": []
+}
