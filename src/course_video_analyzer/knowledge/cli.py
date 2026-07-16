@@ -32,6 +32,11 @@ from course_video_analyzer.knowledge.store import (
 )
 from course_video_analyzer.knowledge.answering import answer_tidy_query
 from course_video_analyzer.knowledge.runs import archive_successful_job, write_run_qa
+from course_video_analyzer.knowledge.dify_sync import (
+    DifyConfig,
+    create_dataset,
+    sync_markdown_dir,
+)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -171,10 +176,18 @@ def build_parser() -> argparse.ArgumentParser:
     p06_qa.add_argument("input", type=Path)
     p06_qa.add_argument("output", type=Path)
     p06_qa.add_argument("report", type=Path)
-    tidy_export = subparsers.add_parser("export-tidy", help="export P06 entries as Markdown")
+    tidy_export = subparsers.add_parser(
+        "export-tidy",
+        aliases=["local-export-markdown"],
+        help="export P06 entries as Markdown (local; not Dify)",
+    )
     tidy_export.add_argument("p06", type=Path)
     tidy_export.add_argument("output_dir", type=Path)
-    tidy_index = subparsers.add_parser("index-tidy", help="index all P06 entries into SQLite FTS")
+    tidy_index = subparsers.add_parser(
+        "index-tidy",
+        aliases=["local-index-build"],
+        help="index P06 into local SQLite FTS (offline regression; not Dify)",
+    )
     tidy_index.add_argument("--data-root", type=Path, default=Path("data"))
     tidy_index.add_argument("--database", type=Path, default=Path("data/tidy/knowledge.db"))
     tidy_index.add_argument(
@@ -182,7 +195,11 @@ def build_parser() -> argparse.ArgumentParser:
         default="knowledge-v002",
         help="P06 output directory suffix, e.g. knowledge-v002 or knowledge-v003",
     )
-    tidy_search = subparsers.add_parser("search-tidy", help="search the local knowledge index")
+    tidy_search = subparsers.add_parser(
+        "search-tidy",
+        aliases=["local-index-search"],
+        help="search local SQLite index (offline; not Dify)",
+    )
     tidy_search.add_argument("query")
     tidy_search.add_argument("--database", type=Path, default=Path("data/tidy/knowledge.db"))
     tidy_search.add_argument("--limit", type=int, default=8)
@@ -191,7 +208,11 @@ def build_parser() -> argparse.ArgumentParser:
     answer_context.add_argument("output", type=Path)
     answer_context.add_argument("--database", type=Path, default=Path("data/tidy/knowledge.db"))
     answer_context.add_argument("--limit", type=int, default=8)
-    tidy_answer = subparsers.add_parser("answer-tidy", help="retrieve evidence and generate multi-option answer")
+    tidy_answer = subparsers.add_parser(
+        "answer-tidy",
+        aliases=["local-index-answer"],
+        help="local multi-option answer via SQLite+Cursor (not Dify Chatflow)",
+    )
     tidy_answer.add_argument("query")
     tidy_answer.add_argument("output", type=Path)
     tidy_answer.add_argument("--database", type=Path, default=Path("data/tidy/knowledge.db"))
@@ -202,6 +223,40 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         default=Path("prompts/knowledge-v002"),
         help="Prompt directory used by Cursor answer stage",
+    )
+    dify_create = subparsers.add_parser(
+        "dify-create-dataset",
+        help="create a Dify Knowledge dataset via official API",
+    )
+    dify_create.add_argument("--name", default="VideoCaptioner Courses")
+    dify_create.add_argument("--description", default="Course knowledge from P06 Markdown")
+    dify_sync = subparsers.add_parser(
+        "dify-sync-markdown",
+        help="idempotently sync Markdown knowledge files into a Dify dataset",
+    )
+    dify_sync.add_argument(
+        "--markdown-root",
+        type=Path,
+        default=Path("data/courses"),
+        help="Courses root or a markdown directory containing *.md",
+    )
+    dify_sync.add_argument(
+        "--map-path",
+        type=Path,
+        default=Path("data/dify/document-map.json"),
+        help="Local knowledge_id to document_id map (runtime; do not commit secrets)",
+    )
+    dify_sync.add_argument("--dataset-id", default=None)
+    dify_sync.add_argument("--limit", type=int, default=None)
+    dify_sync.add_argument("--poll-indexing", action="store_true")
+    dify_status = subparsers.add_parser(
+        "dify-status",
+        help="show local Dify document map summary (does not imply Dify is running)",
+    )
+    dify_status.add_argument(
+        "--map-path",
+        type=Path,
+        default=Path("data/dify/document-map.json"),
     )
     return parser
 
@@ -387,17 +442,17 @@ def main() -> int:
     elif args.command == "qa-p06":
         output = write_p06_qa(args.course_id, args.case_id, args.input, args.output, args.report)
         print(f"P06 QA 报告: {output}")
-    elif args.command == "export-tidy":
+    elif args.command in {"export-tidy", "local-export-markdown"}:
         outputs = export_tidy_markdown(args.p06, args.output_dir)
-        print(f"Tidy Markdown 已输出: {len(outputs)}")
-    elif args.command == "index-tidy":
+        print(f"本地 Markdown 已输出: {len(outputs)}（非 Dify）")
+    elif args.command in {"index-tidy", "local-index-build"}:
         result = index_tidy_entries(
             args.data_root,
             args.database,
             output_version=args.output_version,
         )
         print(json.dumps(result, ensure_ascii=False))
-    elif args.command == "search-tidy":
+    elif args.command in {"search-tidy", "local-index-search"}:
         result = search_tidy_entries(args.database, args.query, limit=args.limit)
         print(json.dumps(result, ensure_ascii=False, indent=2))
     elif args.command == "answer-context":
@@ -406,7 +461,7 @@ def main() -> int:
 
         atomic_write_text(args.output, json.dumps(result, ensure_ascii=False, indent=2))
         print(f"多方案回答上下文已输出: {args.output}")
-    elif args.command == "answer-tidy":
+    elif args.command in {"answer-tidy", "local-index-answer"}:
         output, qa = answer_tidy_query(
             args.query,
             args.database,
@@ -415,7 +470,60 @@ def main() -> int:
             prompt_root=args.prompt_root,
             limit=args.limit,
         )
-        print(f"知识库多方案回答完成: {output}; QA={qa}")
+        print(f"本地多方案回答完成: {output}; QA={qa}（非 Dify Chatflow）")
+    elif args.command == "dify-create-dataset":
+        cfg = DifyConfig.from_env(require_dataset=False)
+        result = create_dataset(cfg, args.name, description=args.description)
+        print(json.dumps(result, ensure_ascii=False, indent=2))
+        dataset_id = result.get("id")
+        if dataset_id:
+            print(f"请将 DIFY_DATASET_ID={dataset_id} 写入本地环境（勿提交）。")
+    elif args.command == "dify-sync-markdown":
+        cfg = DifyConfig.from_env(require_dataset=args.dataset_id is None)
+        root = Path(args.markdown_root)
+        if root.is_dir() and any(root.glob("*.md")):
+            markdown_dirs = [root]
+        else:
+            markdown_dirs = sorted({p.parent for p in root.glob("**/markdown-*/*.md")})
+        totals: dict = {"created": 0, "skipped": 0, "failed": [], "dirs": []}
+        remaining = args.limit
+        for md_dir in markdown_dirs:
+            part = sync_markdown_dir(
+                cfg,
+                md_dir,
+                args.map_path,
+                dataset_id=args.dataset_id,
+                limit=remaining,
+                poll_indexing=args.poll_indexing,
+            )
+            totals["created"] += int(part["created"])
+            totals["skipped"] += int(part["skipped"])
+            totals["failed"].extend(part["failed"])
+            totals["dirs"].append(str(md_dir))
+            if remaining is not None:
+                remaining = max(0, remaining - int(part["created"]))
+                if remaining == 0:
+                    break
+        totals["map_path"] = str(args.map_path)
+        print(json.dumps(totals, ensure_ascii=False, indent=2))
+    elif args.command == "dify-status":
+        from course_video_analyzer.knowledge.dify_sync import load_document_map
+
+        mapping = load_document_map(args.map_path)
+        docs = mapping.get("documents") or {}
+        print(
+            json.dumps(
+                {
+                    "map_path": str(args.map_path),
+                    "dataset_id": mapping.get("dataset_id"),
+                    "document_count": len(docs),
+                    "updated_at": mapping.get("updated_at"),
+                    "note": "本地映射摘要；不等于 Dify 容器已运行或 indexing 已完成",
+                },
+                ensure_ascii=False,
+                indent=2,
+            )
+        )
     return 0
 
 
