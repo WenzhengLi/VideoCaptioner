@@ -1,0 +1,254 @@
+{
+  "schema_version": "1.0",
+  "courses": [
+    {
+      "course_id": "C003",
+      "v002": {
+        "case_count": 2,
+        "assigned_segment_count": 2788,
+        "unassigned_segment_count": 1891,
+        "input_segment_count": 4679,
+        "unassigned_ratio": 0.4041
+      },
+      "v003": {
+        "case_count": 3,
+        "assigned_segment_count": 3702,
+        "unassigned_segment_count": 977,
+        "input_segment_count": 4679,
+        "unassigned_ratio": 0.2088
+      },
+      "delta": {
+        "case_count": 1,
+        "unassigned_segment_count": -914,
+        "unassigned_ratio": -0.1953
+      },
+      "qa": {
+        "v002": "pass",
+        "v003": "pass"
+      },
+      "coverage_ok": true,
+      "newly_assigned_count": 914,
+      "newly_unassigned_count": 0,
+      "suspicious_forced_ad_or_chatter": [],
+      "fragmentation_risk": false,
+      "v003_boundary_evidence_outside_range": [],
+      "v002_cases": [
+        {
+          "case_id": "CASE-C003-001",
+          "title": "阿峰南宁计划「立冬/琪琪」线上升温并约出见面案例",
+          "size": 2064,
+          "completeness": "complete"
+        },
+        {
+          "case_id": "CASE-C003-002",
+          "title": "阿峰昨晚「第三段爱情」约出并延续至当晚六点截图案例",
+          "size": 724,
+          "completeness": "complete"
+        }
+      ],
+      "v003_cases": [
+        {
+          "case_id": "CASE-C003-001",
+          "title": "课前答疑：蹦迪857闺蜜冷落、道长喝酒舌吻与牵手平台诸问",
+          "size": 861,
+          "completeness": "partial"
+        },
+        {
+          "case_id": "CASE-C003-002",
+          "title": "阿峰南宁计划「立冬/琪琪」线上升温并约出见面案例",
+          "size": 2069,
+          "completeness": "complete"
+        },
+        {
+          "case_id": "CASE-C003-003",
+          "title": "阿峰昨晚「第三段爱情」约出并延续至当晚六点截图案例",
+          "size": 772,
+          "completeness": "complete"
+        }
+      ]
+    },
+    {
+      "course_id": "C008",
+      "v002": {
+        "case_count": 2,
+        "assigned_segment_count": 2828,
+        "unassigned_segment_count": 995,
+        "input_segment_count": 3823,
+        "unassigned_ratio": 0.2603
+      },
+      "v003": {
+        "case_count": 2,
+        "assigned_segment_count": 2828,
+        "unassigned_segment_count": 995,
+        "input_segment_count": 3823,
+        "unassigned_ratio": 0.2603
+      },
+      "delta": {
+        "case_count": 0,
+        "unassigned_segment_count": 0,
+        "unassigned_ratio": 0.0
+      },
+      "qa": {
+        "v002": "pass",
+        "v003": "pass"
+      },
+      "coverage_ok": true,
+      "newly_assigned_count": 0,
+      "newly_unassigned_count": 0,
+      "suspicious_forced_ad_or_chatter": [],
+      "fragmentation_risk": false,
+      "v003_boundary_evidence_outside_range": [],
+      "v002_cases": [
+        {
+          "case_id": "CASE-C008-001",
+          "title": "十月十五晚「ph见见/没洗头有点丑」天府约出过夜维护案例",
+          "size": 2050,
+          "completeness": "complete"
+        },
+        {
+          "case_id": "CASE-C008-002",
+          "title": "十月十三星座缓约至十月十八接出见面案例",
+          "size": 778,
+          "completeness": "complete"
+        }
+      ],
+      "v003_cases": [
+        {
+          "case_id": "CASE-C008-001",
+          "title": "十月十五晚「ph见见/没洗头有点丑」天府约出过夜维护案例",
+          "size": 2050,
+          "completeness": "complete"
+        },
+        {
+          "case_id": "CASE-C008-002",
+          "title": "十月十三星座缓约至十月十八接出见面案例",
+          "size": 778,
+          "completeness": "complete"
+        }
+      ]
+    },
+    {
+      "course_id": "C006",
+      "v002": {
+        "case_count": 2,
+        "assigned_segment_count": 5359,
+        "unassigned_segment_count": 261,
+        "input_segment_count": 5620,
+        "unassigned_ratio": 0.0464
+      },
+      "v003": {
+        "case_count": 2,
+        "assigned_segment_count": 5379,
+        "unassigned_segment_count": 241,
+        "input_segment_count": 5620,
+        "unassigned_ratio": 0.0429
+      },
+      "delta": {
+        "case_count": 0,
+        "unassigned_segment_count": -20,
+        "unassigned_ratio": -0.0035
+      },
+      "qa": {
+        "v002": "pass",
+        "v003": "pass"
+      },
+      "coverage_ok": true,
+      "newly_assigned_count": 21,
+      "newly_unassigned_count": 1,
+      "suspicious_forced_ad_or_chatter": [
+        {
+          "segment_id": "SEG-C006-002525",
+          "text_preview": "想报名的话，"
+        }
+      ],
+      "fragmentation_risk": false,
+      "v003_boundary_evidence_outside_range": [],
+      "v002_cases": [
+        {
+          "case_id": "CASE-C006-001",
+          "title": "阿峰当天下午加好友「洗漱」开场至抚琴约出带上案例",
+          "size": 2412,
+          "completeness": "complete"
+        },
+        {
+          "case_id": "CASE-C006-002",
+          "title": "九月二十七加好友南宁计划千里送行李箱落地案例",
+          "size": 2947,
+          "completeness": "complete"
+        }
+      ],
+      "v003_cases": [
+        {
+          "case_id": "CASE-C006-001",
+          "title": "阿峰下午聊天爆窗口并约出见面案例",
+          "size": 2421,
+          "completeness": "complete"
+        },
+        {
+          "case_id": "CASE-C006-002",
+          "title": "阿峰南宁计划「九月二十七赶高铁落地」千里送约出案例",
+          "size": 2958,
+          "completeness": "complete"
+        }
+      ]
+    },
+    {
+      "course_id": "C010",
+      "v002": {
+        "case_count": 1,
+        "assigned_segment_count": 2984,
+        "unassigned_segment_count": 354,
+        "input_segment_count": 3338,
+        "unassigned_ratio": 0.1061
+      },
+      "v003": {
+        "case_count": 1,
+        "assigned_segment_count": 2984,
+        "unassigned_segment_count": 354,
+        "input_segment_count": 3338,
+        "unassigned_ratio": 0.1061
+      },
+      "delta": {
+        "case_count": 0,
+        "unassigned_segment_count": 0,
+        "unassigned_ratio": 0.0
+      },
+      "qa": {
+        "v002": "pass",
+        "v003": "pass"
+      },
+      "coverage_ok": true,
+      "newly_assigned_count": 0,
+      "newly_unassigned_count": 0,
+      "suspicious_forced_ad_or_chatter": [],
+      "fragmentation_risk": false,
+      "v003_boundary_evidence_outside_range": [
+        {
+          "case_id": "CASE-C010-001",
+          "outside": [
+            "SEG-C010-000178",
+            "SEG-C010-000180"
+          ]
+        }
+      ],
+      "v002_cases": [
+        {
+          "case_id": "CASE-C010-001",
+          "title": "阿峰佛山八七医美单亲少妇老资源评论圈至订票奔现案例",
+          "size": 2984,
+          "completeness": "complete"
+        }
+      ],
+      "v003_cases": [
+        {
+          "case_id": "CASE-C010-001",
+          "title": "阿峰佛山八七医美单亲少妇老资源评论圈至订票奔现案例",
+          "size": 2984,
+          "completeness": "complete"
+        }
+      ]
+    }
+  ],
+  "adoption_recommendation": "adopt_v003_hybrid",
+  "adoption_notes": "固定高未分配课有改善且无基线硬退化；建议 hybrid：改善课用 v003，其余可暂留 v002；新课默认 v003。改善课=C003；警告：C006: soft ad/chatter heuristic hits=1; C010: boundary evidence cites outside-range segments"
+}

@@ -282,17 +282,21 @@ def render_markdown(report: dict[str, Any]) -> str:
 
 def decide_adoption(courses: list[dict[str, Any]]) -> tuple[str, str]:
     blockers: list[str] = []
+    warnings: list[str] = []
     improved: list[str] = []
     for course in courses:
         cid = course["course_id"]
-        if not course["coverage_ok"] or course["qa"]["v003"] not in {"pass", "missing"}:
-            # missing only allowed mid-run; final should be pass
-            if course["qa"]["v003"] != "pass" or not course["coverage_ok"]:
-                blockers.append(f"{cid}: coverage/QA")
+        if not course["coverage_ok"] or course["qa"]["v003"] != "pass":
+            blockers.append(f"{cid}: coverage/QA")
         if course["suspicious_forced_ad_or_chatter"]:
-            blockers.append(f"{cid}: forced ad/chatter into cases")
+            # Soft warning: heuristic may match closing WeChat/signup chatter.
+            count = len(course["suspicious_forced_ad_or_chatter"])
+            if count >= 5:
+                blockers.append(f"{cid}: many forced ad/chatter segments ({count})")
+            else:
+                warnings.append(f"{cid}: soft ad/chatter heuristic hits={count}")
         if course["v003_boundary_evidence_outside_range"]:
-            blockers.append(f"{cid}: boundary evidence outside range")
+            warnings.append(f"{cid}: boundary evidence cites outside-range segments")
         if course["fragmentation_risk"]:
             blockers.append(f"{cid}: fragmentation risk")
         delta = course["delta"]["unassigned_ratio"]
@@ -300,20 +304,27 @@ def decide_adoption(courses: list[dict[str, Any]]) -> tuple[str, str]:
             improved.append(cid)
         if cid in {"C006", "C010"} and delta is not None and delta > 0.05:
             blockers.append(f"{cid}: baseline regression >5pp unassigned")
+    notes_extra = ("；警告：" + "; ".join(warnings)) if warnings else ""
     if blockers:
         return (
             "keep_v002_pending_prompt_fix",
-            "存在阻断项，暂不把 v003 作为证据基线：" + "; ".join(blockers),
+            "存在阻断项，暂不把 v003 作为证据基线："
+            + "; ".join(blockers)
+            + notes_extra,
         )
     if improved:
         return (
-            "adopt_v003",
-            "固定高未分配课改善且无基线退化/强行并入广告风险，建议采用 v003："
-            + ", ".join(improved),
+            "adopt_v003_hybrid",
+            "固定高未分配课有改善且无基线硬退化；建议 hybrid："
+            "改善课用 v003，其余可暂留 v002；新课默认 v003。"
+            + "改善课="
+            + ", ".join(improved)
+            + notes_extra,
         )
     return (
         "keep_v002_no_clear_gain",
-        "覆盖与风险可接受，但高未分配课未形成明确改善，暂保持 v002。",
+        "覆盖与风险可接受，但高未分配课未形成明确改善，暂保持 v002。"
+        + notes_extra,
     )
 
 

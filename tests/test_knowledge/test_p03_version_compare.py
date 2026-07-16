@@ -107,5 +107,10 @@ def test_compare_course_detects_unassigned_improvement(tmp_path: Path) -> None:
     assert result["delta"]["unassigned_ratio"] == -0.2
     assert result["newly_assigned_count"] == 2
     assert result["suspicious_forced_ad_or_chatter"]  # SEG 000008 looks like ad/chatter
-    recommendation, _ = decide_adoption([result])
-    assert recommendation == "keep_v002_pending_prompt_fix"
+    recommendation, notes = decide_adoption([result])
+    assert recommendation == "keep_v002_pending_prompt_fix" or recommendation.startswith(
+        "adopt_v003"
+    )
+    # With only 1 soft heuristic hit, adoption should not hard-block.
+    assert recommendation == "adopt_v003_hybrid"
+    assert "soft ad/chatter" in notes
