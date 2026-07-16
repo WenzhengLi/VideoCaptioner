@@ -54,13 +54,29 @@ def analyze_course(data_root: Path, course_id: str, output_version: str) -> dict
 
     cases = []
     unassigned = 0
+    assigned = 0
     if isinstance(p03, dict):
         cases = list(p03.get("cases") or [])
         unassigned = len(p03.get("unassigned_segment_ids") or [])
+        metrics = p03.get("segmentation_metrics") or {}
+        if isinstance(metrics, dict):
+            assigned = int(metrics.get("assigned_segment_count") or 0)
+            unassigned = int(metrics.get("unassigned_segment_count") or unassigned)
+        if not assigned:
+            assigned = sum(
+                len(c.get("segment_ids") or []) for c in cases if isinstance(c, dict)
+            )
     case_count = len(cases)
-    assigned = sum(len(c.get("segment_ids") or []) for c in cases if isinstance(c, dict))
-    total_for_ratio = assigned + unassigned
-    unassigned_ratio = round(unassigned / total_for_ratio, 4) if total_for_ratio else None
+    total_for_ratio = (
+        int((p03 or {}).get("segmentation_metrics", {}).get("input_segment_count") or 0)
+        if isinstance(p03, dict)
+        else 0
+    )
+    if not total_for_ratio:
+        total_for_ratio = assigned + unassigned or speaker["segment_count"]
+    unassigned_ratio = (
+        round(unassigned / total_for_ratio, 4) if total_for_ratio else None
+    )
 
     p05_dir = course_dir / "04_knowledge" / f"P05-{output_version}"
     risk_types: Counter[str] = Counter()
@@ -72,15 +88,43 @@ def analyze_course(data_root: Path, course_id: str, output_version: str) -> dict
             payload = _load_json(path)
             if not isinstance(payload, dict):
                 continue
-            reviews = payload.get("reviews") or payload.get("items") or []
+            flags = payload.get("safety_flags") or []
+            if isinstance(flags, list):
+                for flag in flags:
+                    if isinstance(flag, dict):
+                        label = str(
+                            flag.get("type")
+                            or flag.get("risk_type")
+                            or flag.get("name")
+                            or "unknown"
+                        )
+                    else:
+                        label = str(flag)
+                    risk_types[label] += 1
+                    risk_count += 1
+            reviews = (
+                payload.get("evidence_reviews")
+                or payload.get("reviews")
+                or payload.get("items")
+                or []
+            )
             if isinstance(reviews, list):
                 for item in reviews:
                     if not isinstance(item, dict):
                         continue
-                    flags = item.get("safety_flags") or item.get("risks") or []
-                    if isinstance(flags, list):
-                        for flag in flags:
-                            risk_types[str(flag)] += 1
+                    nested = item.get("safety_flags") or item.get("risks") or []
+                    if isinstance(nested, list):
+                        for flag in nested:
+                            if isinstance(flag, dict):
+                                label = str(
+                                    flag.get("type")
+                                    or flag.get("risk_type")
+                                    or flag.get("name")
+                                    or "unknown"
+                                )
+                            else:
+                                label = str(flag)
+                            risk_types[label] += 1
                             risk_count += 1
 
     p06_dir = course_dir / "05_tidy" / f"P06-{output_version}"
