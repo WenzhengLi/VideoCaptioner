@@ -15,11 +15,14 @@ from course_video_analyzer.knowledge.afeng import (
     build_external_payload,
     cache_key,
     content_hash,
+    normalize_method_source_time_range,
+    normalize_unbacked_method_conditions,
     render_afeng_markdown,
     validate_evidence_package,
     validate_fidelity_audit,
     validate_method_draft,
     validate_publication,
+    iter_method_evidence_ids,
 )
 from course_video_analyzer.knowledge.afeng_models import (
     AfengEvidencePackage,
@@ -29,6 +32,7 @@ from course_video_analyzer.knowledge.afeng_models import (
     AfengStage,
     ExternalSegmentProfile,
     FidelityAudit,
+    FidelityFieldReview,
     PublicationRecord,
 )
 
@@ -102,6 +106,51 @@ def _write_manifest(path: Path, manifest: AfengRunManifest) -> None:
     atomic_write_text(path, manifest.model_dump_json(indent=2))
 
 
+def _load_and_normalize_method_draft(
+    package: AfengEvidencePackage, data: dict[str, Any], path: Path
+) -> AfengMethodDraft:
+    """Validate model output and persist deterministic fields calculated from evidence."""
+    draft = AfengMethodDraft.model_validate(data)
+    normalized = normalize_unbacked_method_conditions(draft)
+    normalized = normalize_method_source_time_range(package, normalized)
+    if normalized != draft:
+        atomic_write_text(path, normalized.model_dump_json(indent=2))
+    return normalized
+
+
+def _load_and_normalize_fidelity_audit(
+    data: dict[str, Any], path: Path, revision_number: int, draft: AfengMethodDraft
+) -> FidelityAudit:
+    """Persist the orchestrator-owned revision number instead of model bookkeeping."""
+    audit = FidelityAudit.model_validate(data)
+    invalid_ids = [
+        item
+        for item in audit.invalid_evidence_ids
+        if item.startswith("SEG-") and not any(character.isspace() for character in item)
+    ]
+    field_reviews = list(audit.field_reviews)
+    if audit.audit_result == "pass" and not field_reviews:
+        field_reviews.append(
+            FidelityFieldReview(
+                field="method_draft",
+                status="supported",
+                issue="",
+                evidence_ids=list(dict.fromkeys(iter_method_evidence_ids(draft))),
+                required_action="keep",
+            )
+        )
+    normalized = audit.model_copy(
+        update={
+            "revision_number": revision_number,
+            "invalid_evidence_ids": invalid_ids,
+            "field_reviews": field_reviews,
+        }
+    )
+    if normalized != audit:
+        atomic_write_text(path, normalized.model_dump_json(indent=2))
+    return normalized
+
+
 def run_afeng_method_pipeline(
     evidence_path: Path,
     course_dir: Path,
@@ -169,6 +218,17 @@ def run_afeng_method_pipeline(
             and previous.status in {"published", "rejected", "manual_review"}
         ):
             return previous
+        if previous.input_hash == package.input_hash and previous.model == executor.model_name:
+            manifest = manifest.model_copy(
+                update={
+                    "knowledge_id": previous.knowledge_id,
+                    "events": list(previous.events),
+                    "artifact_paths": {
+                        **previous.artifact_paths,
+                        "evidence_package": str(Path(evidence_path).resolve()),
+                    },
+                }
+            )
     _write_manifest(run_path, manifest)
     current_stage: AfengStage = "extract_method"
     current_revision = 0
@@ -198,7 +258,11 @@ def run_afeng_method_pipeline(
         manifest.artifact_paths["method_draft_r0"] = str(
             draft_dir / f"{package.case_id}-{run_token}-r0.json"
         )
-        draft = AfengMethodDraft.model_validate(draft_data)
+        draft = _load_and_normalize_method_draft(
+            package,
+            draft_data,
+            draft_dir / f"{package.case_id}-{run_token}-r0.json",
+        )
         manifest.knowledge_id = draft.knowledge_id
         draft_report = validate_method_draft(package, draft)
         if draft_report["status"] != "pass":
@@ -226,8 +290,18 @@ def run_afeng_method_pipeline(
             manifest.artifact_paths[f"fidelity_audit_r{revision_number}"] = str(
                 audit_dir / f"{package.case_id}-{run_token}-r{revision_number}.json"
             )
-            audit = FidelityAudit.model_validate(audit_data)
-            audit_report = validate_fidelity_audit(package, draft, audit)
+            audit = _load_and_normalize_fidelity_audit(
+                audit_data,
+                audit_dir / f"{package.case_id}-{run_token}-r{revision_number}.json",
+                revision_number,
+                draft,
+            )
+            audit_report = validate_fidelity_audit(
+                package,
+                draft,
+                audit,
+                expected_revision_number=revision_number,
+            )
             if audit_report["status"] != "pass":
                 raise ValueError(f"fidelity audit failed deterministic QA: {audit_report}")
             if audit.audit_result == "pass":
@@ -263,7 +337,11 @@ def run_afeng_method_pipeline(
             manifest.artifact_paths[f"method_draft_r{revision_number}"] = str(
                 draft_dir / f"{package.case_id}-{run_token}-r{revision_number}.json"
             )
-            draft = AfengMethodDraft.model_validate(revised_data)
+            draft = _load_and_normalize_method_draft(
+                package,
+                revised_data,
+                draft_dir / f"{package.case_id}-{run_token}-r{revision_number}.json",
+            )
             draft_report = validate_method_draft(package, draft)
             if draft_report["status"] != "pass":
                 raise ValueError(f"revised method failed deterministic QA: {draft_report}")

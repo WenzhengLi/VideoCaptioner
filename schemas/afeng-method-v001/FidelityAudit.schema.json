@@ -64,7 +64,7 @@
       "type": "string"
     },
     "prompt_version": {
-      "default": "mimo-method-v001",
+      "default": "mimo-method-v002",
       "title": "Prompt Version",
       "type": "string"
     },

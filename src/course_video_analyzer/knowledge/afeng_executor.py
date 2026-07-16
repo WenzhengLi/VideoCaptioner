@@ -4,12 +4,13 @@ from __future__ import annotations
 
 import json
 import os
+import subprocess
 import time
 import urllib.error
 import urllib.request
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Callable, cast
+from typing import Any, Callable, Literal, cast
 
 from pydantic import BaseModel, ValidationError
 
@@ -36,6 +37,9 @@ STAGE_MODELS: dict[AfengStage, type[BaseModel]] = {
     "classify_publication": PublicationRecord,
 }
 Transport = Callable[[dict[str, Any], dict[str, str]], dict[str, Any]]
+CommandRunner = Callable[
+    [list[str], str, Path, int], subprocess.CompletedProcess[str]
+]
 
 
 @dataclass(frozen=True)
@@ -47,9 +51,13 @@ class OpenAICompatibleConfig:
     max_retries: int = 2
     retry_delay_seconds: float = 1.0
     temperature: float = 0.0
-    structured_output: bool = True
+    top_p: float | None = None
+    max_completion_tokens: int = 16_384
+    thinking: Literal["enabled", "disabled"] | None = None
+    response_format: Literal["json_schema", "json_object", "none"] = "json_schema"
     input_cost_per_million: float | None = None
     output_cost_per_million: float | None = None
+    cost_currency: str = ""
     prompt_root: Path = Path("prompts/afeng-method-v001")
 
     @classmethod
@@ -59,6 +67,22 @@ class OpenAICompatibleConfig:
         if not endpoint or not model:
             raise RuntimeError("AFENG_LLM_ENDPOINT and AFENG_LLM_MODEL are required")
         return cls(endpoint=endpoint, model=model)
+
+    @classmethod
+    def mimo_v25_pro(cls) -> "OpenAICompatibleConfig":
+        """Official Xiaomi MiMo API defaults verified from platform documentation."""
+        return cls(
+            endpoint="https://api.xiaomimimo.com/v1/chat/completions",
+            model="mimo-v2.5-pro",
+            api_key_env="MIMO_API_KEY",
+            temperature=1.0,
+            top_p=0.95,
+            thinking="enabled",
+            response_format="json_object",
+            input_cost_per_million=3.0,
+            output_cost_per_million=6.0,
+            cost_currency="CNY",
+        )
 
 
 def _extract_json_text(content: str) -> dict[str, Any]:
@@ -147,6 +171,8 @@ class OpenAICompatibleAfengExecutor:
         body: dict[str, Any] = {
             "model": self.config.model,
             "temperature": self.config.temperature,
+            "max_completion_tokens": self.config.max_completion_tokens,
+            "stream": False,
             "messages": [
                 {"role": "system", "content": self._prompt(stage)},
                 {
@@ -155,7 +181,11 @@ class OpenAICompatibleAfengExecutor:
                 },
             ],
         }
-        if self.config.structured_output:
+        if self.config.top_p is not None:
+            body["top_p"] = self.config.top_p
+        if self.config.thinking is not None:
+            body["thinking"] = {"type": self.config.thinking}
+        if self.config.response_format == "json_schema":
             body["response_format"] = {
                 "type": "json_schema",
                 "json_schema": {
@@ -164,6 +194,8 @@ class OpenAICompatibleAfengExecutor:
                     "schema": model_type.model_json_schema(),
                 },
             }
+        elif self.config.response_format == "json_object":
+            body["response_format"] = {"type": "json_object"}
         return body
 
     def _http_transport(
@@ -223,6 +255,7 @@ class OpenAICompatibleAfengExecutor:
                         / 1_000_000,
                         8,
                     )
+                    metadata["cost_currency"] = self.config.cost_currency
                 return StageExecutionResult(
                     output=validated.model_dump(mode="json"), metadata=metadata
                 )
@@ -240,5 +273,216 @@ class OpenAICompatibleAfengExecutor:
                 time.sleep(self.config.retry_delay_seconds)
         raise RuntimeError(
             f"Afeng model stage failed after {self.config.max_retries + 1} attempts: "
+            + " | ".join(errors)
+        )
+
+
+@dataclass(frozen=True)
+class ClaudeCodeCcSwitchConfig:
+    command: tuple[str, ...] = ("npx.cmd", "-y", "@anthropic-ai/claude-code")
+    model: str = "mimo-v2.5-pro"
+    timeout_seconds: int = 900
+    max_retries: int = 1
+    retry_delay_seconds: float = 1.0
+    max_budget_usd: float | None = 2.0
+    setting_sources: str = "user"
+    settings_path: Path = Path.home() / ".claude" / "settings.json"
+    prompt_root: Path = Path("prompts/afeng-method-v001")
+    working_directory: Path = Path.cwd()
+
+
+def inspect_cc_switch_claude_settings(path: Path) -> dict[str, Any]:
+    target = Path(path)
+    if not target.is_file():
+        raise FileNotFoundError(f"Claude settings written by CC Switch are missing: {target}")
+    payload = json.loads(target.read_text(encoding="utf-8-sig"))
+    if not isinstance(payload, dict):
+        raise ValueError("Claude settings root must be an object")
+    env = payload.get("env")
+    if not isinstance(env, dict):
+        raise ValueError("Claude settings do not contain an env object")
+    base_url = str(env.get("ANTHROPIC_BASE_URL") or "")
+    model = str(env.get("ANTHROPIC_MODEL") or env.get("ANTHROPIC_DEFAULT_SONNET_MODEL") or "")
+    auth_configured = bool(
+        env.get("ANTHROPIC_AUTH_TOKEN") or env.get("ANTHROPIC_API_KEY")
+    )
+    if not base_url or not model or not auth_configured:
+        raise ValueError("CC Switch Claude provider is incomplete")
+    return {
+        "settings_path": str(target),
+        "base_url": base_url,
+        "model": model,
+        "auth_configured": auth_configured,
+    }
+
+
+def _default_command_runner(
+    command: list[str], prompt: str, cwd: Path, timeout_seconds: int
+) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        command,
+        input=prompt,
+        cwd=cwd,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        timeout=timeout_seconds,
+        check=False,
+    )
+
+
+class ClaudeCodeCcSwitchExecutor:
+    """Invoke the provider selected by CC Switch through headless Claude Code."""
+
+    def __init__(
+        self,
+        config: ClaudeCodeCcSwitchConfig | None = None,
+        *,
+        runner: CommandRunner | None = None,
+    ) -> None:
+        self.config = config or ClaudeCodeCcSwitchConfig()
+        self._runner = runner or _default_command_runner
+        self.provider_info = inspect_cc_switch_claude_settings(self.config.settings_path)
+        self.config.working_directory.mkdir(parents=True, exist_ok=True)
+
+    @property
+    def model_name(self) -> str:
+        return self.config.model
+
+    def _prompt(self, stage: AfengStage, payload: dict[str, Any]) -> str:
+        if stage == "render_markdown":
+            raise ValueError("render_markdown is deterministic and must not call Claude Code")
+        rule_path = Path(self.config.prompt_root) / PROMPT_FILES[stage]
+        if not rule_path.is_file():
+            raise FileNotFoundError(f"Afeng prompt is missing: {rule_path}")
+        return (
+            rule_path.read_text(encoding="utf-8")
+            + "\n\n只使用以下输入。不要调用工具，不要读取项目文件，不要补充外部知识。"
+            + "只输出符合 JSON Schema 的对象。\n\n输入：\n"
+            + canonical_json(payload)
+        )
+
+    def _command(self, stage: AfengStage) -> list[str]:
+        model_type = STAGE_MODELS.get(stage)
+        if model_type is None:
+            raise ValueError(f"unsupported Afeng stage: {stage}")
+        command = [
+            *self.config.command,
+            "-p",
+            "--output-format",
+            "json",
+            "--model",
+            self.config.model,
+            "--permission-mode",
+            "dontAsk",
+            "--tools",
+            "",
+            "--no-session-persistence",
+            "--setting-sources",
+            self.config.setting_sources,
+            "--safe-mode",
+            "--prompt-suggestions",
+            "false",
+            "--json-schema",
+            json.dumps(model_type.model_json_schema(), ensure_ascii=False, separators=(",", ":")),
+        ]
+        if self.config.max_budget_usd is not None:
+            command.extend(["--max-budget-usd", str(self.config.max_budget_usd)])
+        return command
+
+    def execute(self, stage: str, payload: dict[str, Any]) -> StageExecutionResult:
+        if stage not in STAGE_MODELS:
+            raise ValueError(f"unsupported Afeng stage: {stage}")
+        typed_stage = cast(AfengStage, stage)
+        model_type = STAGE_MODELS[typed_stage]
+        prompt = self._prompt(typed_stage, payload)
+        command = self._command(typed_stage)
+        errors: list[str] = []
+        for attempt in range(self.config.max_retries + 1):
+            started = time.monotonic()
+            try:
+                completed = self._runner(
+                    command,
+                    prompt,
+                    self.config.working_directory,
+                    self.config.timeout_seconds,
+                )
+                if completed.returncode != 0:
+                    error_text = (completed.stderr or completed.stdout or "").strip()
+                    raise RuntimeError(
+                        f"Claude Code exited {completed.returncode}: {error_text[:1000]}"
+                    )
+                envelope = json.loads(completed.stdout)
+                if not isinstance(envelope, dict):
+                    raise ValueError("Claude Code output envelope must be an object")
+                if envelope.get("is_error") is True or envelope.get("subtype") != "success":
+                    raise RuntimeError(
+                        f"Claude Code request failed: {envelope.get('api_error_status') or envelope.get('result')}"
+                    )
+                structured = envelope.get("structured_output")
+                if isinstance(structured, dict):
+                    parsed = structured
+                else:
+                    parsed = _extract_json_text(str(envelope.get("result") or ""))
+                validated = model_type.model_validate(parsed)
+                usage_value = envelope.get("usage")
+                usage: dict[str, Any] = usage_value if isinstance(usage_value, dict) else {}
+                model_usage_value = envelope.get("modelUsage")
+                model_usage = (
+                    model_usage_value if isinstance(model_usage_value, dict) else {}
+                )
+                selected_usage = model_usage.get(self.config.model)
+                selected: dict[str, Any] = (
+                    selected_usage if isinstance(selected_usage, dict) else {}
+                )
+                metadata = {
+                    "provider": "cc_switch_claude_code",
+                    "model": self.config.model,
+                    "base_url": self.provider_info["base_url"],
+                    "attempt": attempt + 1,
+                    "duration_ms": int(
+                        envelope.get("duration_api_ms")
+                        or (time.monotonic() - started) * 1000
+                    ),
+                    "prompt_tokens": int(
+                        selected.get("inputTokens") or usage.get("input_tokens") or 0
+                    ),
+                    "completion_tokens": int(
+                        selected.get("outputTokens") or usage.get("output_tokens") or 0
+                    ),
+                    "cache_read_tokens": int(
+                        selected.get("cacheReadInputTokens")
+                        or usage.get("cache_read_input_tokens")
+                        or 0
+                    ),
+                    "estimated_cost": float(
+                        selected.get("costUSD") or envelope.get("total_cost_usd") or 0
+                    ),
+                    "cost_currency": "USD",
+                    "context_window": int(selected.get("contextWindow") or 0),
+                    "max_output_tokens": int(selected.get("maxOutputTokens") or 0),
+                    "claude_code_session_id": str(envelope.get("session_id") or ""),
+                }
+                metadata["total_tokens"] = (
+                    metadata["prompt_tokens"] + metadata["completion_tokens"]
+                )
+                return StageExecutionResult(
+                    output=validated.model_dump(mode="json"), metadata=metadata
+                )
+            except (
+                OSError,
+                subprocess.SubprocessError,
+                json.JSONDecodeError,
+                ValidationError,
+                ValueError,
+                RuntimeError,
+            ) as exc:
+                errors.append(f"attempt {attempt + 1}: {type(exc).__name__}: {exc}")
+                if attempt >= self.config.max_retries:
+                    break
+                time.sleep(self.config.retry_delay_seconds)
+        raise RuntimeError(
+            f"CC Switch Claude stage failed after {self.config.max_retries + 1} attempts: "
             + " | ".join(errors)
         )

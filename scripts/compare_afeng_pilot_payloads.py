@@ -16,6 +16,9 @@ def main() -> int:
     parser.add_argument("manifests", nargs="+", type=Path)
     parser.add_argument("--json-output", type=Path, required=True)
     parser.add_argument("--markdown-output", type=Path, required=True)
+    parser.add_argument("--input-price-per-million", type=float, default=3.0)
+    parser.add_argument("--minimum-model-calls", type=int, default=3)
+    parser.add_argument("--maximum-model-calls", type=int, default=7)
     args = parser.parse_args()
     manifests = [
         PilotManifest.model_validate_json(path.read_text(encoding="utf-8"))
@@ -57,6 +60,20 @@ def main() -> int:
                 ),
             }
         )
+        rows[-1]["estimated_input_cost_min"] = round(
+            rows[-1]["rough_input_tokens"]
+            * args.minimum_model_calls
+            * args.input_price_per_million
+            / 1_000_000,
+            4,
+        )
+        rows[-1]["estimated_input_cost_max"] = round(
+            rows[-1]["rough_input_tokens"]
+            * args.maximum_model_calls
+            * args.input_price_per_million
+            / 1_000_000,
+            4,
+        )
     full = next((row for row in rows if row["profile"] == "full"), None)
     if full:
         for row in rows:
@@ -71,14 +88,15 @@ def main() -> int:
         "",
         "固定输入：C003、C006、C010，共 5 个案例。所有 Profile 均保留本地完整证据包。",
         "",
-        "| Profile | Context | External segments | Segment reduction | Characters | Rough tokens | Character reduction | Evidence coverage | PII safe |",
-        "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |",
+        "| Profile | Context | External segments | Segment reduction | Characters | Rough tokens | Character reduction | Input cost ¥ (3–7 calls) | Evidence coverage | PII safe |",
+        "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |",
     ]
     for row in rows:
         lines.append(
             f"| {row['profile']} | {row['context_window']} | {row['external_segment_count']} | "
             f"{row['segment_reduction_ratio']:.1%} | {row['estimated_input_characters']} | "
             f"{row['rough_input_tokens']} | {row.get('character_reduction_vs_full', 0):.1%} | "
+            f"{row['estimated_input_cost_min']:.2f}–{row['estimated_input_cost_max']:.2f} | "
             f"{row['minimum_required_evidence_coverage']:.1%} | "
             f"{row['all_external_payloads_safe']} |"
         )

@@ -162,7 +162,7 @@ class ReportedOutcome(StrictModel):
 class AfengMethodDraft(StrictModel):
     schema_version: str = "1.0"
     pipeline_version: str = "afeng-method-v001"
-    prompt_version: str = "mimo-method-v001"
+    prompt_version: str = "mimo-method-v002"
     knowledge_id: str
     course_id: str
     case_id: str
@@ -201,7 +201,7 @@ class FidelityFieldReview(StrictModel):
 class FidelityAudit(StrictModel):
     schema_version: str = "1.0"
     pipeline_version: str = "afeng-method-v001"
-    prompt_version: str = "mimo-method-v001"
+    prompt_version: str = "mimo-method-v002"
     course_id: str
     case_id: str
     knowledge_id: str
@@ -227,7 +227,7 @@ class FidelityAudit(StrictModel):
 class PublicationRecord(StrictModel):
     schema_version: str = "1.0"
     pipeline_version: str = "afeng-method-v001"
-    prompt_version: str = "mimo-method-v001"
+    prompt_version: str = "mimo-method-v002"
     knowledge_id: str
     course_id: str
     case_id: str
@@ -279,7 +279,7 @@ class AfengRunEvent(StrictModel):
 class AfengRunManifest(StrictModel):
     schema_version: str = "1.0"
     pipeline_version: str = "afeng-method-v001"
-    prompt_version: str = "mimo-method-v001"
+    prompt_version: str = "mimo-method-v002"
     model: str
     course_id: str
     case_id: str

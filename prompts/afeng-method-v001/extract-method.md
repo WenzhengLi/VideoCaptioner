@@ -15,6 +15,10 @@
   都必须带非空 `evidence_ids`；
 - evidence ID 使用输入中的 segment ID，不得使用 P04 的 OBS/CLM/QUO 编号代替；
 - 示例表达来源只允许 `course_quote`、`direct_adaptation`、`course_combination`；
+- 课程没有明确讲适用条件、不适用条件或限制时，对应数组必须输出 `[]`，不得创建“课程未说明”
+  之类的无证据占位项；证据缺口只写入 `insufficient_course_evidence`；
+- 讲师给人物贴的标签、对动机的解释、对结果的判断，即使有 evidence ID，也必须在该字段内部
+  写明“讲师称”“讲师认为”或“课程将其解释为”，不能依赖章节标题暗示归属；
 - 不能确认的结果使用 `instructor_claimed` 或 `unknown`；
 - `source_time_range` 根据实际引用 evidence 的最早开始和最晚结束填写；
 - `draft_fidelity_status` 必须为 `pending_review`；

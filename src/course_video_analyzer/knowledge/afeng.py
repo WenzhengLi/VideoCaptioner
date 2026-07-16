@@ -32,7 +32,8 @@ from course_video_analyzer.knowledge.afeng_models import (
 )
 
 PIPELINE_VERSION = "afeng-method-v001"
-PROMPT_VERSION = "mimo-method-v001"
+EVIDENCE_PROMPT_VERSION = "mimo-method-v001"
+PROMPT_VERSION = "mimo-method-v002"
 
 _PII_PATTERNS = {
     "mainland_phone": re.compile(r"(?<!\d)1[3-9]\d{9}(?!\d)"),
@@ -268,7 +269,7 @@ def build_afeng_evidence_package(
     package_without_hash = {
         "schema_version": "1.0",
         "pipeline_version": PIPELINE_VERSION,
-        "prompt_version": PROMPT_VERSION,
+        "prompt_version": EVIDENCE_PROMPT_VERSION,
         "source_pipeline_version": source_pipeline_version
         or str(p04.get("prompt_version") or case_input.get("prompt_version") or "unknown"),
         "course_id": course_id,
@@ -612,10 +613,54 @@ def evidence_time_range(
     )
 
 
+def normalize_method_source_time_range(
+    package: AfengEvidencePackage, draft: AfengMethodDraft
+) -> AfengMethodDraft:
+    """Derive the draft time range from its cited evidence instead of model arithmetic."""
+    expected = evidence_time_range(package, iter_method_evidence_ids(draft))
+    if expected is None or draft.source_time_range == expected:
+        return draft
+    return draft.model_copy(update={"source_time_range": expected})
+
+
+def normalize_unbacked_method_conditions(draft: AfengMethodDraft) -> AfengMethodDraft:
+    """Move unsupported condition placeholders to the explicit evidence-gap list."""
+    applicable = [item for item in draft.applicable_conditions if item.evidence_ids]
+    not_applicable = [item for item in draft.not_applicable_conditions if item.evidence_ids]
+    limits = [item for item in draft.course_stated_limits if item.evidence_ids]
+    removed = [
+        item.condition
+        for item in (*draft.applicable_conditions, *draft.not_applicable_conditions)
+        if not item.evidence_ids and item.condition.strip()
+    ]
+    removed.extend(
+        item.content
+        for item in draft.course_stated_limits
+        if not item.evidence_ids and item.content.strip()
+    )
+    if not removed:
+        return draft
+    gaps = list(draft.insufficient_course_evidence)
+    for content in removed:
+        note = f"证据不足，不能作为方法条件或限制：{content}"
+        if note not in gaps:
+            gaps.append(note)
+    return draft.model_copy(
+        update={
+            "applicable_conditions": applicable,
+            "not_applicable_conditions": not_applicable,
+            "course_stated_limits": limits,
+            "insufficient_course_evidence": gaps,
+        }
+    )
+
+
 def validate_fidelity_audit(
     package: AfengEvidencePackage,
     draft: AfengMethodDraft,
     audit: FidelityAudit,
+    *,
+    expected_revision_number: int | None = None,
 ) -> dict[str, Any]:
     valid_ids = {item.evidence_id for item in package.segments}
     audit_ids = {evidence_id for item in audit.field_reviews for evidence_id in item.evidence_ids}
@@ -638,6 +683,10 @@ def validate_fidelity_audit(
     )
     checks = {
         "identity": identity_ok,
+        "revision_number": (
+            expected_revision_number is None
+            or audit.revision_number == expected_revision_number
+        ),
         "audit_evidence_valid": not actual_invalid,
         "declared_invalid_accurate": declared_invalid == actual_invalid,
         "release_gate": audit.release_allowed == (audit.audit_result == "pass"),
@@ -723,8 +772,10 @@ def render_afeng_markdown(
             f"- `[{evidence_id}]` [{_format_ms(item.start_ms)}–{_format_ms(item.end_ms)}] "
             f"[{item.speaker_role}/{item.source_type}] {text}"
         )
-    conditions = [item.condition for item in method.applicable_conditions]
-    not_conditions = [item.condition for item in method.not_applicable_conditions]
+    conditions = [f"按照课程方法，{item.condition}" for item in method.applicable_conditions]
+    not_conditions = [
+        f"按照课程方法，{item.condition}" for item in method.not_applicable_conditions
+    ]
     steps = [
         f"{item.order}. {item.action}"
         + (f"（按照课程方法，目的：{item.purpose_according_to_course}）" if item.purpose_according_to_course else "")

@@ -11,6 +11,8 @@ from course_video_analyzer.knowledge.afeng import (
     approve_method,
     build_afeng_evidence_package,
     build_external_payload,
+    normalize_method_source_time_range,
+    normalize_unbacked_method_conditions,
     render_afeng_markdown,
     validate_evidence_package,
     validate_fidelity_audit,
@@ -22,7 +24,10 @@ from course_video_analyzer.knowledge.afeng_models import (
     FidelityAudit,
     PublicationRecord,
 )
-from course_video_analyzer.knowledge.afeng_pipeline import run_afeng_method_pipeline
+from course_video_analyzer.knowledge.afeng_pipeline import (
+    _load_and_normalize_fidelity_audit,
+    run_afeng_method_pipeline,
+)
 
 
 def _write(path: Path, value: dict[str, Any]) -> Path:
@@ -104,7 +109,7 @@ def _draft(status: str = "pending_review") -> dict[str, Any]:
     return {
         "schema_version": "1.0",
         "pipeline_version": "afeng-method-v001",
-        "prompt_version": "mimo-method-v001",
+        "prompt_version": "mimo-method-v002",
         "knowledge_id": "AFENG-C001-CASE-C001-001",
         "course_id": "C001",
         "case_id": "CASE-C001-001",
@@ -147,7 +152,7 @@ def _audit(result: str, revision: int = 0) -> dict[str, Any]:
     return {
         "schema_version": "1.0",
         "pipeline_version": "afeng-method-v001",
-        "prompt_version": "mimo-method-v001",
+        "prompt_version": "mimo-method-v002",
         "course_id": "C001",
         "case_id": "CASE-C001-001",
         "knowledge_id": "AFENG-C001-CASE-C001-001",
@@ -177,7 +182,7 @@ def _publication() -> dict[str, Any]:
     return {
         "schema_version": "1.0",
         "pipeline_version": "afeng-method-v001",
-        "prompt_version": "mimo-method-v001",
+        "prompt_version": "mimo-method-v002",
         "knowledge_id": "AFENG-C001-CASE-C001-001",
         "course_id": "C001",
         "case_id": "CASE-C001-001",
@@ -234,11 +239,70 @@ def test_draft_audit_and_markdown_release_gate(tmp_path: Path) -> None:
     assert "SEG-C001-000001" in markdown
 
 
+def test_markdown_attributes_applicable_conditions_to_course(tmp_path: Path) -> None:
+    package = _build_package(tmp_path)
+    value = _draft()
+    value["applicable_conditions"] = [
+        {"condition": "讲师称对方属于某类案例对象", "evidence_ids": ["SEG-C001-000001"]}
+    ]
+    draft = AfengMethodDraft.model_validate(value)
+    audit = FidelityAudit.model_validate(_audit("pass"))
+    markdown = render_afeng_markdown(
+        package, approve_method(draft, audit), audit, PublicationRecord.model_validate(_publication())
+    )
+
+    assert "- 按照课程方法，讲师称对方属于某类案例对象" in markdown
+
+
 def test_audit_cannot_release_when_not_passed() -> None:
     value = _audit("revise")
     value["release_allowed"] = True
     with pytest.raises(ValidationError):
         FidelityAudit.model_validate(value)
+
+
+def test_audit_revision_must_match_orchestrator_revision(tmp_path: Path) -> None:
+    package = _build_package(tmp_path)
+    draft = AfengMethodDraft.model_validate(_draft())
+    audit = FidelityAudit.model_validate(_audit("revise", revision=1))
+
+    report = validate_fidelity_audit(
+        package, draft, audit, expected_revision_number=0
+    )
+
+    assert report["status"] == "needs_review"
+    assert report["checks"]["revision_number"] is False
+
+
+def test_audit_normalization_drops_prose_from_invalid_evidence_ids(tmp_path: Path) -> None:
+    value = _audit("revise", revision=2)
+    value["invalid_evidence_ids"] = [
+        "CLM-002原证据较弱，应改绑其他片段",
+        "SEG-NOT-IN-PACKAGE",
+    ]
+    output = tmp_path / "audit.json"
+
+    normalized = _load_and_normalize_fidelity_audit(
+        value, output, revision_number=1, draft=AfengMethodDraft.model_validate(_draft())
+    )
+
+    assert normalized.revision_number == 1
+    assert normalized.invalid_evidence_ids == ["SEG-NOT-IN-PACKAGE"]
+    assert FidelityAudit.model_validate_json(output.read_text(encoding="utf-8")) == normalized
+
+
+def test_passing_empty_audit_gets_deterministic_supported_review(tmp_path: Path) -> None:
+    value = _audit("pass")
+    value["field_reviews"] = []
+    output = tmp_path / "audit.json"
+    draft = AfengMethodDraft.model_validate(_draft())
+
+    normalized = _load_and_normalize_fidelity_audit(value, output, 0, draft)
+
+    assert len(normalized.field_reviews) == 1
+    assert normalized.field_reviews[0].field == "method_draft"
+    assert normalized.field_reviews[0].status == "supported"
+    assert normalized.field_reviews[0].evidence_ids == ["SEG-C001-000001"]
 
 
 def test_every_nonempty_method_element_requires_evidence(tmp_path: Path) -> None:
@@ -251,6 +315,34 @@ def test_every_nonempty_method_element_requires_evidence(tmp_path: Path) -> None
     report = validate_method_draft(package, draft)
     assert report["status"] == "needs_review"
     assert "signals_used_by_course[0]" in report["missing_core_evidence"]
+
+
+def test_method_time_range_is_derived_from_cited_evidence(tmp_path: Path) -> None:
+    package = _build_package(tmp_path)
+    value = _draft()
+    value["source_time_range"] = {"start_ms": 0, "end_ms": 9999}
+    draft = AfengMethodDraft.model_validate(value)
+
+    normalized = normalize_method_source_time_range(package, draft)
+
+    assert normalized.source_time_range.start_ms == 1000
+    assert normalized.source_time_range.end_ms == 2500
+    assert validate_method_draft(package, normalized)["status"] == "pass"
+
+
+def test_unbacked_condition_placeholder_moves_to_evidence_gaps() -> None:
+    value = _draft()
+    value["not_applicable_conditions"] = [
+        {"condition": "课程未说明不适用情况。", "evidence_ids": []}
+    ]
+    draft = AfengMethodDraft.model_validate(value)
+
+    normalized = normalize_unbacked_method_conditions(draft)
+
+    assert normalized.not_applicable_conditions == []
+    assert normalized.insufficient_course_evidence[-1] == (
+        "证据不足，不能作为方法条件或限制：课程未说明不适用情况。"
+    )
 
 
 class _ScriptedExecutor:

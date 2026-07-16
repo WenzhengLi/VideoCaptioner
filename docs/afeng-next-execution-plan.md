@@ -1,7 +1,8 @@
 # 阿峰方法层：下一阶段执行总计划
 
 > 更新：2026-07-16
-> 当前版本：`afeng-method-v001` / `mimo-method-v001`
+> 当前版本：`afeng-method-v001` / `mimo-method-v002`
+> 三课状态：6 案例中 5 个发布、1 个人工复核、0 程序失败
 
 ## 一、目标
 
@@ -9,8 +10,8 @@
 
 ```text
 前20课 evidence baseline
-→ C003/C006/C010 固定试验
-→ 模型 A/B 与忠实度抽检
+→ C003/C006/C010 固定试验（已完成）
+→ Prompt v002 与忠实度抽检（已完成第一轮）
 → 5课 / 15课 / 20课扩展
 → 冻结 afeng-method-v001
 → Dify 阿峰课程方法库
@@ -68,9 +69,10 @@
 - 请求耗时、token usage、request ID 和失败原因记录；
 - 相同输入哈希、Prompt、模型和阶段不重复调用。
 
-真实 MiMo API 契约未知时，先提供通用 OpenAI-compatible adapter，不声称已经完成 MiMo 联调。
+默认执行器已经改为 CC Switch 当前配置驱动的 Claude Code CLI headless；直接 HTTP adapter
+保留备用。响应后继续执行本地 Schema 强校验、确定性 QA、缓存和断点恢复。
 
-### A03：三课固定试验
+### A03：三课固定试验（已完成）
 
 固定课程：
 
@@ -109,7 +111,7 @@ evidence package QA
 
 - `docs/evaluation/afeng-pilot-v001.md/.json`；
 - 人工审查模板；
-- `mimo-method-v002` 是否需要创建的决策记录。
+- `mimo-method-v002` 固定回归与继续扩展决策记录。
 
 ### A05：扩展与冻结
 
@@ -144,22 +146,17 @@ Dataset：`阿峰课程方法库-研究版`
 
 应用：`阿峰`
 
-## 四、阻塞条件
+## 四、当前阻塞条件
 
-以下不阻塞程序开发，但会阻塞真实模型生产：
-
-- MiMo API 地址和认证方式未知；
-- MiMo 的结构化输出能力未知；
-- Cursor 尚未冻结 evidence baseline。
-
-在此之前允许完成：baseline 消费器、dry-run、Schema、模型 adapter、测试、人工审查模板和旧
-v002 基线的临时冒烟验证。
+真实模型链路和三课试验已经完成。当前唯一批量扩展阻塞项是 Cursor 尚未冻结
+`evidence-baseline-C001-C020.json`。C006/CASE-C006-001 保留人工复核，不阻塞其他案例。
 
 ## 五、当前立即动作
 
-1. 等待并监控 Cursor 完成 P03 v003 固定回归；
-2. 实现阿峰 baseline manifest 消费器；
-3. 用旧 v002 临时 baseline 对 C003/C006/C010 做无模型 dry-run；
-4. 实现通用结构化模型执行器；
-5. Cursor baseline 生成后立即重跑三课 evidence package；
-6. 取得 MiMo API 信息后开始真实三课试验。
+1. 监控 Cursor 完成 C016–C020 事实层、P01–P04 和全量 QA；
+2. 冻结 `evidence-baseline-C001-C020.json`；
+3. 对发生 source case 变化的三课案例重建 evidence package 并定点回归；
+4. 对 C006/CASE-C006-001 做人工忠实度复核，不强行发布；
+5. 选择 5 课扩展集，运行 v002 并统计发布率、人工复核率、耗时和成本；
+6. 5 课通过后再扩展到 15 课和 20 课；
+7. 稳定后设计 Dify 导入清单和检索元数据，不让 Dify 承担方法提炼。

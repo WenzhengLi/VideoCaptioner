@@ -50,6 +50,8 @@ class BaselineCourse(StrictModel):
 class EvidenceBaseline(StrictModel):
     schema_version: str = "1.0"
     generated_at: str | None = None
+    policy: str | None = None
+    generated_from: str | None = None
     courses: list[BaselineCourse]
 
 
@@ -204,7 +206,7 @@ def _resolve_case_paths(
         course_dir / "04_knowledge" / f"P04-{case.p04_version}" / f"{case.case_id}.json"
     )
     p05 = None
-    if historical_p05_version:
+    if historical_p05_version and not case.source_case_changed:
         candidate = (
             course_dir
             / "04_knowledge"

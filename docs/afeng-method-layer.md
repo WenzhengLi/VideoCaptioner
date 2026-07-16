@@ -39,8 +39,20 @@ P04 案例证据 + P05 证据审查字段
 
 ```text
 pipeline_version: afeng-method-v001
-prompt_version: mimo-method-v001
+prompt_version: mimo-method-v002
 ```
+
+正式模型调用默认链路：
+
+```text
+CC Switch 当前 Claude 配置
+→ Claude Code CLI headless
+→ Xiaomi MiMo / mimo-v2.5-pro
+```
+
+程序不会启动或自动化 CC Switch GUI。CC Switch 负责写入 Claude 用户配置，执行器读取非敏感
+供应商信息后，以 stdin 发送 Prompt，使用 `dontAsk`、禁用工具、无会话持久化和 JSON Schema
+约束启动独立 Claude Code 进程。项目直接 HTTP adapter 仅作为备用。
 
 ## 数据目录
 
@@ -132,23 +144,33 @@ python scripts/prepare_afeng_pilot.py `
 正式 baseline 尚未生成时，可省略 `--baseline`，使用旧 v002 做临时冒烟验证。该结果不能冒充
 正式阿峰方法产物。
 
-真实模型运行使用以下环境变量：
-
-```text
-AFENG_LLM_ENDPOINT=https://.../v1/chat/completions
-AFENG_LLM_MODEL=...
-AFENG_LLM_API_KEY=...
-```
-
-然后执行：
+默认通过 CC Switch/Claude Code 执行：
 
 ```powershell
 python scripts/run_afeng_pilot_model.py `
-  data/afeng/pilots/C003-C006-C010-baseline-v001/manifest.json
+  data/afeng/pilots/C003-C006-C010-baseline-v001/manifest.json `
+  --executor cc-switch
 ```
 
-如果服务不支持 `json_schema`，显式传 `--without-json-schema`，程序仍会执行 JSON 解析、Pydantic
-校验和有限重试。未经真实 API 验证前，不声称该通用 adapter 已完成 MiMo 联调。
+HTTP 备用方式才需要从环境变量读取 API Key；密钥不写入日志、产物或文档。
+
+官方 MiMo 参数已经核对：
+
+- endpoint：`https://api.xiaomimimo.com/v1/chat/completions`；
+- model：`mimo-v2.5-pro`；
+- `response_format`：使用 `json_object`；
+- context：1M tokens；最大输出 128K；
+- 国内按量价格：输入未命中 ¥3/M、输出 ¥6/M。
+
+程序仍会在响应后执行 Pydantic Schema 校验和有限重试。若接入其他兼容服务，可显式传入
+`--endpoint`、`--model` 和 `--response-format`。
+
+官方资料：
+
+- [First API Call](https://platform.xiaomimimo.com/static/docs/quick-start/first-api-call.md)
+- [Model and Rate Limits](https://platform.xiaomimimo.com/static/docs/quick-start/model.md)
+- [OpenAI API Compatibility](https://platform.xiaomimimo.com/static/docs/api/chat/openai-api.md)
+- [API Pricing](https://platform.xiaomimimo.com/static/docs/price/pay-as-you-go.md)
 
 模型输出后的确定性 QA 和发布：
 
@@ -159,16 +181,32 @@ course-knowledge afeng-approve method-draft.json audit.json approved.json
 course-knowledge afeng-render evidence.json approved.json audit.json publication.json method.md
 ```
 
-## 尚未执行的部分
+## 三课真实试验结论
 
-MiMo-V2.5-Pro 的真实 API 地址、认证方式、结构化输出参数、上下文限制和计费信息目前未知，
-因此 v001 已建立 `AfengStageExecutor` 适配边界和通用 OpenAI-compatible adapter，但没有猜测或
-宣称 MiMo 一定兼容。取得真实 API 文档和凭据后，先验证通用 adapter；不兼容时新增专用执行器，
-不改变证据、审查、发布和 Markdown 契约。
+正式 baseline：`data/catalog/evidence-baseline-C001-C015.json`，策略
+`adopt_v003_hybrid`。三课证据包共 6 个案例，必需 evidence 覆盖率 100%。
+
+MiMo/Claude Code 真实试验：
+
+| 课程 | 案例数 | 已发布 | 人工复核 | 结论 |
+| --- | ---: | ---: | ---: | --- |
+| C003 | 3 | 3 | 0 | 全部首轮通过，均为 `case_derived_method` |
+| C006 | 2 | 1 | 1 | OCR 密集案例可发布；复杂亲密推进案例保留人工复核 |
+| C010 | 1 | 1 | 0 | v002 一轮修订后以 95 分通过 |
+
+合计 6 个案例：5 个发布，1 个人工复核，0 个程序失败。运行报告位于：
+
+- `data/afeng/model-runs/C003-C006-C010-baseline-v001/c003-v002/run-report.md`；
+- `data/afeng/model-runs/C003-C006-C010-baseline-v001/c006-v002/run-report.md`；
+- `data/afeng/model-runs/C003-C006-C010-baseline-v001/c010-v002/run-report.md`。
+
+试验中已修正：时间范围由程序推导、无证据条件占位符归档、审查轮次归一化、非法
+`invalid_evidence_ids` 说明文字过滤、空通过审查的确定性审计记录、部分补跑汇总合并，以及恢复时
+保留历史事件。
 
 旧 v002 三课外发规模对比见
 `docs/evaluation/afeng-prebaseline-payload-comparison.md`。该报告证明 focused Profile 在保持必需
 evidence 100% 覆盖的同时，可明显降低外发上下文。
 
-在 Cursor 完成并冻结前 20 课 P04 evidence baseline 前，不批量生成正式阿峰方法，避免消费仍在
-变化的案例边界。可先用固定的 C003、C006、C010 做 dry-run。
+下一扩展门槛是 Cursor 完成并冻结 C001–C020 P04 evidence baseline。冻结前不批量覆盖三课之外
+的正式方法产物；已完成的三课试验作为 `mimo-method-v002` 固定回归集。
