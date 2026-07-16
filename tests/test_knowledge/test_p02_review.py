@@ -27,7 +27,13 @@ def test_compact_p02_review_applies_cluster_and_quote_decisions(tmp_path: Path) 
                 "classification_confidence": 0.5,
             }
         )
-    baseline.write_text(json.dumps({"segments": segments}, ensure_ascii=False), encoding="utf-8")
+    baseline.write_text(
+        json.dumps(
+            {"prompt_version": "knowledge-v003-p02-baseline", "segments": segments},
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
     pack = tmp_path / "pack.json"
     build_p02_review_pack("C002", baseline, pack)
     review = tmp_path / "review.json"
@@ -55,4 +61,5 @@ def test_compact_p02_review_applies_cluster_and_quote_decisions(tmp_path: Path) 
     assert payload["segments"][0]["source_role"] == "instructor_explanation"
     assert payload["segments"][1]["source_role"] == "student_question"
     assert payload["segments"][2]["source_role"] == "actual_chat"
+    assert payload["prompt_version"] == "knowledge-v003-p02"
     assert payload["review_metrics"]["review_mode"] == "compact_decisions_applied_deterministically"

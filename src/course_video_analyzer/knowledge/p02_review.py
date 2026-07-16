@@ -198,7 +198,12 @@ def apply_p02_review(
         (item["source_role"], item["epistemic_type"], item["relevance"])
         for item in segments
     ]
-    baseline["prompt_version"] = "knowledge-v002-p02"
+    baseline_prompt_version = str(baseline.get("prompt_version") or "")
+    baseline["prompt_version"] = (
+        baseline_prompt_version.removesuffix("-baseline")
+        if baseline_prompt_version.endswith("-p02-baseline")
+        else "knowledge-v002-p02"
+    )
     baseline["classification_metrics"] = {
         "source_role_counts": role_counts,
         "epistemic_type_counts": epistemic_counts,
