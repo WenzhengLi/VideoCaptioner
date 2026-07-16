@@ -1,0 +1,4148 @@
+{
+  "schema_version": "1.0",
+  "report_focus": "fact_and_evidence_layer_through_p04",
+  "baseline": "D:\\Dev\\VideoCaptioner\\data\\catalog\\evidence-baseline-C001-C020.json",
+  "baseline_policy": "adopt_v003_hybrid",
+  "course_count": 20,
+  "case_count": 40,
+  "segment_count": 80264,
+  "ocr_segment_count": 4121,
+  "failure_count": 0,
+  "all_qa_pass": true,
+  "failures": [],
+  "courses": [
+    {
+      "course_id": "C001",
+      "versions": {
+        "P01": "knowledge-v002",
+        "P02": "knowledge-v002",
+        "P03": "knowledge-v002"
+      },
+      "segment_count": 3459,
+      "speaker_distribution": {
+        "student": 1228,
+        "teacher_a": 2040,
+        "unknown": 191
+      },
+      "unknown_speaker_count": 191,
+      "unknown_speaker_ratio": 0.055218,
+      "ocr_segment_count": 175,
+      "case_count": 3,
+      "assigned_segment_count": 3253,
+      "unassigned_segment_count": 206,
+      "unassigned_ratio": 0.059555,
+      "coverage_count_matches": true,
+      "qa": {
+        "raw": "pass",
+        "P01": "pass",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "cases": [
+        {
+          "case_id": "CASE-C001-001",
+          "p04_version": "knowledge-v002",
+          "source_case_changed": false,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        },
+        {
+          "case_id": "CASE-C001-002",
+          "p04_version": "knowledge-v002",
+          "source_case_changed": false,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        },
+        {
+          "case_id": "CASE-C001-003",
+          "p04_version": "knowledge-v002",
+          "source_case_changed": false,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        }
+      ],
+      "p04_out_of_range_cases": [],
+      "known_uncertainties": [
+        {
+          "segment_id": "SEG-C001-000007",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C001-000214",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C001-000276",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C001-000491",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C001-000559",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C001-000908",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C001-000954",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C001-001016",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C001-001246",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C001-001251",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C001-001290",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C001-001387",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C001-001395",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C001-001417",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C001-001478",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C001-001484",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C001-001578",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C001-001588",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C001-002240",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C001-002408",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C001-002598",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C001-002733",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C001-002825",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C001-002826",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C001-002920",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C001-003265",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C001-003414",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C001-003420",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C001-003454",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "case_id": "CASE-C001-001",
+          "note": "与CASE-C001-002同属12月23日「摆烂/哈罗」聊天线程，但被开播寒暄切开；课前段未完整走完约见到结果，故标partial。不确定是否应并入后段同一案例（区间规则要求连续闭区间，寒暄必须单列unassigned）。"
+        },
+        {
+          "case_id": "CASE-C001-002",
+          "note": "SEG-C001-002393曾说「那下一个是」，随即插入室友听见房事的题外复盘，周三课板在SEG-C001-002517已露出，但口头正式切换到周三案例约在SEG-C001-002540之后；中间公屏问答段放入unassigned。"
+        },
+        {
+          "case_id": "CASE-C001-003",
+          "note": "收尾后SEG-C001-003302附近短暂翻看「狗女人」截图并称「改天再讲」，未形成完整案例讲解，故保持unassigned，不单列案例。"
+        }
+      ]
+    },
+    {
+      "course_id": "C002",
+      "versions": {
+        "P01": "knowledge-v002",
+        "P02": "knowledge-v002",
+        "P03": "knowledge-v002"
+      },
+      "segment_count": 4272,
+      "speaker_distribution": {
+        "speaker_0": 4059,
+        "speaker_1": 13,
+        "speaker_2": 3,
+        "unknown": 197
+      },
+      "unknown_speaker_count": 197,
+      "unknown_speaker_ratio": 0.046114,
+      "ocr_segment_count": 172,
+      "case_count": 3,
+      "assigned_segment_count": 3429,
+      "unassigned_segment_count": 843,
+      "unassigned_ratio": 0.197331,
+      "coverage_count_matches": true,
+      "qa": {
+        "raw": "pass",
+        "P01": "pass",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "cases": [
+        {
+          "case_id": "CASE-C002-001",
+          "p04_version": "knowledge-v002",
+          "source_case_changed": false,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        },
+        {
+          "case_id": "CASE-C002-002",
+          "p04_version": "knowledge-v002",
+          "source_case_changed": false,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        },
+        {
+          "case_id": "CASE-C002-003",
+          "p04_version": "knowledge-v002",
+          "source_case_changed": false,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        }
+      ],
+      "p04_out_of_range_cases": [],
+      "known_uncertainties": [
+        {
+          "segment_id": "SEG-C002-000121",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-000318",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-000438",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-000485",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-000493",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-000557",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-000619",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-000677",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-000710",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-000732",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-000747",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-000805",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-000818",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-000969",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-000981",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-001057",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-001091",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-001125",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-001166",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-001215",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-001370",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-001546",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-001599",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-001663",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-001733",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-001759",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-001850",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-001949",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-001967",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-002022",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-002068",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-002137",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-002173",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-002243",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-002284",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-002411",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-002480",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-002536",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-002550",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-002697",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-002781",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-002791",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-002947",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-002953",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-002988",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-003024",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-003028",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-003032",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-003038",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-003081",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-003109",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-003143",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-003165",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-003225",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-003306",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C002-004028",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "case_id": "CASE-C002-001",
+          "note": "开场后曾插入「先简单答疑」的长相/帅哥判定公屏讨论（约SEG-C002-000049至000106），再回到截图；按宽区间保留在案例内。阿峰聊天含多次删除与后续约见，讲师始终称「今天阿峰这个案例」，故作单一连续案例，不按删次切开。"
+        },
+        {
+          "case_id": "CASE-C002-002",
+          "note": "与CASE-C002-003同属昨夜海底捞/北京电商女孩事件，但被全日总括、公屏问答、安全感闲聊与「先下麦」假收尾切开；区间规则要求连续闭区间，故后段朋友圈补强单列CASE-C002-003，本段标partial。"
+        },
+        {
+          "case_id": "CASE-C002-003",
+          "note": "补充讲述中夹杂抖音电商逻辑与深圳朋友圈顶流展示，仍服务于「昨天晚上如何干住」的同一结果；结束点取建议说教前的昨夜时间线收束，标partial。SEG-C002-003842附近「打麻将骗我」为直播即时质问片段，未形成完整案例讲解，保持unassigned。"
+        }
+      ]
+    },
+    {
+      "course_id": "C003",
+      "versions": {
+        "P01": "knowledge-v002",
+        "P02": "knowledge-v002",
+        "P03": "knowledge-v003"
+      },
+      "segment_count": 4679,
+      "speaker_distribution": {
+        "speaker_0": 3485,
+        "speaker_1": 897,
+        "unknown": 297
+      },
+      "unknown_speaker_count": 297,
+      "unknown_speaker_ratio": 0.063475,
+      "ocr_segment_count": 237,
+      "case_count": 3,
+      "assigned_segment_count": 3702,
+      "unassigned_segment_count": 977,
+      "unassigned_ratio": 0.208805,
+      "coverage_count_matches": true,
+      "qa": {
+        "raw": "pass",
+        "P01": "pass",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "cases": [
+        {
+          "case_id": "CASE-C003-001",
+          "p04_version": "knowledge-v003",
+          "source_case_changed": true,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        },
+        {
+          "case_id": "CASE-C003-002",
+          "p04_version": "knowledge-v003",
+          "source_case_changed": true,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        },
+        {
+          "case_id": "CASE-C003-003",
+          "p04_version": "knowledge-v003",
+          "source_case_changed": true,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        }
+      ],
+      "p04_out_of_range_cases": [],
+      "known_uncertainties": [
+        {
+          "segment_id": "SEG-C003-000080",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C003-000149",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C003-000412",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C003-000415",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C003-001126",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C003-001751",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C003-001825",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C003-001839",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C003-001960",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C003-001993",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C003-002071",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C003-002772",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C003-002849",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C003-003220",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C003-003329",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C003-003545",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C003-003633",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C003-003638",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C003-003768",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C003-003821",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C003-003828",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C003-003888",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C003-003984",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C003-003985",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C003-004153",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C003-004217",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C003-004343",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C003-004351",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C003-004371",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C003-004374",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C003-004442",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C003-004484",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C003-004494",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C003-004635",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "case_id": "",
+          "note": "SEG-C003-000001–SEG-C003-000495 为开场寒暄、礼物/设备闲聊、通用恋爱理论，以及含内部「报名」营销插话的档期冲突问答；尚无稳定单一人事物聊天线，故未分配。"
+        },
+        {
+          "case_id": "CASE-C003-001",
+          "note": "本案例将蹦迪857、道长喝酒舌吻、牵手平台等连续课前答疑保存在同一闭区间，中间穿插的销售号说明与短期关系抽象讲解因仍夹在同一答疑时段且回指公屏问题而一并保留；不拆成更多案例以免边界碎片化。"
+        },
+        {
+          "case_id": "",
+          "note": "SEG-C003-001357–SEG-C003-001680 含「刚搭讪升温/展示面」问答与蹦迪事件「加闺蜜微信」追问：前者与牵手问已切换主题，后者虽属蹦迪续问但中间已插入其他题目且无法与 CASE-C003-001 连续合并；又不宜并入随后的立冬/琪琪完整聊天案例。为避免跨事件强并与过度拆案，保持未分配。"
+        },
+        {
+          "case_id": "CASE-C003-003",
+          "note": "SEG-C003-004522 之后为下播、带人回来、展示面围观、加微信广告，以及把第一/第二个案例作方法对比的收尾，已离开单一聊天结果线，故不并入。"
+        },
+        {
+          "case_id": "",
+          "note": "完成覆盖校验后未分配占比为 20.9%。高于 20% 的剩余未分配已按上方条目给出具体原因（开场/跨事件答疑间隙/下播广告），并非空白高未分配。"
+        }
+      ]
+    },
+    {
+      "course_id": "C004",
+      "versions": {
+        "P01": "knowledge-v002",
+        "P02": "knowledge-v002",
+        "P03": "knowledge-v002"
+      },
+      "segment_count": 5161,
+      "speaker_distribution": {
+        "speaker_0": 3453,
+        "speaker_1": 1083,
+        "speaker_2": 314,
+        "unknown": 311
+      },
+      "unknown_speaker_count": 311,
+      "unknown_speaker_ratio": 0.06026,
+      "ocr_segment_count": 275,
+      "case_count": 2,
+      "assigned_segment_count": 4519,
+      "unassigned_segment_count": 642,
+      "unassigned_ratio": 0.124394,
+      "coverage_count_matches": true,
+      "qa": {
+        "raw": "pass",
+        "P01": "pass",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "cases": [
+        {
+          "case_id": "CASE-C004-001",
+          "p04_version": "knowledge-v002",
+          "source_case_changed": false,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        },
+        {
+          "case_id": "CASE-C004-002",
+          "p04_version": "knowledge-v002",
+          "source_case_changed": false,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        }
+      ],
+      "p04_out_of_range_cases": [],
+      "known_uncertainties": [
+        {
+          "segment_id": "SEG-C004-000262",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-000603",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-000604",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-000701",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-000708",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-000758",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-000784",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-000792",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-000810",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-000822",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-000835",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-001025",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-001122",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-001213",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-001233",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-001307",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-001446",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-001462",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-001484",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-001835",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-001905",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-001940",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-001959",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-002090",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-002122",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-002162",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-002179",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-002193",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-002210",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-002258",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-002346",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-002512",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-002635",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-002695",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-002841",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-003048",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-003227",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-003267",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-003656",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-003690",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-004179",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-004233",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-004848",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-004933",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-004949",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C004-000015",
+          "field": "normalized_text",
+          "note": "「基码」在黄暴图上下文中可能是口误/识别错误，缺少唯一读法，已保留"
+        },
+        {
+          "segment_id": "SEG-C004-004528",
+          "field": "normalized_text",
+          "note": "「物馆」可能为「博物馆」或「物业」相关说法，证据不足已保留"
+        },
+        {
+          "case_id": "CASE-C004-001",
+          "note": "开场 SEG-C004-000038/000042 课板已提前露出八月六日聊天，但当时仍在调试/热场；案例正式讲解自阿峰宣布「两个案例」并开讲起算。SEG-C004-000289「那继续下一个」是同一聊天内推进邀约句，非新案例边界。"
+        },
+        {
+          "case_id": "CASE-C004-002",
+          "note": "「下一位」（001881-001894）与新课板（001886）之间有短过渡；将新课板出现作为第二案例起点，过渡句放入未分配。课后答疑与抖音话题自问答公屏出现起未并入案例。"
+        }
+      ]
+    },
+    {
+      "course_id": "C005",
+      "versions": {
+        "P01": "knowledge-v002",
+        "P02": "knowledge-v002",
+        "P03": "knowledge-v002"
+      },
+      "segment_count": 3589,
+      "speaker_distribution": {
+        "speaker_0": 3362,
+        "unknown": 227
+      },
+      "unknown_speaker_count": 227,
+      "unknown_speaker_ratio": 0.063249,
+      "ocr_segment_count": 214,
+      "case_count": 2,
+      "assigned_segment_count": 3451,
+      "unassigned_segment_count": 138,
+      "unassigned_ratio": 0.038451,
+      "coverage_count_matches": true,
+      "qa": {
+        "raw": "pass",
+        "P01": "pass",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "cases": [
+        {
+          "case_id": "CASE-C005-001",
+          "p04_version": "knowledge-v002",
+          "source_case_changed": false,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        },
+        {
+          "case_id": "CASE-C005-002",
+          "p04_version": "knowledge-v002",
+          "source_case_changed": false,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        }
+      ],
+      "p04_out_of_range_cases": [],
+      "known_uncertainties": [
+        {
+          "segment_id": "SEG-C005-000285",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C005-000381",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C005-000607",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C005-000634",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C005-000648",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C005-000650",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C005-000869",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C005-000906",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C005-001051",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C005-001308",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C005-001323",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C005-001361",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C005-001382",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C005-001961",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C005-002083",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C005-002368",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C005-002443",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C005-002677",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C005-002699",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C005-002716",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C005-002736",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C005-002757",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C005-002774",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C005-002834",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C005-002856",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C005-002860",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C005-002955",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C005-003078",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C005-003309",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C005-003560",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C005-000007",
+          "field": "normalized_text",
+          "note": "「为什么你们为什么什么」语义仍不完整，可能还有听不清内容，已做叠词/明显识别修正后保留"
+        },
+        {
+          "segment_id": "SEG-C005-000012",
+          "field": "normalized_text",
+          "note": "「露女那样」仍可能有识别残缺，相邻上下文指向女生头像，证据不足未强改"
+        },
+        {
+          "segment_id": "SEG-C005-001181",
+          "field": "normalized_text",
+          "note": "「你女从前一直认什么话」结合后文「认同」，完整原句仍不确定"
+        },
+        {
+          "segment_id": "SEG-C005-001293",
+          "field": "normalized_text",
+          "note": "「继个就候传说爱意」听不清，可能为「这个时候错失爱意」等，证据不足已保留"
+        },
+        {
+          "segment_id": "SEG-C005-001797",
+          "field": "normalized_text",
+          "note": "「火窗户破窗口」可能是「和/或窗口破窗口」等，课程窗口黑话下证据不足已保留"
+        },
+        {
+          "segment_id": "SEG-C005-002756",
+          "field": "normalized_text",
+          "note": "「GGPA」可能为表情包/英文口误残留，唯一读法不足已保留"
+        },
+        {
+          "segment_id": "SEG-C005-001274",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C005-001298",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C005-001372",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C005-001937",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C005-001938",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C005-002994",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "case_id": "CASE-C005-001",
+          "note": "开播前课板已出现9月18日好友验证片段（约SEG-C005-000024），但正式宣布「直接开讲案例」在SEG-C005-000049；按寒暄/调试与开讲分界，将000001-000048列为未分配，若需更宽可前移至课板首现。"
+        },
+        {
+          "case_id": "CASE-C005-002",
+          "note": "SEG-C005-002003起已说「来看下一个」，且SEG-C005-002037课板已切到9月24日，但口头完整立题「第二个案例是一个什么情况」在002048；中间002003-002047多为对第一案节奏的感叹对比，故放入未分配而非强行并入任一案例。"
+        },
+        {
+          "case_id": "CASE-C005-002",
+          "note": "第二案在聊天截图「到这里就结束了」（003164）之后仍有较长现场操作与结果讲述，按「结果/复盘收尾」保留至003544，未在聊天结束处切断。"
+        }
+      ]
+    },
+    {
+      "course_id": "C006",
+      "versions": {
+        "P01": "knowledge-v002",
+        "P02": "knowledge-v002",
+        "P03": "knowledge-v002"
+      },
+      "segment_count": 5620,
+      "speaker_distribution": {
+        "speaker_0": 3162,
+        "speaker_1": 2092,
+        "unknown": 366
+      },
+      "unknown_speaker_count": 366,
+      "unknown_speaker_ratio": 0.065125,
+      "ocr_segment_count": 345,
+      "case_count": 2,
+      "assigned_segment_count": 5359,
+      "unassigned_segment_count": 261,
+      "unassigned_ratio": 0.046441,
+      "coverage_count_matches": true,
+      "qa": {
+        "raw": "pass",
+        "P01": "pass",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "cases": [
+        {
+          "case_id": "CASE-C006-001",
+          "p04_version": "knowledge-v002",
+          "source_case_changed": false,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        },
+        {
+          "case_id": "CASE-C006-002",
+          "p04_version": "knowledge-v002",
+          "source_case_changed": false,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        }
+      ],
+      "p04_out_of_range_cases": [],
+      "known_uncertainties": [
+        {
+          "segment_id": "SEG-C006-000217",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C006-000235",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C006-000333",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C006-000347",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C006-000401",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C006-000402",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C006-000413",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C006-000574",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C006-000631",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C006-001356",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C006-001621",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C006-001627",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C006-001652",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C006-001657",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C006-001772",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C006-001916",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C006-001962",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C006-003088",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C006-003177",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C006-003213",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C006-003499",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C006-003834",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C006-004076",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C006-004085",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C006-004298",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C006-004365",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C006-004370",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C006-004502",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C006-004770",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C006-004834",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C006-004856",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C006-005353",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C006-005483",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C006-005595",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C006-005601",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C006-004486",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C006-005107",
+          "field": "normalized_text",
+          "note": "扬/杨/养 同音混淆，保留多种读法痕迹"
+        },
+        {
+          "segment_id": "SEG-C006-002908",
+          "field": "normalized_text",
+          "note": "粉粉叠词可能为小吃名强调或识别重复，已保留"
+        },
+        {
+          "segment_id": "SEG-C006-000551",
+          "field": "normalized_text",
+          "note": "打车车丰富好 语义不清，可能为聊天/OCR 噪声，保留原文"
+        },
+        {
+          "segment_id": "SEG-C006-002348",
+          "field": "normalized_text",
+          "note": "把把脚无情 语义不清，上下文不足，保留原文"
+        },
+        {
+          "segment_id": "SEG-C006-000553",
+          "field": "normalized_text",
+          "note": "我其你们其他城市 可能为「像/与你们其他城市」，证据不足未改"
+        },
+        {
+          "segment_id": "SEG-C006-004671",
+          "field": "normalized_text",
+          "note": "三九月月/是不不是没有没有 识别混乱，证据不足未强改"
+        },
+        {
+          "case_id": "CASE-C006-001",
+          "note": "开场约SEG-C006-000095至000102已出现第一案聊天课板，但同时在调手机/投屏；为避免把直播调试并入案例，案例起点取明确口头「看一看阿峰的案例」的SEG-C006-000103。若需更宽背景可将起点前移至课板首屏。"
+        },
+        {
+          "case_id": "CASE-C006-002",
+          "note": "SEG-C006-002515至002527含「下一个案例」宣告、9月27日课板首屏与加微信/报名广告；按规则将广告与过渡放入unassigned，第二案从广告后的SEG-C006-002528连续课板续讲起算，因此002520课板不在案例闭区间内。"
+        },
+        {
+          "case_id": "CASE-C006-002",
+          "note": "第二案中后段夹杂教学题外话与假案例辨析，仍绑定同一南宁千里送聊天主线，未再拆案；若后续复核认为应单独切段，需重标边界。"
+        }
+      ]
+    },
+    {
+      "course_id": "C007",
+      "versions": {
+        "P01": "knowledge-v002",
+        "P02": "knowledge-v002",
+        "P03": "knowledge-v002"
+      },
+      "segment_count": 3738,
+      "speaker_distribution": {
+        "speaker_0": 1664,
+        "speaker_1": 1601,
+        "speaker_2": 15,
+        "unknown": 458
+      },
+      "unknown_speaker_count": 458,
+      "unknown_speaker_ratio": 0.122525,
+      "ocr_segment_count": 398,
+      "case_count": 1,
+      "assigned_segment_count": 3213,
+      "unassigned_segment_count": 525,
+      "unassigned_ratio": 0.140449,
+      "coverage_count_matches": true,
+      "qa": {
+        "raw": "pass",
+        "P01": "pass",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "cases": [
+        {
+          "case_id": "CASE-C007-001",
+          "p04_version": "knowledge-v002",
+          "source_case_changed": false,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        }
+      ],
+      "p04_out_of_range_cases": [],
+      "known_uncertainties": [
+        {
+          "segment_id": "SEG-C007-000119",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C007-000216",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C007-000235",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C007-000254",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C007-000562",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C007-000805",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C007-000824",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C007-001077",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C007-002190",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C007-002619",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C007-002740",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C007-002789",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C007-002954",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C007-002969",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C007-002986",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C007-003102",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C007-003224",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C007-003352",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C007-003535",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C007-000561",
+          "field": "normalized_text",
+          "note": "「骰中」语义不明（或为测算类说法），已保留原文"
+        },
+        {
+          "segment_id": "SEG-C007-002039",
+          "field": "normalized_text",
+          "note": "「适于对方」语句不完整，可能为口误，已保留原文"
+        },
+        {
+          "segment_id": "SEG-C007-003156",
+          "field": "normalized_text",
+          "note": "「二二二」语义不明，已保留原词"
+        },
+        {
+          "segment_id": "SEG-C007-000012",
+          "field": "normalized_text",
+          "note": "「弹性桃」可能是表情包/贴纸类指称，无法从上下文唯一确定"
+        },
+        {
+          "case_id": "CASE-C007-001",
+          "note": "案例开始前 SEG-C007-000001 至 SEG-C007-000173 含开播寒暄、投屏调试，以及同微信号 shenshipai666 的前置闲聊截图（如「六万战利品」等）；因讲师在朋友验证屏后才正式宣布「开始讲案例」，且前置内容未形成独立案例起止，故放入 unassigned。若下游需要更宽背景，可将起点前移并标 partial。"
+        },
+        {
+          "case_id": "CASE-C007-001",
+          "note": "案例中段约 SEG-C007-002651 起插入「美柚/女性经期软件」投屏推荐与帖子浏览，随后又回到同一微信线的经期关怀与约见推进；按连续区间规则保留在本案内，不单拆新案例。案例结束后（SEG-C007-003387 起）再次长时间逛该平台与下播口播，归入 unassigned。"
+        }
+      ]
+    },
+    {
+      "course_id": "C008",
+      "versions": {
+        "P01": "knowledge-v002",
+        "P02": "knowledge-v002",
+        "P03": "knowledge-v002"
+      },
+      "segment_count": 3823,
+      "speaker_distribution": {
+        "speaker_0": 2131,
+        "speaker_1": 1460,
+        "unknown": 232
+      },
+      "unknown_speaker_count": 232,
+      "unknown_speaker_ratio": 0.060685,
+      "ocr_segment_count": 195,
+      "case_count": 2,
+      "assigned_segment_count": 2828,
+      "unassigned_segment_count": 995,
+      "unassigned_ratio": 0.260267,
+      "coverage_count_matches": true,
+      "qa": {
+        "raw": "pass",
+        "P01": "pass",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "cases": [
+        {
+          "case_id": "CASE-C008-001",
+          "p04_version": "knowledge-v002",
+          "source_case_changed": false,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        },
+        {
+          "case_id": "CASE-C008-002",
+          "p04_version": "knowledge-v002",
+          "source_case_changed": false,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        }
+      ],
+      "p04_out_of_range_cases": [],
+      "known_uncertainties": [
+        {
+          "segment_id": "SEG-C008-000246",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C008-000250",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C008-000259",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C008-000789",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C008-001353",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C008-001523",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C008-001527",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C008-001628",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C008-001642",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C008-001735",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C008-001782",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C008-001976",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C008-002144",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C008-002382",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C008-002461",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C008-002993",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C008-003035",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C008-001878",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C008-001973",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C008-001978",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C008-002013",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C008-002014",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C008-002028",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C008-002947",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C008-003137",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C008-000139",
+          "field": "normalized_text",
+          "note": "「发发菜」语义不明（请吃饭/发菜/识别误差皆可能），已保留原文"
+        },
+        {
+          "segment_id": "SEG-C008-001999",
+          "field": "normalized_text",
+          "note": "「牛猫」语义不明（或与后续撸猫拟声相关），已保留原文"
+        },
+        {
+          "segment_id": "SEG-C008-000125",
+          "field": "normalized_text",
+          "note": "「可可以基基期本直播播」严重识别噪声，无法唯一还原，已保留"
+        },
+        {
+          "segment_id": "SEG-C008-001184",
+          "field": "normalized_text",
+          "note": "「吧吧展中」语义不明，已保留原文"
+        },
+        {
+          "segment_id": "SEG-C008-003328",
+          "field": "normalized_text",
+          "note": "「象象的大大台上」语义不清，已保留原文"
+        },
+        {
+          "case_id": "CASE-C008-001",
+          "note": "第一案中段夹杂较长时间的过程/结果、房价等讲师观点扩展，但随后多次说「回到案例」并继续同一十月十五天府过夜聊天线；按宽边界保留在同一连续区间，未单独切开。"
+        },
+        {
+          "case_id": "CASE-C008-002",
+          "note": "第二案课板前段混有大量朋友圈刷屏 OCR，且开场前有约15句「第一个/第二个/门徒预约」过渡；已将过渡段放入 unassigned，案例自「我们来看一下啊/这一个呢这个案例是什么」起算。"
+        }
+      ]
+    },
+    {
+      "course_id": "C009",
+      "versions": {
+        "P01": "knowledge-v002",
+        "P02": "knowledge-v002",
+        "P03": "knowledge-v002"
+      },
+      "segment_count": 5870,
+      "speaker_distribution": {
+        "speaker_0": 3394,
+        "speaker_1": 2182,
+        "unknown": 294
+      },
+      "unknown_speaker_count": 294,
+      "unknown_speaker_ratio": 0.050085,
+      "ocr_segment_count": 275,
+      "case_count": 1,
+      "assigned_segment_count": 4746,
+      "unassigned_segment_count": 1124,
+      "unassigned_ratio": 0.191482,
+      "coverage_count_matches": true,
+      "qa": {
+        "raw": "pass",
+        "P01": "pass",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "cases": [
+        {
+          "case_id": "CASE-C009-001",
+          "p04_version": "knowledge-v002",
+          "source_case_changed": false,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        }
+      ],
+      "p04_out_of_range_cases": [],
+      "known_uncertainties": [
+        {
+          "segment_id": "SEG-C009-000245",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C009-000417",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C009-000647",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C009-000658",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C009-000986",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C009-001642",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C009-001644",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C009-001762",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C009-001773",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C009-001999",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C009-002101",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C009-002118",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C009-002594",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C009-002949",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C009-003127",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C009-003834",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C009-003839",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C009-004420",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C009-004691",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C009-005091",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C009-005592",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C009-004817",
+          "field": "normalized_text",
+          "note": "「得意会」可能为口误或同音误识别，上下文指向朋友圈尺度内容，但无法唯一确定目标词，已保留"
+        },
+        {
+          "segment_id": "SEG-C009-003483",
+          "field": "normalized_text",
+          "note": "「将军将军将军」可能为策略术语重复或识别叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C009-000739",
+          "field": "normalized_text",
+          "note": "「头头」片段过短，可能是「上头」截断或应答残片，已保留"
+        },
+        {
+          "segment_id": "SEG-C009-003716",
+          "field": "normalized_text",
+          "note": "「赛核酸」与后文核酸检测聊天相关，但无法唯一确定是「晒核酸/在核酸」等，已保留"
+        },
+        {
+          "case_id": "CASE-C009-001",
+          "note": "开场 SEG-C009-000002 至 SEG-C009-000004 为 hello/everyone 寒暄，与案例课板 SEG-C009-000001 时间重叠；因课板已是本案聊天且讲师紧接着宣布「这个案例」，按较宽完整区间将寒暄保留在案内。若下游只要纯讲解起点，可将 start 后移至 SEG-C009-000005 或 SEG-C009-000032。"
+        },
+        {
+          "case_id": "CASE-C009-001",
+          "note": "中段约 SEG-C009-000240 至 SEG-C009-000690 插入较长「有无脑子/资料话题/第一次见框架」说教与提问，以及约 SEG-C009-002646 起短暂报名营销；随后均回到同一聊天线（含「击溃理性」定性与支线）。按连续区间规则不单拆、不剔出。主线结束后的支线与「第一个/第二个」结果照片同属开场声明的主线加支线，不拆第二案。"
+        },
+        {
+          "case_id": "CASE-C009-001",
+          "note": "收束选在 SEG-C009-004746「很靠谱呀」：案例结果叙述已完成。SEG-C009-004747 至 SEG-C009-004793 含广州学员组织与「今天讲完了/结束这」，SEG-C009-004794 起为刷朋友圈展示面/万圣节评论、问答与下播。若希望把明确口播「讲完了」也算进案例尾声，可将 end 后移至 SEG-C009-004793。"
+        }
+      ]
+    },
+    {
+      "course_id": "C010",
+      "versions": {
+        "P01": "knowledge-v002",
+        "P02": "knowledge-v002",
+        "P03": "knowledge-v002"
+      },
+      "segment_count": 3338,
+      "speaker_distribution": {
+        "speaker_0": 1919,
+        "speaker_1": 1179,
+        "unknown": 240
+      },
+      "unknown_speaker_count": 240,
+      "unknown_speaker_ratio": 0.071899,
+      "ocr_segment_count": 224,
+      "case_count": 1,
+      "assigned_segment_count": 2984,
+      "unassigned_segment_count": 354,
+      "unassigned_ratio": 0.106052,
+      "coverage_count_matches": true,
+      "qa": {
+        "raw": "pass",
+        "P01": "pass",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "cases": [
+        {
+          "case_id": "CASE-C010-001",
+          "p04_version": "knowledge-v002",
+          "source_case_changed": false,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        }
+      ],
+      "p04_out_of_range_cases": [],
+      "known_uncertainties": [
+        {
+          "segment_id": "SEG-C010-000168",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C010-000243",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C010-000244",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C010-000324",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C010-000393",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C010-000395",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C010-000403",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C010-000921",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C010-000939",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C010-000975",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C010-000997",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C010-001132",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C010-001243",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C010-001309",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C010-001325",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C010-001434",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C010-001551",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C010-001621",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C010-001631",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C010-001660",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C010-001699",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C010-001726",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C010-001833",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C010-002000",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C010-002102",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C010-002283",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C010-002288",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C010-002323",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C010-002376",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C010-002377",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C010-002381",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C010-002810",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C010-003141",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C010-003168",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C010-000102",
+          "field": "normalized_text",
+          "note": "「检样」可能为「截图/见样」等误识别，上下文指向展示案例，但无法唯一确定，已保留"
+        },
+        {
+          "segment_id": "SEG-C010-000182",
+          "field": "normalized_text",
+          "note": "「展外」与前后「展示面」相关，可能为「展位/再说/案例」残片，无法唯一确定，已保留"
+        },
+        {
+          "segment_id": "SEG-C010-000188",
+          "field": "normalized_text",
+          "note": "「展外来」语义不清，可能与外出客户/展示相关，无法唯一确定，已保留"
+        },
+        {
+          "segment_id": "SEG-C010-000728",
+          "field": "normalized_text",
+          "note": "「正邪」在房地产泡沫语境下可能为同音误识别，无法唯一确定目标词，已保留"
+        },
+        {
+          "segment_id": "SEG-C010-002309",
+          "field": "normalized_text",
+          "note": "「阿底裤」可能为口误或误识别残片，无法唯一确定，已保留"
+        },
+        {
+          "segment_id": "SEG-C010-002452",
+          "field": "normalized_text",
+          "note": "段末「形」疑与下一段「容」跨段断裂成「形容」，本段无法补全，已保留"
+        },
+        {
+          "segment_id": "SEG-C010-000357",
+          "field": "normalized_text",
+          "note": "「没有没有没有」可能为口语强调否定，已保留原文结构"
+        },
+        {
+          "case_id": "CASE-C010-001",
+          "note": "案例讲解中段（约 SEG-C010-002273 至 SEG-C010-002625）插入纽约六十岁学员「师姐」聊天吐槽与课板切换；因随后明确回到同一佛山少妇奔现订票线，且规则要求不确定时优先保留较宽完整区间，未单独拆成第二案例。若后续阶段需要独立抽取夕阳红学员片段，可再评估从该插叙起止切开。"
+        },
+        {
+          "case_id": "CASE-C010-001",
+          "note": "案例起点前有短暂断线重连与狼人杀/高分网红开课广告（约 SEG-C010-000204 至 SEG-C010-000248）；因阿峰已在 SEG-C010-000193 点名具体对象且紧接着「我们来看一下这个案例」，按不切掉背景的原则将上述过渡保留在案例起止闭区间内，而非拆成未分配空洞。"
+        }
+      ]
+    },
+    {
+      "course_id": "C011",
+      "versions": {
+        "P01": "knowledge-v002",
+        "P02": "knowledge-v002",
+        "P03": "knowledge-v002"
+      },
+      "segment_count": 3577,
+      "speaker_distribution": {
+        "speaker_0": 2451,
+        "speaker_1": 37,
+        "speaker_2": 797,
+        "speaker_3": 16,
+        "speaker_4": 8,
+        "speaker_5": 2,
+        "speaker_6": 5,
+        "unknown": 261
+      },
+      "unknown_speaker_count": 261,
+      "unknown_speaker_ratio": 0.072966,
+      "ocr_segment_count": 249,
+      "case_count": 3,
+      "assigned_segment_count": 2912,
+      "unassigned_segment_count": 665,
+      "unassigned_ratio": 0.18591,
+      "coverage_count_matches": true,
+      "qa": {
+        "raw": "pass",
+        "P01": "pass",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "cases": [
+        {
+          "case_id": "CASE-C011-001",
+          "p04_version": "knowledge-v002",
+          "source_case_changed": false,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        },
+        {
+          "case_id": "CASE-C011-002",
+          "p04_version": "knowledge-v002",
+          "source_case_changed": false,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        },
+        {
+          "case_id": "CASE-C011-003",
+          "p04_version": "knowledge-v002",
+          "source_case_changed": false,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        }
+      ],
+      "p04_out_of_range_cases": [],
+      "known_uncertainties": [
+        {
+          "segment_id": "SEG-C011-000098",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C011-000199",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C011-000266",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C011-000441",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C011-000746",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C011-000999",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C011-001434",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C011-001636",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C011-001709",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C011-002021",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C011-002111",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C011-002575",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C011-002587",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C011-002732",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C011-002806",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C011-002929",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C011-002942",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C011-003264",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C011-003462",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C011-003503",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C011-003529",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C011-003543",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C011-000262",
+          "field": "normalized_text",
+          "note": "段首「塞这种」可能为「在这种」等误识别残片，无法唯一确定，已保留"
+        },
+        {
+          "segment_id": "SEG-C011-000419",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C011-000478",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C011-000869",
+          "field": "normalized_text",
+          "note": "「只持」可能为「直视/只提」等误识别，无法唯一确定，已保留"
+        },
+        {
+          "segment_id": "SEG-C011-000870",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C011-000929",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C011-001633",
+          "field": "normalized_text",
+          "note": "「下折」语义不清，可能为误识别，无法唯一确定，已保留"
+        },
+        {
+          "segment_id": "SEG-C011-002321",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "case_id": "CASE-C011-001",
+          "note": "开播后 SEG-C011-000077 阿峰曾说「那我来截一个新疆的案例」，但随后仍长时间寒暄、翻相册与公屏问答，直至 SEG-C011-000483 起才进入十一月三日聊天逐句讲解；此前片段按寒暄/过渡放入 unassigned，未前移案例起点。"
+        },
+        {
+          "case_id": "CASE-C011-002",
+          "note": "正式开讲前（约 SEG-C011-000299 至 SEG-C011-000308）课板曾短暂闪过「宝贝我可能12点多才下班…2点左右到」等同线截图，但当时语境仍是公屏问答/素材群，未进入高老师专场讲解；按不强行并入原则保留在 unassigned。"
+        },
+        {
+          "case_id": "CASE-C011-002",
+          "note": "案例尾段（约 SEG-C011-003125 至 SEG-C011-003145）夹有「谈好一点的女朋友 / 怎么结婚」一般性劝诫；因紧接当晚约见复盘且下一句才明确切到「我的一个学员」，按较宽完整区间保留在 CASE-C011-002 内。"
+        },
+        {
+          "case_id": "CASE-C011-003",
+          "note": "SEG-C011-003395 起转入「舔狗逻辑 / 花钱逻辑」一般说教，与学员反馈聊天已无逐句对应；若后续需要把该说教并入案例尾声，可再评估是否后移 end_segment_id。"
+        }
+      ]
+    },
+    {
+      "course_id": "C012",
+      "versions": {
+        "P01": "knowledge-v002",
+        "P02": "knowledge-v002",
+        "P03": "knowledge-v002"
+      },
+      "segment_count": 2952,
+      "speaker_distribution": {
+        "speaker_0": 1971,
+        "speaker_1": 27,
+        "speaker_2": 779,
+        "unknown": 175
+      },
+      "unknown_speaker_count": 175,
+      "unknown_speaker_ratio": 0.059282,
+      "ocr_segment_count": 164,
+      "case_count": 1,
+      "assigned_segment_count": 1357,
+      "unassigned_segment_count": 1595,
+      "unassigned_ratio": 0.540312,
+      "coverage_count_matches": true,
+      "qa": {
+        "raw": "pass",
+        "P01": "pass",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "cases": [
+        {
+          "case_id": "CASE-C012-001",
+          "p04_version": "knowledge-v002",
+          "source_case_changed": false,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        }
+      ],
+      "p04_out_of_range_cases": [],
+      "known_uncertainties": [
+        {
+          "segment_id": "SEG-C012-000308",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C012-000577",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C012-000582",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C012-000607",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C012-000632",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C012-000637",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C012-000694",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C012-000741",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C012-000849",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C012-001141",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C012-001314",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C012-001328",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C012-001392",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C012-001579",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C012-001615",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C012-001618",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C012-002141",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C012-002169",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C012-002172",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C012-000244",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "case_id": "CASE-C012-001",
+          "note": "案例在 SEG-C012-001447 明确收束后，问答段（约 SEG-C012-001794 起）再次调出同一聊天的定位/「可以啦 okk 还没到」课板并称「外卖到家」；按连续闭区间与明确结束语，将该回看保留在 unassigned，不并入本案、不另开第二案例。若下游需要把复盘并入证据链，可再标 partial 扩界。"
+        }
+      ]
+    },
+    {
+      "course_id": "C013",
+      "versions": {
+        "P01": "knowledge-v002",
+        "P02": "knowledge-v002",
+        "P03": "knowledge-v002"
+      },
+      "segment_count": 4151,
+      "speaker_distribution": {
+        "speaker_0": 2128,
+        "speaker_1": 1803,
+        "unknown": 220
+      },
+      "unknown_speaker_count": 220,
+      "unknown_speaker_ratio": 0.052999,
+      "ocr_segment_count": 202,
+      "case_count": 2,
+      "assigned_segment_count": 3776,
+      "unassigned_segment_count": 375,
+      "unassigned_ratio": 0.09034,
+      "coverage_count_matches": true,
+      "qa": {
+        "raw": "pass",
+        "P01": "pass",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "cases": [
+        {
+          "case_id": "CASE-C013-001",
+          "p04_version": "knowledge-v002",
+          "source_case_changed": false,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        },
+        {
+          "case_id": "CASE-C013-002",
+          "p04_version": "knowledge-v002",
+          "source_case_changed": false,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        }
+      ],
+      "p04_out_of_range_cases": [],
+      "known_uncertainties": [
+        {
+          "segment_id": "SEG-C013-000095",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C013-000211",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C013-000532",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C013-000557",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C013-000857",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C013-001001",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C013-001425",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C013-001805",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C013-002236",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C013-002457",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C013-002873",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C013-003540",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C013-003613",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C013-003794",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C013-003961",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C013-004104",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C013-004132",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C013-002873",
+          "field": "normalized_text",
+          "note": "天意与叠词好好好相邻，口语强调成分仍有不确定性"
+        },
+        {
+          "segment_id": "SEG-C013-003642",
+          "field": "normalized_text",
+          "note": "生态学→群里为上下文推断，原始识别仍可能指向其他群相关说法"
+        },
+        {
+          "case_id": "CASE-C013-001",
+          "note": "收束段（SEG-C013-003243 至 SEG-C013-003311）夹带「这次来了个学员…三三九截胡甜妹」对照讲解，无独立学员聊天课板；按同案例关系定位复盘延伸保留在 CASE-001 闭区间内，未单拆为新案例。若后续阶段只需主聊天线，可将该对照段标为旁路引用。"
+        },
+        {
+          "case_id": "CASE-C013-002",
+          "note": "本案例为门徒小分队群+私聊战绩连续翻看，内含多名学员多条约出/过夜/照骗/飞行员线，讲师以「从头看到尾」「最近门徒战绩」整体展示，未再给出「下一个案例」级硬切分；结束点取「就简单给大家看一看」之后转入不可公放照片浏览之前，尾部照片筛选与下播归入 unassigned。"
+        }
+      ]
+    },
+    {
+      "course_id": "C014",
+      "versions": {
+        "P01": "knowledge-v002",
+        "P02": "knowledge-v002",
+        "P03": "knowledge-v002"
+      },
+      "segment_count": 4757,
+      "speaker_distribution": {
+        "speaker_0": 8,
+        "speaker_1": 2997,
+        "speaker_2": 1557,
+        "speaker_3": 18,
+        "unknown": 177
+      },
+      "unknown_speaker_count": 177,
+      "unknown_speaker_ratio": 0.037208,
+      "ocr_segment_count": 168,
+      "case_count": 2,
+      "assigned_segment_count": 4511,
+      "unassigned_segment_count": 246,
+      "unassigned_ratio": 0.051713,
+      "coverage_count_matches": true,
+      "qa": {
+        "raw": "pass",
+        "P01": "pass",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "cases": [
+        {
+          "case_id": "CASE-C014-001",
+          "p04_version": "knowledge-v002",
+          "source_case_changed": false,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        },
+        {
+          "case_id": "CASE-C014-002",
+          "p04_version": "knowledge-v002",
+          "source_case_changed": false,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        }
+      ],
+      "p04_out_of_range_cases": [],
+      "known_uncertainties": [
+        {
+          "segment_id": "SEG-C014-000014",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C014-000035",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C014-000067",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C014-000262",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C014-000439",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C014-000597",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C014-000878",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C014-001535",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C014-001605",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C014-002038",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C014-002072",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C014-002534",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C014-002684",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C014-002733",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C014-002734",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C014-002736",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C014-002809",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C014-003031",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C014-003300",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C014-003421",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C014-003422",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C014-003524",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C014-003624",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C014-003721",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C014-004023",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C014-004110",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C014-004178",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C014-004489",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C014-004591",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C014-004690",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C014-000498",
+          "field": "normalized_text",
+          "note": "「白日」或为「白天/百日/啊你」等，上下文不足以唯一判定，已保留"
+        },
+        {
+          "segment_id": "SEG-C014-000690",
+          "field": "normalized_text",
+          "note": "「判」与下段「断…」跨段拼接成「判断」，本段保留原文不断段合并"
+        },
+        {
+          "case_id": "CASE-C014-001",
+          "note": "讲师多次强调「简单看一看」「浅看一下」，本区间为门徒近两日多条战绩连续翻看（双线编排问询、接回房、唱歌灌醉等），未再给出「下一个案例」级硬切分；按「较宽完整区间」保留为单一 partial 案例。若后续只需单聊天线，可再拆子线。"
+        },
+        {
+          "case_id": "CASE-C014-002",
+          "note": "正式点题前（约 SEG-C014-000137 至 SEG-C014-000217）已宣布「先看整套案例」且课板出现 urmuse，但夹杂猫挡镜头、录播扫码与抖音不便讲实战等直播运维/过渡，未计入本案例起止，归入 unassigned；案例内另有较长话术原理旁讲（如「泡妞三件事」）及「今天有两个案例」预告，因仍围绕同一 urmuse/千里送聊天推进且无新人物课板硬切换，未断开。课后明确「第二个案例…改天再讲」，故本课仅落地这一整套案例。"
+        }
+      ]
+    },
+    {
+      "course_id": "C015",
+      "versions": {
+        "P01": "knowledge-v002",
+        "P02": "knowledge-v002",
+        "P03": "knowledge-v003"
+      },
+      "segment_count": 5198,
+      "speaker_distribution": {
+        "speaker_0": 3340,
+        "speaker_1": 1682,
+        "speaker_2": 3,
+        "speaker_3": 6,
+        "unknown": 167
+      },
+      "unknown_speaker_count": 167,
+      "unknown_speaker_ratio": 0.032128,
+      "ocr_segment_count": 141,
+      "case_count": 2,
+      "assigned_segment_count": 3876,
+      "unassigned_segment_count": 1322,
+      "unassigned_ratio": 0.254329,
+      "coverage_count_matches": true,
+      "qa": {
+        "raw": "pass",
+        "P01": "pass",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "cases": [
+        {
+          "case_id": "CASE-C015-001",
+          "p04_version": "knowledge-v002",
+          "source_case_changed": false,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        },
+        {
+          "case_id": "CASE-C015-002",
+          "p04_version": "knowledge-v003",
+          "source_case_changed": true,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        }
+      ],
+      "p04_out_of_range_cases": [],
+      "known_uncertainties": [
+        {
+          "segment_id": "SEG-C015-000057",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C015-000335",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C015-000524",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C015-000604",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C015-000730",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C015-000864",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C015-001292",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C015-001500",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C015-001959",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C015-001983",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C015-001992",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C015-002202",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C015-002306",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C015-002388",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C015-002493",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C015-002683",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C015-003059",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C015-004047",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C015-004127",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C015-004156",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C015-004328",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C015-004631",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "case_id": "CASE-C015-001",
+          "note": "案中截胡技术串讲与展示照片点评穿插，前后仍锚定「小邓紫棋」人物与接回滨河湾结果线，故保留在本案连续区间；未单独切开。"
+        },
+        {
+          "case_id": "CASE-C015-002",
+          "note": "主线在「到家了/没回了/后面起床了」后出现展示面弹幕问答，随后又回看同一聊天后续。为满足连续闭区间且不丢掉可定位复盘/OCR，将中间展示面串讲一并纳入本案宽边界；若下游只需纯聊天推进，可再人工收窄到 SEG-C015-003876。"
+        },
+        {
+          "case_id": "",
+          "note": "SEG-C015-000001 至 SEG-C015-000208 为开播寒暄、直播调试、行程说明与黑丝/爱情闲聊，尚未切入具体课板聊天案例，故放入 unassigned_segment_ids。"
+        },
+        {
+          "case_id": "",
+          "note": "SEG-C015-004085 至 SEG-C015-005198 为「谢谢惠顾」通识、屌丝约咖啡说教、弹幕学员「六分姑娘」临场分析、泡房/HR/朋友圈等公屏问答与下播预告（明确说明其他案例改明天讲），无法归入今晚两个已划定案例主线，故保持未分配。开场宣称「可以讲三个」属时间不够的计划，本场未实际展开第三案。"
+        },
+        {
+          "case_id": "",
+          "note": "完成覆盖校验后未分配占比为 25.4%（1322/5198）。高于 20% 的剩余未分配已按上方条目给出具体原因（开场寒暄/通识说教与弹幕答疑/下播），并非空白高未分配；已将案例二后续复盘与可定位 OCR 并回 CASE-C015-002。"
+        }
+      ]
+    },
+    {
+      "course_id": "C016",
+      "versions": {
+        "P01": "knowledge-v003",
+        "P02": "knowledge-v003",
+        "P03": "knowledge-v003"
+      },
+      "segment_count": 4560,
+      "speaker_distribution": {
+        "speaker_0": 2179,
+        "speaker_1": 2254,
+        "unknown": 127
+      },
+      "unknown_speaker_count": 127,
+      "unknown_speaker_ratio": 0.027851,
+      "ocr_segment_count": 84,
+      "case_count": 1,
+      "assigned_segment_count": 4413,
+      "unassigned_segment_count": 147,
+      "unassigned_ratio": 0.032237,
+      "coverage_count_matches": true,
+      "qa": {
+        "raw": "pass",
+        "P01": "pass",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "cases": [
+        {
+          "case_id": "CASE-C016-001",
+          "p04_version": "knowledge-v003",
+          "source_case_changed": true,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        }
+      ],
+      "p04_out_of_range_cases": [],
+      "known_uncertainties": [
+        {
+          "segment_id": "SEG-C016-000065",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C016-000159",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C016-000330",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C016-001156",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C016-001320",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C016-001322",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C016-001550",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C016-001877",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C016-001929",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C016-002151",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C016-002573",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C016-002629",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C016-002724",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C016-003164",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C016-003170",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C016-003421",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C016-003426",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C016-003839",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C016-004063",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C016-004243",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "case_id": "CASE-C016-001",
+          "note": "开场宣布案例后至「ok 我们来看一下这个案例」之间夹杂西双版纳/机票闲聊，已按宽边界并入案例起点；中段赵露思外貌对比与阿峰另一女生过夜吐槽为旁支串讲，未单独拆案。若需更紧起点可改从 SEG-C016-000153 起算。"
+        }
+      ]
+    },
+    {
+      "course_id": "C017",
+      "versions": {
+        "P01": "knowledge-v003",
+        "P02": "knowledge-v003",
+        "P03": "knowledge-v003"
+      },
+      "segment_count": 3317,
+      "speaker_distribution": {
+        "speaker_0": 1529,
+        "speaker_1": 1563,
+        "unknown": 225
+      },
+      "unknown_speaker_count": 225,
+      "unknown_speaker_ratio": 0.067832,
+      "ocr_segment_count": 207,
+      "case_count": 1,
+      "assigned_segment_count": 3155,
+      "unassigned_segment_count": 162,
+      "unassigned_ratio": 0.048839,
+      "coverage_count_matches": true,
+      "qa": {
+        "raw": "pass",
+        "P01": "pass",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "cases": [
+        {
+          "case_id": "CASE-C017-001",
+          "p04_version": "knowledge-v003",
+          "source_case_changed": true,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        }
+      ],
+      "p04_out_of_range_cases": [],
+      "known_uncertainties": [
+        {
+          "segment_id": "SEG-C017-000363",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C017-000465",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C017-000753",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C017-001103",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C017-001188",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C017-001622",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C017-001946",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C017-002113",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C017-002254",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C017-002306",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C017-002402",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C017-002813",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C017-003012",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C017-003023",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C017-000120",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C017-001814",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "case_id": "CASE-C017-001",
+          "note": "宣布案例后至「我们先来看一下这个案例/新鲜出炉」之间夹杂西双版纳行程与搭讪见闻，已按宽边界并入案例起点；明示「案例过了到这儿结束了」之后仍展示女主「小甜妹」照片，并穿插别墅/团队见闻，因回指同一人物与结果线保留在闭区间内。若需更紧终点可改从 SEG-C017-003106 收束。"
+        }
+      ]
+    },
+    {
+      "course_id": "C018",
+      "versions": {
+        "P01": "knowledge-v003",
+        "P02": "knowledge-v003",
+        "P03": "knowledge-v003"
+      },
+      "segment_count": 1336,
+      "speaker_distribution": {
+        "speaker_0": 1223,
+        "unknown": 113
+      },
+      "unknown_speaker_count": 113,
+      "unknown_speaker_ratio": 0.084581,
+      "ocr_segment_count": 91,
+      "case_count": 3,
+      "assigned_segment_count": 1267,
+      "unassigned_segment_count": 69,
+      "unassigned_ratio": 0.051647,
+      "coverage_count_matches": true,
+      "qa": {
+        "raw": "pass",
+        "P01": "pass",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "cases": [
+        {
+          "case_id": "CASE-C018-001",
+          "p04_version": "knowledge-v003",
+          "source_case_changed": true,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        },
+        {
+          "case_id": "CASE-C018-002",
+          "p04_version": "knowledge-v003",
+          "source_case_changed": true,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        },
+        {
+          "case_id": "CASE-C018-003",
+          "p04_version": "knowledge-v003",
+          "source_case_changed": true,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        }
+      ],
+      "p04_out_of_range_cases": [],
+      "known_uncertainties": [
+        {
+          "segment_id": "SEG-C018-000065",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C018-000480",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C018-000677",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C018-000760",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C018-000077",
+          "field": "normalized_text",
+          "note": "六六六可能为口语评价口癖或数字强调，已保留原文"
+        },
+        {
+          "segment_id": "SEG-C018-000435",
+          "field": "normalized_text",
+          "note": "小额通指向不明（昵称/口误/专名），上下文不足以确定，已保留原文"
+        },
+        {
+          "segment_id": "SEG-C018-000440",
+          "field": "normalized_text",
+          "note": "小河通指向不明（昵称/口误/专名），上下文不足以确定，已保留原文"
+        },
+        {
+          "segment_id": "SEG-C018-000511",
+          "field": "normalized_text",
+          "note": "八八八八八可能为道别口癖或语气填充，已保留原文"
+        },
+        {
+          "segment_id": "SEG-C018-001325",
+          "field": "normalized_text",
+          "note": "连续拜拜可能为道别语气强调，已保留原文结构"
+        },
+        {
+          "case_id": "CASE-C018-001",
+          "note": "本段为西双版纳整次活动的群聊/照片蒙太奇，内含昆明千里送的爱情、别墅轰趴、多位女孩与后续闺蜜聊天等短线，未再拆成独立案例；人物切换多为弱信号，故标 partial，边界取整段成果回顾宽区间。"
+        },
+        {
+          "case_id": "CASE-C018-003",
+          "note": "案例起点取「再来看看一些问题」宽边界：SEG-C018-000574 至 SEG-C018-000597 含翻看抖音消息与「啥秘诀」短暂旁支，随后才落到私密空间长文问询；因同属本段答疑检索过程且规则要求宽区间，未拆出。若下游只要纯流程答疑，可自 SEG-C018-000598 收窄。"
+        },
+        {
+          "case_id": "",
+          "note": "SEG-C018-000001 至 SEG-C018-000030 为开场寒暄、连 WiFi/等一下与先看照片还是群里的排期闲聊；SEG-C018-000444 至 SEG-C018-000445 为「今天还讲点什么」过渡；SEG-C018-001300 至 SEG-C018-001336 为下麦、接妹子与晚安下播，均未归入具体案例。"
+        }
+      ]
+    },
+    {
+      "course_id": "C019",
+      "versions": {
+        "P01": "knowledge-v003",
+        "P02": "knowledge-v003",
+        "P03": "knowledge-v003"
+      },
+      "segment_count": 3724,
+      "speaker_distribution": {
+        "speaker_0": 2021,
+        "speaker_1": 1465,
+        "unknown": 238
+      },
+      "unknown_speaker_count": 238,
+      "unknown_speaker_ratio": 0.06391,
+      "ocr_segment_count": 189,
+      "case_count": 2,
+      "assigned_segment_count": 3696,
+      "unassigned_segment_count": 28,
+      "unassigned_ratio": 0.007519,
+      "coverage_count_matches": true,
+      "qa": {
+        "raw": "pass",
+        "P01": "pass",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "cases": [
+        {
+          "case_id": "CASE-C019-001",
+          "p04_version": "knowledge-v003",
+          "source_case_changed": true,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        },
+        {
+          "case_id": "CASE-C019-002",
+          "p04_version": "knowledge-v003",
+          "source_case_changed": true,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        }
+      ],
+      "p04_out_of_range_cases": [],
+      "known_uncertainties": [
+        {
+          "segment_id": "SEG-C019-000243",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C019-000346",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C019-000503",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C019-000613",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C019-000628",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C019-000874",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C019-000969",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C019-001029",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C019-001049",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C019-001127",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C019-001753",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C019-001984",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C019-002024",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C019-002122",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C019-002496",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C019-002523",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C019-002820",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C019-002839",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C019-002877",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C019-002958",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C019-003060",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C019-003688",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C019-000017",
+          "field": "normalized_text",
+          "note": "“果果吧”可能是效果相关断裂或口误，已保留"
+        },
+        {
+          "segment_id": "SEG-C019-000020",
+          "field": "normalized_text",
+          "note": "“今然”听写不确定，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C019-000045",
+          "field": "normalized_text",
+          "note": "自述片段识别严重，可能含自卑/见不得人等，已保守保留"
+        },
+        {
+          "segment_id": "SEG-C019-000199",
+          "field": "normalized_text",
+          "note": "“把位”与后续“置给我”疑似“把位置”跨段断裂，未合并段"
+        },
+        {
+          "segment_id": "SEG-C019-000232",
+          "field": "normalized_text",
+          "note": "“一人工币”语义不确定，已保留"
+        },
+        {
+          "case_id": "CASE-C019-001",
+          "note": "案例起点取课板首段「9月18日」聊天宽边界：SEG-C019-000001 至正式「开讲案例」（SEG-C019-000053）之间夹有露手指甲/看不清等直播调试与弹幕闲聊；因同属本场对该聊天记录的开场展示与导入，且规则要求宽区间，未拆出。"
+        },
+        {
+          "case_id": "CASE-C019-002",
+          "note": "结果段在「到这里为止」后仍含直播间有女观众而收着讲、是否展示照片与后期维护；仍属同一上楼结果线复盘，故留在案例闭区间至「讲差不多了」。因现场主动省略部分细节，completeness 标 partial。"
+        },
+        {
+          "case_id": "",
+          "note": "SEG-C019-003697 至 SEG-C019-003724 为下麦、展示微信、无录播说明、十一继续播预告与晚安结束语，未归入具体案例。"
+        }
+      ]
+    },
+    {
+      "course_id": "C020",
+      "versions": {
+        "P01": "knowledge-v003",
+        "P02": "knowledge-v003",
+        "P03": "knowledge-v003"
+      },
+      "segment_count": 3143,
+      "speaker_distribution": {
+        "speaker_0": 1815,
+        "speaker_1": 1127,
+        "speaker_2": 34,
+        "unknown": 167
+      },
+      "unknown_speaker_count": 167,
+      "unknown_speaker_ratio": 0.053134,
+      "ocr_segment_count": 116,
+      "case_count": 3,
+      "assigned_segment_count": 3106,
+      "unassigned_segment_count": 37,
+      "unassigned_ratio": 0.011772,
+      "coverage_count_matches": true,
+      "qa": {
+        "raw": "pass",
+        "P01": "pass",
+        "P02": "pass",
+        "P03": "pass"
+      },
+      "cases": [
+        {
+          "case_id": "CASE-C020-001",
+          "p04_version": "knowledge-v003",
+          "source_case_changed": true,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        },
+        {
+          "case_id": "CASE-C020-002",
+          "p04_version": "knowledge-v003",
+          "source_case_changed": true,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        },
+        {
+          "case_id": "CASE-C020-003",
+          "p04_version": "knowledge-v003",
+          "source_case_changed": true,
+          "qa_status": "pass",
+          "invalid_evidence_count": 0
+        }
+      ],
+      "p04_out_of_range_cases": [],
+      "known_uncertainties": [
+        {
+          "segment_id": "SEG-C020-000288",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C020-000297",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C020-000298",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C020-000346",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C020-000900",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C020-001130",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C020-001164",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C020-001193",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C020-001377",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C020-001449",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C020-001627",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C020-002354",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C020-002374",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C020-002646",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C020-002792",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C020-003105",
+          "field": "normalized_text",
+          "note": "存在可能为口语强调或识别重复的叠词，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C020-000116",
+          "field": "normalized_text",
+          "note": "“始上D”跨段断裂且拉丁字母含义不明，已保留"
+        },
+        {
+          "segment_id": "SEG-C020-000117",
+          "field": "normalized_text",
+          "note": "“白博尼兰博”疑似品牌连读识别，已保留原文结构"
+        },
+        {
+          "segment_id": "SEG-C020-000118",
+          "field": "normalized_text",
+          "note": "“SKK two 肌肤之约”产品名听写不确定，已保留"
+        },
+        {
+          "segment_id": "SEG-C020-000120",
+          "field": "normalized_text",
+          "note": "跨段开头“些”疑似承接上段“那些”，未合并段"
+        },
+        {
+          "segment_id": "SEG-C020-000194",
+          "field": "normalized_text",
+          "note": "“层次太了”疑似“层次太低了”，证据不足未补字"
+        },
+        {
+          "segment_id": "SEG-C020-000654",
+          "field": "normalized_text",
+          "note": "跨段承接上段“然/后”，未合并段"
+        },
+        {
+          "segment_id": "SEG-C020-000837",
+          "field": "normalized_text",
+          "note": "“为已”语义不完整，已保留"
+        },
+        {
+          "segment_id": "SEG-C020-001257",
+          "field": "normalized_text",
+          "note": "跨段承接上段“你看我怎/么”，未合并段；“内裤”由后续“穿裤子”语境支持"
+        },
+        {
+          "segment_id": "SEG-C020-002277",
+          "field": "normalized_text",
+          "note": "“逃跑剪头像我”仍不完整，可能为头像相关口误，已保守保留结构"
+        },
+        {
+          "segment_id": "SEG-C020-002329",
+          "field": "normalized_text",
+          "note": "夹杂英文歌词/品牌听写不确定，已保留"
+        },
+        {
+          "segment_id": "SEG-C020-002331",
+          "field": "normalized_text",
+          "note": "英文片段 to stay them 暖光 听写不确定，已保留"
+        },
+        {
+          "segment_id": "SEG-C020-002799",
+          "field": "normalized_text",
+          "note": "“泰国老聊”可能为昵称或“泰国佬”，八八八为打赏口播，已保留"
+        },
+        {
+          "segment_id": "SEG-C020-002993",
+          "field": "normalized_text",
+          "note": "“那为什么什思不”断裂严重，已保留原文结构"
+        },
+        {
+          "case_id": "CASE-C020-001",
+          "note": "案例起点取课板「11月2日」好友通过宽边界：SEG-C020-000001 至正式「从这个时间线来看起」之间夹有直播调试（我看一眼/OK了）及课板短暂闪现「捏捏现在下播了吗/12月8日」等后续主播案例画面；因同属本场案例环节开场展示与导入，且规则要求宽区间，未拆出。"
+        },
+        {
+          "case_id": "CASE-C020-002",
+          "note": "讲师明确「截了两个比较重点的位置」即结束，十二月聊天线未全文展开至最终见面结果；completeness 标 partial。开场「我们来看这一个案例」后至「来说一下这个女生」之间含公屏/喝水等直播互动，仍属该案例导入，留在闭区间内。"
+        },
+        {
+          "case_id": "CASE-C020-003",
+          "note": "直球聊天展示后长段海王人设/展示面条件串讲仍回指刚演示的聊天气势与结果窗口，故留在案例内至「还有其他聊天记录但不展开」。因主动省略其余记录且未给单一女生完整闭环，completeness 标 partial。"
+        },
+        {
+          "case_id": "",
+          "note": "SEG-C020-003107 至 SEG-C020-003143 为门徒封城约炮旁支、成都死城闲聊与「今天差不多就」收播语，未归入具体案例。"
+        }
+      ]
+    }
+  ]
+}
