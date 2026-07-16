@@ -32,6 +32,49 @@
       "title": "Source Input Hash",
       "type": "string"
     },
+    "segment_profile": {
+      "enum": [
+        "full",
+        "evidence_focused"
+      ],
+      "title": "Segment Profile",
+      "type": "string"
+    },
+    "original_segment_count": {
+      "minimum": 0,
+      "title": "Original Segment Count",
+      "type": "integer"
+    },
+    "selected_segment_count": {
+      "minimum": 0,
+      "title": "Selected Segment Count",
+      "type": "integer"
+    },
+    "omitted_segment_count": {
+      "minimum": 0,
+      "title": "Omitted Segment Count",
+      "type": "integer"
+    },
+    "required_evidence_count": {
+      "minimum": 0,
+      "title": "Required Evidence Count",
+      "type": "integer"
+    },
+    "selected_required_evidence_count": {
+      "minimum": 0,
+      "title": "Selected Required Evidence Count",
+      "type": "integer"
+    },
+    "required_evidence_coverage": {
+      "maximum": 1,
+      "minimum": 0,
+      "title": "Required Evidence Coverage",
+      "type": "number"
+    },
+    "selected_evidence_ids_hash": {
+      "title": "Selected Evidence Ids Hash",
+      "type": "string"
+    },
     "redacted_package": {
       "additionalProperties": true,
       "title": "Redacted Package",
@@ -51,6 +94,14 @@
   },
   "required": [
     "source_input_hash",
+    "segment_profile",
+    "original_segment_count",
+    "selected_segment_count",
+    "omitted_segment_count",
+    "required_evidence_count",
+    "selected_required_evidence_count",
+    "required_evidence_coverage",
+    "selected_evidence_ids_hash",
     "redacted_package",
     "external_payload_safe"
   ],

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import time
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Protocol
 
@@ -26,6 +27,7 @@ from course_video_analyzer.knowledge.afeng_models import (
     AfengRunEvent,
     AfengRunManifest,
     AfengStage,
+    ExternalSegmentProfile,
     FidelityAudit,
     PublicationRecord,
 )
@@ -37,7 +39,15 @@ class AfengStageExecutor(Protocol):
     @property
     def model_name(self) -> str: ...
 
-    def execute(self, stage: str, payload: dict[str, Any]) -> dict[str, Any]: ...
+    def execute(
+        self, stage: str, payload: dict[str, Any]
+    ) -> dict[str, Any] | "StageExecutionResult": ...
+
+
+@dataclass(frozen=True)
+class StageExecutionResult:
+    output: dict[str, Any]
+    metadata: dict[str, Any]
 
 
 def _read_object(path: Path) -> dict[str, Any]:
@@ -67,7 +77,13 @@ def _artifact(
             output_hash=content_hash(output),
             duration_ms=0,
         )
-    output = executor.execute(stage, payload)
+    response = executor.execute(stage, payload)
+    metadata: dict[str, Any] = {}
+    if isinstance(response, StageExecutionResult):
+        output = response.output
+        metadata = response.metadata
+    else:
+        output = response
     if not isinstance(output, dict):
         raise ValueError(f"stage {stage} did not return a JSON object")
     atomic_write_text(path, json.dumps(output, ensure_ascii=False, indent=2))
@@ -78,6 +94,7 @@ def _artifact(
         input_hash=input_digest,
         output_hash=content_hash(output),
         duration_ms=int((time.monotonic() - started) * 1000),
+        model_metadata=metadata,
     )
 
 
@@ -91,6 +108,8 @@ def run_afeng_method_pipeline(
     executor: AfengStageExecutor,
     *,
     max_revisions: int = 2,
+    external_segment_profile: ExternalSegmentProfile = "evidence_focused",
+    external_context_window: int = 1,
 ) -> AfengRunManifest:
     """Run extraction, fidelity audit, publication classification, and rendering.
 
@@ -103,7 +122,11 @@ def run_afeng_method_pipeline(
     evidence_report = validate_evidence_package(package)
     if evidence_report["status"] != "pass":
         raise ValueError(f"evidence package failed deterministic QA: {evidence_report}")
-    external = build_external_payload(package)
+    external = build_external_payload(
+        package,
+        segment_profile=external_segment_profile,
+        context_window=external_context_window,
+    )
     if not external.external_payload_safe:
         raise ValueError("evidence package could not be safely redacted for an external model")
 
@@ -122,6 +145,9 @@ def run_afeng_method_pipeline(
             "input_hash": package.input_hash,
             "prompt_version": PROMPT_VERSION,
             "model": executor.model_name,
+            "external_segment_profile": external_segment_profile,
+            "external_context_window": external_context_window,
+            "selected_evidence_ids_hash": external.selected_evidence_ids_hash,
         }
     )[:12]
     run_path = run_dir / f"{package.case_id}-{run_token}.json"
@@ -133,6 +159,7 @@ def run_afeng_method_pipeline(
         knowledge_id=initial_knowledge_id,
         input_hash=package.input_hash,
         status="running",
+        artifact_paths={"evidence_package": str(Path(evidence_path).resolve())},
     )
     if run_path.is_file():
         previous = AfengRunManifest.model_validate(_read_object(run_path))
@@ -145,12 +172,19 @@ def run_afeng_method_pipeline(
     _write_manifest(run_path, manifest)
     current_stage: AfengStage = "extract_method"
     current_revision = 0
+    model_input_hash = content_hash(
+        {
+            "source_input_hash": package.input_hash,
+            "segment_profile": external.segment_profile,
+            "selected_evidence_ids_hash": external.selected_evidence_ids_hash,
+        }
+    )
 
     try:
         draft_payload = {
             "prompt_version": PROMPT_VERSION,
             "cache_key": cache_key(
-                package.input_hash, PROMPT_VERSION, executor.model_name, "extract_method"
+                model_input_hash, PROMPT_VERSION, executor.model_name, "extract_method"
             ),
             "evidence_package": external.redacted_package,
         }
@@ -161,6 +195,9 @@ def run_afeng_method_pipeline(
             draft_dir / f"{package.case_id}-{run_token}-r0.json",
         )
         manifest.events.append(event)
+        manifest.artifact_paths["method_draft_r0"] = str(
+            draft_dir / f"{package.case_id}-{run_token}-r0.json"
+        )
         draft = AfengMethodDraft.model_validate(draft_data)
         manifest.knowledge_id = draft.knowledge_id
         draft_report = validate_method_draft(package, draft)
@@ -186,6 +223,9 @@ def run_afeng_method_pipeline(
                 revision_number=revision_number,
             )
             manifest.events.append(event)
+            manifest.artifact_paths[f"fidelity_audit_r{revision_number}"] = str(
+                audit_dir / f"{package.case_id}-{run_token}-r{revision_number}.json"
+            )
             audit = FidelityAudit.model_validate(audit_data)
             audit_report = validate_fidelity_audit(package, draft, audit)
             if audit_report["status"] != "pass":
@@ -220,6 +260,9 @@ def run_afeng_method_pipeline(
                 revision_number=revision_number,
             )
             manifest.events.append(event)
+            manifest.artifact_paths[f"method_draft_r{revision_number}"] = str(
+                draft_dir / f"{package.case_id}-{run_token}-r{revision_number}.json"
+            )
             draft = AfengMethodDraft.model_validate(revised_data)
             draft_report = validate_method_draft(package, draft)
             if draft_report["status"] != "pass":

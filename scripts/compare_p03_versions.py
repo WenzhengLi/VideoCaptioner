@@ -266,7 +266,7 @@ def render_markdown(report: dict[str, Any]) -> str:
                 f"{len(course['suspicious_forced_ad_or_chatter'])} (see JSON)"
             )
         lines.append(
-            f"- v003 cases: "
+            "- v003 cases: "
             + "; ".join(
                 f"{c['case_id']}({c['size']},{c['completeness']})"
                 for c in course["v003_cases"]

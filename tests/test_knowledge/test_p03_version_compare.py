@@ -14,7 +14,6 @@ decide_adoption = _MOD.decide_adoption
 
 
 def _write_p03(path: Path, *, cases: list[dict], unassigned: list[str], prompt: str) -> None:
-    assigned = 0
     # derive assigned via indexes in ids list later; store metrics explicitly
     path.write_text(
         json.dumps(

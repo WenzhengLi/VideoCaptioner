@@ -21,6 +21,7 @@ from course_video_analyzer.knowledge.afeng_models import (
     EvidenceStatementType,
     EvidenceStatus,
     ExternalPayload,
+    ExternalSegmentProfile,
     FidelityAudit,
     PiiFinding,
     PublicationClass,
@@ -357,13 +358,103 @@ def _redact_value(value: Any, counts: dict[str, int]) -> Any:
     return value
 
 
-def build_external_payload(package: AfengEvidencePackage) -> ExternalPayload:
+def _select_external_segments(
+    package: AfengEvidencePackage,
+    segment_profile: ExternalSegmentProfile,
+    context_window: int,
+) -> list[EvidenceSegment]:
+    if context_window < 0:
+        raise ValueError("context_window must be non-negative")
+    if segment_profile == "full":
+        return list(package.segments)
+    if segment_profile != "evidence_focused":
+        raise ValueError("segment_profile must be full or evidence_focused")
+    referenced = {
+        evidence_id
+        for statement in package.statements
+        for evidence_id in statement.evidence_ids
+    }
+    referenced.update(
+        evidence_id
+        for review in package.evidence_reviews
+        for evidence_id in review.evidence_ids
+    )
+    referenced.update(
+        evidence_id
+        for warning in package.source_warnings
+        for evidence_id in warning.evidence_ids
+    )
+    indexes = {
+        index
+        for index, segment in enumerate(package.segments)
+        if segment.evidence_id in referenced
+    }
+    selected_indexes: set[int] = set()
+    for index in indexes:
+        selected_indexes.update(
+            range(
+                max(0, index - context_window),
+                min(len(package.segments), index + context_window + 1),
+            )
+        )
+    return [package.segments[index] for index in sorted(selected_indexes)]
+
+
+def build_external_payload(
+    package: AfengEvidencePackage,
+    *,
+    segment_profile: ExternalSegmentProfile = "evidence_focused",
+    context_window: int = 1,
+) -> ExternalPayload:
+    selected_segments = _select_external_segments(package, segment_profile, context_window)
+    required_ids = {
+        evidence_id
+        for statement in package.statements
+        for evidence_id in statement.evidence_ids
+    }
+    required_ids.update(
+        evidence_id
+        for review in package.evidence_reviews
+        for evidence_id in review.evidence_ids
+    )
+    required_ids.update(
+        evidence_id
+        for warning in package.source_warnings
+        for evidence_id in warning.evidence_ids
+    )
+    selected_ids = {item.evidence_id for item in selected_segments}
+    selected_required = required_ids & selected_ids
+    coverage = len(selected_required) / len(required_ids) if required_ids else 1.0
     counts: dict[str, int] = {}
-    redacted = _redact_value(package.model_dump(mode="json"), counts)
+    source = package.model_dump(mode="json")
+    source["segments"] = [item.model_dump(mode="json") for item in selected_segments]
+    source["model_payload_selection"] = {
+        "segment_profile": segment_profile,
+        "context_window": context_window,
+        "original_segment_count": len(package.segments),
+        "selected_segment_count": len(selected_segments),
+        "omitted_segment_count": len(package.segments) - len(selected_segments),
+        "selection_rule": "all P04/P05 referenced segments plus adjacent context",
+        "required_evidence_count": len(required_ids),
+        "selected_required_evidence_count": len(selected_required),
+        "required_evidence_coverage": coverage,
+        "local_full_package_input_hash": package.input_hash,
+    }
+    redacted = _redact_value(source, counts)
     remaining: dict[str, int] = {}
     _redact_value(redacted, remaining)
     return ExternalPayload(
         source_input_hash=package.input_hash,
+        segment_profile=segment_profile,
+        original_segment_count=len(package.segments),
+        selected_segment_count=len(selected_segments),
+        omitted_segment_count=len(package.segments) - len(selected_segments),
+        required_evidence_count=len(required_ids),
+        selected_required_evidence_count=len(selected_required),
+        required_evidence_coverage=coverage,
+        selected_evidence_ids_hash=content_hash(
+            [item.evidence_id for item in selected_segments]
+        ),
         redacted_package=redacted,
         pii_findings=[PiiFinding(kind=kind, count=count) for kind, count in sorted(counts.items())],
         external_payload_safe=not remaining,

@@ -214,6 +214,7 @@ def test_external_payload_redacts_deterministic_pii(tmp_path: Path) -> None:
     payload = build_external_payload(package)
     serialized = json.dumps(payload.redacted_package, ensure_ascii=False)
     assert payload.external_payload_safe is True
+    assert payload.required_evidence_coverage == 1.0
     assert "13800138000" not in serialized
     assert "abcdef12" not in serialized
     assert {item.kind for item in payload.pii_findings} == {"mainland_phone", "wechat_id"}

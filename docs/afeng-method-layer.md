@@ -29,6 +29,8 @@ P04 案例证据 + P05 证据审查字段
 - `src/course_video_analyzer/knowledge/afeng_models.py`：版本化数据契约；
 - `src/course_video_analyzer/knowledge/afeng.py`：证据包、哈希、脱敏、QA、发布闸门和 Markdown；
 - `src/course_video_analyzer/knowledge/afeng_pipeline.py`：最多两轮修订的可恢复状态机；
+- `src/course_video_analyzer/knowledge/afeng_experiment.py`：baseline 消费和三课试验准备；
+- `src/course_video_analyzer/knowledge/afeng_executor.py`：通用 OpenAI-compatible 结构化模型 adapter；
 - `prompts/afeng-method-v001/`：提炼、审查、修订和发布分类 Prompt；
 - `schemas/afeng-method-v001/`：可交给模型/API 调用层使用的 JSON Schema；
 - `tests/test_knowledge/test_afeng.py`：闸门、脱敏、缓存和渲染测试。
@@ -114,6 +116,40 @@ course-knowledge afeng-qa-evidence evidence.json evidence-qa.json
 course-knowledge afeng-build-external-payload evidence.json external-payload.json
 ```
 
+本地始终保留完整证据包。默认外发载荷使用 `evidence_focused/context=1`：保留全部 P04/P05
+引用证据及相邻 segment，并记录 selection hash、原始/选中数量和必需 evidence 覆盖率。
+
+准备三课无模型试验：
+
+```powershell
+python scripts/prepare_afeng_pilot.py `
+  --baseline data/catalog/evidence-baseline-C001-C020.json `
+  --courses C003,C006,C010 `
+  --pilot-id C003-C006-C010-baseline-v001 `
+  --external-context-window 1
+```
+
+正式 baseline 尚未生成时，可省略 `--baseline`，使用旧 v002 做临时冒烟验证。该结果不能冒充
+正式阿峰方法产物。
+
+真实模型运行使用以下环境变量：
+
+```text
+AFENG_LLM_ENDPOINT=https://.../v1/chat/completions
+AFENG_LLM_MODEL=...
+AFENG_LLM_API_KEY=...
+```
+
+然后执行：
+
+```powershell
+python scripts/run_afeng_pilot_model.py `
+  data/afeng/pilots/C003-C006-C010-baseline-v001/manifest.json
+```
+
+如果服务不支持 `json_schema`，显式传 `--without-json-schema`，程序仍会执行 JSON 解析、Pydantic
+校验和有限重试。未经真实 API 验证前，不声称该通用 adapter 已完成 MiMo 联调。
+
 模型输出后的确定性 QA 和发布：
 
 ```powershell
@@ -126,8 +162,13 @@ course-knowledge afeng-render evidence.json approved.json audit.json publication
 ## 尚未执行的部分
 
 MiMo-V2.5-Pro 的真实 API 地址、认证方式、结构化输出参数、上下文限制和计费信息目前未知，
-因此 v001 已建立 `AfengStageExecutor` 适配边界，但没有猜测或伪造 MiMo HTTP 实现。取得真实
-API 文档和凭据后，只需新增执行器，不改变证据、审查、发布和 Markdown 契约。
+因此 v001 已建立 `AfengStageExecutor` 适配边界和通用 OpenAI-compatible adapter，但没有猜测或
+宣称 MiMo 一定兼容。取得真实 API 文档和凭据后，先验证通用 adapter；不兼容时新增专用执行器，
+不改变证据、审查、发布和 Markdown 契约。
+
+旧 v002 三课外发规模对比见
+`docs/evaluation/afeng-prebaseline-payload-comparison.md`。该报告证明 focused Profile 在保持必需
+evidence 100% 覆盖的同时，可明显降低外发上下文。
 
 在 Cursor 完成并冻结前 20 课 P04 evidence baseline 前，不批量生成正式阿峰方法，避免消费仍在
 变化的案例边界。可先用固定的 C003、C006、C010 做 dry-run。

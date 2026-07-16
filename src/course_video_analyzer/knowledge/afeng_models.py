@@ -17,6 +17,7 @@ EvidenceStatementType = Literal[
 AfengStage = Literal[
     "extract_method", "audit_fidelity", "revise", "classify_publication", "render_markdown"
 ]
+ExternalSegmentProfile = Literal["full", "evidence_focused"]
 
 
 class StrictModel(BaseModel):
@@ -251,6 +252,14 @@ class PiiFinding(StrictModel):
 class ExternalPayload(StrictModel):
     schema_version: str = "1.0"
     source_input_hash: str
+    segment_profile: ExternalSegmentProfile
+    original_segment_count: int = Field(ge=0)
+    selected_segment_count: int = Field(ge=0)
+    omitted_segment_count: int = Field(ge=0)
+    required_evidence_count: int = Field(ge=0)
+    selected_required_evidence_count: int = Field(ge=0)
+    required_evidence_coverage: float = Field(ge=0, le=1)
+    selected_evidence_ids_hash: str
     redacted_package: dict[str, Any]
     pii_findings: list[PiiFinding] = Field(default_factory=list)
     external_payload_safe: bool
@@ -263,6 +272,7 @@ class AfengRunEvent(StrictModel):
     input_hash: str
     output_hash: str | None = None
     duration_ms: int = Field(default=0, ge=0)
+    model_metadata: dict[str, Any] = Field(default_factory=dict)
     error: str | None = None
 
 

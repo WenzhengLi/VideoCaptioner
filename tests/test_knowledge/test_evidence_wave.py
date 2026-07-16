@@ -29,7 +29,7 @@ def test_finalize_evidence_wave_writes_marker_without_p05(tmp_path: Path) -> Non
         course = tmp_path / "courses" / course_id
         (course / "03_cases").mkdir(parents=True)
         (course / "qa").mkdir(parents=True)
-        (course / "qa" / f"RUN-20260715-001-V001.json").write_text(
+        (course / "qa" / "RUN-20260715-001-V001.json").write_text(
             json.dumps({"status": "pass"}), encoding="utf-8"
         )
         for stage in ("P01", "P02", "P03"):

@@ -39,6 +39,8 @@ def choose_p03_version(
         v3_ok = status == "pass" and v3 is not None
     if not v3_ok:
         return "knowledge-v002"
+    if v3 is None:
+        return "knowledge-v002"
     if not prefer_v003_if_better or v2 is None:
         return "knowledge-v003"
     r2 = (v2.get("unassigned_segment_count") or 0) / max(

@@ -131,7 +131,8 @@ def _ocr_metrics(job_dir: Path | None) -> dict[str, Any]:
     payload = _load_json(manifest_path)
     if not isinstance(payload, dict):
         return empty
-    stats = payload.get("stats") if isinstance(payload.get("stats"), dict) else {}
+    stats_value = payload.get("stats")
+    stats: dict[str, Any] = stats_value if isinstance(stats_value, dict) else {}
     return {
         "ocr_call_count": stats.get("actual_full_ocr_count"),
         "ocr_cache_hits": stats.get("downstream_ocr_cache_hit_count"),
