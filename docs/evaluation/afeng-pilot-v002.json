@@ -1,0 +1,61 @@
+{
+  "schema_version": "1.0",
+  "pipeline_version": "afeng-method-v001",
+  "prompt_version": "mimo-method-v002",
+  "executor": "cc-switch-claude-code",
+  "model": "mimo-v2.5-pro",
+  "pilot_id": "C003-C006-C010-baseline-v001",
+  "baseline_policy": "adopt_v003_hybrid",
+  "case_count": 6,
+  "published_count": 5,
+  "manual_review_count": 1,
+  "failed_count": 0,
+  "publication_rate": 0.833333,
+  "manual_review_rate": 0.166667,
+  "reported_usage_lower_bound": {
+    "total_tokens": 1758402,
+    "estimated_cost": 11.106822,
+    "cost_currency": "USD",
+    "model_duration_ms": 1819310,
+    "complete": false,
+    "note": "C006 CASE-C006-001 的部分恢复前历史 usage 曾被旧逻辑覆盖；恢复事件保留缺陷已修复。"
+  },
+  "courses": [
+    {
+      "course_id": "C003",
+      "case_count": 3,
+      "published_count": 3,
+      "manual_review_count": 0,
+      "reported_tokens": 827224,
+      "reported_cost": 5.12582,
+      "model_duration_ms": 768840
+    },
+    {
+      "course_id": "C006",
+      "case_count": 2,
+      "published_count": 1,
+      "manual_review_count": 1,
+      "reported_tokens": 503525,
+      "reported_cost": 3.439297,
+      "model_duration_ms": 743660
+    },
+    {
+      "course_id": "C010",
+      "case_count": 1,
+      "published_count": 1,
+      "manual_review_count": 0,
+      "reported_tokens": 427653,
+      "reported_cost": 2.541705,
+      "model_duration_ms": 306810
+    }
+  ],
+  "cases": [
+    {"course_id": "C003", "case_id": "CASE-C003-001", "status": "published", "revision_count": 0, "publication_class": "case_derived_method"},
+    {"course_id": "C003", "case_id": "CASE-C003-002", "status": "published", "revision_count": 0, "publication_class": "case_derived_method"},
+    {"course_id": "C003", "case_id": "CASE-C003-003", "status": "published", "revision_count": 0, "publication_class": "case_derived_method"},
+    {"course_id": "C006", "case_id": "CASE-C006-001", "status": "manual_review", "revision_count": 2, "publication_class": null},
+    {"course_id": "C006", "case_id": "CASE-C006-002", "status": "published", "revision_count": 0, "publication_class": "case_derived_method"},
+    {"course_id": "C010", "case_id": "CASE-C010-001", "status": "published", "revision_count": 1, "publication_class": "case_derived_method"}
+  ],
+  "next_gate": "evidence-baseline-C001-C020.json frozen and all qa_status pass"
+}
