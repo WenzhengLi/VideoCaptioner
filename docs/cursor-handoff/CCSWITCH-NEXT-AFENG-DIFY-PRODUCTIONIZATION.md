@@ -33,7 +33,8 @@ TASK-013 → 014 → 015 → 016 → 017 顺序执行，不跳过前置验收。
 ```text
 workspace: D:\Dev\VideoCaptioner
 branch: master
-current completed commit: 5226da0 feat: 完成阿峰前20课方法层验收
+current completed commit: cddf315 docs: 规划阿峰知识库生产化任务
+（含前置 bc3f032 Dify 初始化与 v002.5 同步）
 remote: origin/master
 ```
 
@@ -55,7 +56,7 @@ remote: origin/master
 - C016–C020 使用 `glm-5-2-260617[1M]`；
 - 当前报告：`docs/evaluation/afeng-twenty-course-v002.md/.json`；
 - 当前离线包：`data/dify/afeng-release-v002.5/`，36 文档、排除 4；
-- v002.5 尚未正式导入 Dify。
+- v002.5 **已正式导入** Dify（economy，indexing 36/36 completed；keyword 有命中）；后续以 v002.6 canonical 迁移/更新为准。
 
 仓库验证基线：
 
@@ -70,13 +71,12 @@ Dify：
 - 官方 Dify 1.15.0 已在 `http://127.0.0.1:3080` 运行；
 - Docker 容器健康；
 - `cpa` 位于 8317，禁止停止、删除或修改；
-- 管理员、Dataset API Key、economy 冒烟 Dataset 已完成；
-- 冒烟文档 1 个，indexing completed；
-- 正式阿峰文档未导入；
-- 当前无 embedding，semantic retrieve 返回 400；
-- keyword/full_text 冒烟检索为 0 hits；
-- Workflow/Chatflow 未创建；
-- 本地密钥只在 `D:\Dev\dify-deploy\local-credentials.env`，禁止打印或提交。
+- 管理员、Dataset「阿峰课程方法库-研究版」、Dataset API Key 已完成；
+- `afeng-release-v002.5` 36 文档已导入且 indexing completed；历史 SMOKE 已从 map 清除；
+- 当前无 embedding，semantic/`high_quality` 不可用；
+- keyword retrieve 对正式库有命中；
+- Chatflow DSL 已准备，控制台可回答应用未创建（缺 LLM）；
+- 本地密钥仅在 `D:\Dev\dify-deploy\secrets\`（及兼容旧文件），禁止打印或提交。
 
 ## 三、本轮审查发现的必须修复问题
 

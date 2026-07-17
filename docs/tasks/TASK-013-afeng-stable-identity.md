@@ -15,7 +15,8 @@
 - 当前存在中文、英文、哈希等多种 knowledge ID；
 - C001–C015 使用 MiMo，C016–C020 使用 `glm-5-2-260617[1M]`；
 - v002.5 manifest 没有逐文档 model/run metadata；
-- v002.5 尚未正式导入 Dify，适合现在修正。
+- v002.5 **已正式导入** Dify（economy Dataset，36 文档 indexing completed）；
+- 因此本任务必须产出可对远端做 **update/skip（按 canonical ID）** 的迁移路径，并在 v002.6 包中完成身份归一；不得假设“尚未入库”。
 
 ## 必须完成
 

@@ -98,17 +98,50 @@ items = docs.get('data') or []
 print('documents_listed', len(items))
 statuses = sorted({str(i.get('indexing_status') or i.get('display_status') or '') for i in items})
 print('indexing_statuses', ','.join(statuses) if statuses else 'none')
+# keyword retrieve probe (no embedding required)
+payload = json.dumps({
+    'query': 'C001',
+    'retrieval_model': {
+        'search_method': 'keyword_search',
+        'reranking_enable': False,
+        'top_k': 3,
+        'score_threshold_enabled': False,
+    },
+}).encode('utf-8')
+req3 = urllib.request.Request(
+    f'{base}/datasets/{ds}/retrieve',
+    data=payload,
+    method='POST',
+    headers={
+        'Authorization': f'Bearer {key}',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+    },
+)
+with urllib.request.urlopen(req3, timeout=60) as resp3:
+    retrieved = json.loads(resp3.read().decode('utf-8'))
+hits = retrieved.get('records') or retrieved.get('data') or []
+print('keyword_retrieve_ok', True)
+print('keyword_hits', len(hits) if isinstance(hits, list) else 0)
 "@
         $out = & $python -X utf8 -c $code 2>&1
         if ($LASTEXITCODE -eq 0) {
             $datasetApiOk = ($out | Select-String 'dataset_ok True') -ne $null
             $docsSynced = ($out | Select-String 'documents_listed').Line -match 'documents_listed [1-9]'
             $indexingNote = (($out | Select-String 'indexing_statuses').Line -replace 'indexing_statuses ', '')
+            $hitLine = ($out | Select-String 'keyword_hits').Line
+            $hitCount = 0
+            if ($hitLine -match 'keyword_hits (\d+)') { $hitCount = [int]$Matches[1] }
+            $retrieveNote = if (($out | Select-String 'keyword_retrieve_ok True')) { "keyword_hits=$hitCount" } else { "failed" }
             Write-Check "dataset_api" $datasetApiOk
             Write-Check "documents_present" $docsSynced
             Write-Host "[INFO] indexing_sample_statuses=$indexingNote"
+            Write-Check "keyword_retrieve" (
+                (($out | Select-String 'keyword_retrieve_ok True') -ne $null) -and ($hitCount -gt 0)
+            ) "hits=$hitCount"
         } else {
             Write-Check "dataset_api" $false "query_failed"
+            $retrieveNote = "query_failed"
         }
     } else {
         Write-Check "dataset_api" $false "runtime env incomplete"

@@ -70,6 +70,7 @@
 create=36, update=0, skip=0, failed=0
 indexing completed=36
 map: data/dify/document-map.json（运行时，勿提交密钥）
+mapped=36（已清除历史 KNOW-SMOKE-001 污染条目；远端无 SMOKE）
 ```
 
 再次同步命令（加载 runtime env 后）：

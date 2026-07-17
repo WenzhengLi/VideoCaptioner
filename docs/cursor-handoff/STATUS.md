@@ -1,6 +1,6 @@
 # Cursor Flow 状态
 
-最后更新：2026-07-17 11:24 CST（UTC+8）
+最后更新：2026-07-17 14:40 CST（UTC+8）
 
 ## 本轮任务边界
 
@@ -67,8 +67,8 @@
 
 1. 人工忠实度抽检 C016–C020 发布结果（尤其 2 个 `partial_method`）。
 2. 保持 C006-001、C008-002 的人工复核状态；保持 C014-001、C015-001 的拒绝状态，不绕过闸门。
-3. 用 `afeng-release-v002.5` 做离线验收；Dify 真实在线部署并完成索引后，再做检索验收。
-4. Dify 在线入库前不宣称已入库。
+3. Dify 平台与 `afeng-release-v002.5` 在线入库/indexing/keyword 检索已完成（见 `DIFY-STATUS.md`）。
+4. 下一生产化轮次：CC Switch 执行 TASK-013～017（canonical ID → v002.6 → indexing 就绪 → 再同步 → 应用）；缺 embedding/LLM 时标记 `external_blocked`。
 
 ## 仓库验收
 

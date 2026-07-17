@@ -104,9 +104,14 @@ uv run pytest -q -m "not integration"
 
 ## TASK-013 ~ TASK-017
 
-- 状态：待执行
+- 状态：待执行（交 CC Switch；见 `docs/cursor-handoff/CCSWITCH-NEXT-AFENG-DIFY-PRODUCTIONIZATION.md`）
 - 当前基线：阿峰前 20 课 40 案例已完成，36 published / 2 manual_review / 2 rejected / 0 failed；
-- 当前离线包：`data/dify/afeng-release-v002.5/`，尚未正式导入；
-- 当前 Dify：平台、管理员、economy Dataset 和冒烟文档已完成，embedding/正式索引/Workflow 未完成；
+- 当前离线包：`data/dify/afeng-release-v002.5/`（36 文档）；
+- 当前 Dify（2026-07-17 独立验收后）：
+  - 平台 1.15.0 / 管理员 / Dataset「阿峰课程方法库-研究版」(`economy`) / API Key：**已完成**
+  - `afeng-release-v002.5` **已导入**，indexing 36/36 `completed`，keyword retrieve 有命中
+  - 历史冒烟条目已从 document-map 清除；远端无 SMOKE
+  - embedding / `high_quality` / Chatflow 可回答应用：**未完成**（外部密钥阻塞）
+- 注意：TASK-013 须在已导入的 v002.5 之上做 canonical ID 迁移（v002.6），不能假设“尚未入库”
 - 执行顺序：TASK-013 → TASK-014 → TASK-015 → TASK-016 → TASK-017；
 - 任务入口：[TASK-013-afeng-stable-identity.md](TASK-013-afeng-stable-identity.md)。
