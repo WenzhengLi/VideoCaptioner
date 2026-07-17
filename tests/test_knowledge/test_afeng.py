@@ -12,6 +12,7 @@ from course_video_analyzer.knowledge.afeng import (
     build_afeng_evidence_package,
     build_external_payload,
     normalize_method_source_time_range,
+    normalize_method_evidence_id_aliases,
     normalize_unbacked_method_conditions,
     render_afeng_markdown,
     validate_evidence_package,
@@ -328,6 +329,28 @@ def test_method_time_range_is_derived_from_cited_evidence(tmp_path: Path) -> Non
     assert normalized.source_time_range.start_ms == 1000
     assert normalized.source_time_range.end_ms == 2500
     assert validate_method_draft(package, normalized)["status"] == "pass"
+
+
+def test_signal_prefix_alias_is_repaired_only_when_segment_exists(tmp_path: Path) -> None:
+    package = _build_package(tmp_path)
+    value = _draft()
+    value["signals_used_by_course"] = [
+        {
+            "signal": "课程信号",
+            "course_interpretation": "课程解释",
+            "evidence_ids": ["SIG-C001-000001", "SIG-C001-999999"],
+        }
+    ]
+    draft = AfengMethodDraft.model_validate(value)
+
+    normalized = normalize_method_evidence_id_aliases(package, draft)
+
+    assert normalized.signals_used_by_course[0].evidence_ids == [
+        "SEG-C001-000001",
+        "SIG-C001-999999",
+    ]
+    report = validate_method_draft(package, normalized)
+    assert report["invalid_evidence_ids"] == ["SIG-C001-999999"]
 
 
 def test_unbacked_condition_placeholder_moves_to_evidence_gaps() -> None:

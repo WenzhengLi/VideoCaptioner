@@ -623,6 +623,41 @@ def normalize_method_source_time_range(
     return draft.model_copy(update={"source_time_range": expected})
 
 
+def normalize_method_evidence_id_aliases(
+    package: AfengEvidencePackage, draft: AfengMethodDraft
+) -> AfengMethodDraft:
+    """Repair only unambiguous model aliases that resolve to a real segment ID.
+
+    Models occasionally copy a segment number with the ``SIG-`` prefix used for
+    a course signal. Conversion is allowed only when the exact ``SEG-`` form is
+    present in the current evidence package; all other invalid IDs still fail QA.
+    """
+    valid_ids = {item.evidence_id for item in package.segments}
+    value = draft.model_dump(mode="json")
+    changed = False
+
+    def visit(item: Any) -> None:
+        nonlocal changed
+        if isinstance(item, dict):
+            for key, child in item.items():
+                if key == "evidence_ids" and isinstance(child, list):
+                    for index, evidence_id in enumerate(child):
+                        if not isinstance(evidence_id, str) or not evidence_id.startswith("SIG-"):
+                            continue
+                        candidate = f"SEG-{evidence_id[4:]}"
+                        if candidate in valid_ids:
+                            child[index] = candidate
+                            changed = True
+                else:
+                    visit(child)
+        elif isinstance(item, list):
+            for child in item:
+                visit(child)
+
+    visit(value)
+    return AfengMethodDraft.model_validate(value) if changed else draft
+
+
 def normalize_unbacked_method_conditions(draft: AfengMethodDraft) -> AfengMethodDraft:
     """Move unsupported condition placeholders to the explicit evidence-gap list."""
     applicable = [item for item in draft.applicable_conditions if item.evidence_ids]

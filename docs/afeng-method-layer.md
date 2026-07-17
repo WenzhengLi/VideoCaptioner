@@ -261,6 +261,28 @@ C003/C006/C010 的 6 个 evidence package 与既有正式三课逐文件 SHA-256
 新的 Dify 离线包为 `data/dify/afeng-release-v002.2/`，包含 7 个文档并自动排除 1 个
 manual_review 案例。离线包仍不等于 Dify 已在线部署或完成索引。
 
+## 十五课正式扩展结果
+
+十五课正式 pilot：`data/afeng/pilots/C001-C015-baseline-C020-v002/`，共 30 个案例。首次新增
+十课运行得到 20 个终态和 2 个程序失败；失败案例使用独立 `repair-v002` 运行补齐，没有覆盖原始
+失败记录。最终结果：
+
+- 26 published；
+- 2 manual_review：C006/CASE-C006-001、C008/CASE-C008-002；
+- 2 rejected：C014/CASE-C014-001、C015/CASE-C015-001；
+- 0 unresolved failure；
+- 完整报告：`docs/evaluation/afeng-fifteen-course-v002.md/.json`。
+
+C008 首次两次生成均把非 segment 标识写入 evidence IDs。程序新增了保守别名归一化：只有
+`SIG-...` 替换为同编号 `SEG-...` 后确实存在于当前 evidence package 时才纠正；其他无效 ID 继续
+失败。纠正 ID 后，该案例仍需经过完整忠实度审查，最终两轮修订后进入 manual_review。
+
+多 summary 聚合器会把后续 repair summary 中已有终态的旧失败标记为已解决，同时仍拒绝重复的
+终态案例，避免失败重复计数或案例重复计数。
+
+十五课 Dify 离线包为 `data/dify/afeng-release-v002.4/`：26 个文档，自动排除 2 个
+manual_review 和 2 个 rejected 案例；全部 prompt version 为 `mimo-method-v002`。
+
 通用 Dify Markdown 同步已使用内容 SHA-256 做幂等判断：首次创建、内容相同跳过、内容变化调用
 `update-by-text`。本地 document map 保存 knowledge ID、Dify document ID、内容哈希和 metadata。
 阿峰 metadata 从 frontmatter 读取 fidelity、发布分类、泛化等级、课程/案例和源时间范围。

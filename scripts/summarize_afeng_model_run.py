@@ -81,10 +81,17 @@ def main() -> int:
                 "model_duration_ms": duration_ms,
             }
         )
-    failures = [failure for source in sources for failure in source.get("failures") or []]
+    all_failures = [
+        failure for source in sources for failure in source.get("failures") or []
+    ]
+    failures = [
+        failure
+        for failure in all_failures
+        if (str(failure.get("course_id") or ""), str(failure.get("case_id") or ""))
+        not in seen_cases
+    ]
     pilot_ids = list(dict.fromkeys(str(source.get("pilot_id") or "") for source in sources))
     models = list(dict.fromkeys(str(source.get("model") or "") for source in sources))
-    statuses = [str(source.get("status") or "unknown") for source in sources]
     report_id = args.report_id or (pilot_ids[0] if len(pilot_ids) == 1 else "+".join(pilot_ids))
     report = {
         "schema_version": "1.0",
@@ -92,7 +99,7 @@ def main() -> int:
         "source_pilot_ids": pilot_ids,
         "source_summaries": [str(path.resolve()) for path in args.model_run_summaries],
         "model": models[0] if len(models) == 1 else models,
-        "status": "complete" if all(status == "complete" for status in statuses) and not failures else "needs_review",
+        "status": "complete" if not failures else "needs_review",
         "case_count": len(manifests),
         "failure_count": len(failures),
         "status_counts": dict(status_counts),

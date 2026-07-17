@@ -1,0 +1,370 @@
+{
+  "schema_version": "1.0",
+  "pilot_id": "afeng-fifteen-course-v002",
+  "source_pilot_ids": [
+    "C003-C006-C010-baseline-v001",
+    "C003-C006-C007-C010-C012-baseline-C020-v002",
+    "C001-C015-baseline-C020-v002"
+  ],
+  "source_summaries": [
+    "D:\\Dev\\VideoCaptioner\\data\\afeng\\model-runs\\C003-C006-C010-baseline-v001\\c003-v002\\model-run-summary.json",
+    "D:\\Dev\\VideoCaptioner\\data\\afeng\\model-runs\\C003-C006-C010-baseline-v001\\c006-v002\\model-run-summary.json",
+    "D:\\Dev\\VideoCaptioner\\data\\afeng\\model-runs\\C003-C006-C010-baseline-v001\\c010-v002\\model-run-summary.json",
+    "D:\\Dev\\VideoCaptioner\\data\\afeng\\model-runs\\C003-C006-C007-C010-C012-baseline-C020-v002\\new-courses-v002\\model-run-summary.json",
+    "D:\\Dev\\VideoCaptioner\\data\\afeng\\model-runs\\C001-C015-baseline-C020-v002\\remaining-ten-v002\\model-run-summary.json",
+    "D:\\Dev\\VideoCaptioner\\data\\afeng\\model-runs\\C001-C015-baseline-C020-v002\\repair-v002\\model-run-summary.json"
+  ],
+  "model": "mimo-v2.5-pro",
+  "status": "complete",
+  "case_count": 30,
+  "failure_count": 0,
+  "status_counts": {
+    "published": 26,
+    "manual_review": 2,
+    "rejected": 2
+  },
+  "publication_class_counts": {
+    "case_derived_method": 25,
+    "course_claim": 1,
+    "verified_method": 1,
+    "insufficient_evidence": 1
+  },
+  "prompt_tokens": 9280579,
+  "completion_tokens": 584706,
+  "total_tokens": 9865285,
+  "estimated_cost": 62.160769,
+  "model_duration_ms": 12285023,
+  "cases": [
+    {
+      "course_id": "C003",
+      "case_id": "CASE-C003-001",
+      "status": "published",
+      "revision_count": 0,
+      "publication_class": "case_derived_method",
+      "prompt_tokens": 267655,
+      "completion_tokens": 21379,
+      "estimated_cost": 1.899758,
+      "model_duration_ms": 342716
+    },
+    {
+      "course_id": "C003",
+      "case_id": "CASE-C003-002",
+      "status": "published",
+      "revision_count": 0,
+      "publication_class": "case_derived_method",
+      "prompt_tokens": 273991,
+      "completion_tokens": 11909,
+      "estimated_cost": 1.673312,
+      "model_duration_ms": 220303
+    },
+    {
+      "course_id": "C003",
+      "case_id": "CASE-C003-003",
+      "status": "published",
+      "revision_count": 0,
+      "publication_class": "case_derived_method",
+      "prompt_tokens": 239077,
+      "completion_tokens": 13213,
+      "estimated_cost": 1.55275,
+      "model_duration_ms": 205821
+    },
+    {
+      "course_id": "C006",
+      "case_id": "CASE-C006-001",
+      "status": "manual_review",
+      "revision_count": 2,
+      "publication_class": "",
+      "prompt_tokens": 159350,
+      "completion_tokens": 13455,
+      "estimated_cost": 1.196741,
+      "model_duration_ms": 266033
+    },
+    {
+      "course_id": "C006",
+      "case_id": "CASE-C006-002",
+      "status": "published",
+      "revision_count": 0,
+      "publication_class": "case_derived_method",
+      "prompt_tokens": 307349,
+      "completion_tokens": 23371,
+      "estimated_cost": 2.242556,
+      "model_duration_ms": 477626
+    },
+    {
+      "course_id": "C010",
+      "case_id": "CASE-C010-001",
+      "status": "published",
+      "revision_count": 1,
+      "publication_class": "case_derived_method",
+      "prompt_tokens": 408785,
+      "completion_tokens": 18868,
+      "estimated_cost": 2.541705,
+      "model_duration_ms": 306813
+    },
+    {
+      "course_id": "C007",
+      "case_id": "CASE-C007-001",
+      "status": "published",
+      "revision_count": 0,
+      "publication_class": "case_derived_method",
+      "prompt_tokens": 172934,
+      "completion_tokens": 13588,
+      "estimated_cost": 1.205394,
+      "model_duration_ms": 207613
+    },
+    {
+      "course_id": "C012",
+      "case_id": "CASE-C012-001",
+      "status": "published",
+      "revision_count": 1,
+      "publication_class": "case_derived_method",
+      "prompt_tokens": 465278,
+      "completion_tokens": 20435,
+      "estimated_cost": 2.892817,
+      "model_duration_ms": 353124
+    },
+    {
+      "course_id": "C001",
+      "case_id": "CASE-C001-001",
+      "status": "published",
+      "revision_count": 0,
+      "publication_class": "course_claim",
+      "prompt_tokens": 163840,
+      "completion_tokens": 11225,
+      "estimated_cost": 1.101873,
+      "model_duration_ms": 188795
+    },
+    {
+      "course_id": "C001",
+      "case_id": "CASE-C001-002",
+      "status": "published",
+      "revision_count": 0,
+      "publication_class": "case_derived_method",
+      "prompt_tokens": 395380,
+      "completion_tokens": 13489,
+      "estimated_cost": 2.319245,
+      "model_duration_ms": 246335
+    },
+    {
+      "course_id": "C001",
+      "case_id": "CASE-C001-003",
+      "status": "published",
+      "revision_count": 0,
+      "publication_class": "case_derived_method",
+      "prompt_tokens": 295410,
+      "completion_tokens": 36603,
+      "estimated_cost": 2.397245,
+      "model_duration_ms": 514369
+    },
+    {
+      "course_id": "C002",
+      "case_id": "CASE-C002-001",
+      "status": "published",
+      "revision_count": 0,
+      "publication_class": "case_derived_method",
+      "prompt_tokens": 382984,
+      "completion_tokens": 15046,
+      "estimated_cost": 2.29619,
+      "model_duration_ms": 247755
+    },
+    {
+      "course_id": "C002",
+      "case_id": "CASE-C002-003",
+      "status": "published",
+      "revision_count": 0,
+      "publication_class": "case_derived_method",
+      "prompt_tokens": 173970,
+      "completion_tokens": 13165,
+      "estimated_cost": 1.204095,
+      "model_duration_ms": 225080
+    },
+    {
+      "course_id": "C004",
+      "case_id": "CASE-C004-001",
+      "status": "published",
+      "revision_count": 0,
+      "publication_class": "case_derived_method",
+      "prompt_tokens": 307254,
+      "completion_tokens": 11642,
+      "estimated_cost": 1.83244,
+      "model_duration_ms": 185748
+    },
+    {
+      "course_id": "C004",
+      "case_id": "CASE-C004-002",
+      "status": "published",
+      "revision_count": 1,
+      "publication_class": "case_derived_method",
+      "prompt_tokens": 411462,
+      "completion_tokens": 45429,
+      "estimated_cost": 3.266667,
+      "model_duration_ms": 770704
+    },
+    {
+      "course_id": "C005",
+      "case_id": "CASE-C005-001",
+      "status": "published",
+      "revision_count": 0,
+      "publication_class": "case_derived_method",
+      "prompt_tokens": 455874,
+      "completion_tokens": 12703,
+      "estimated_cost": 2.602065,
+      "model_duration_ms": 187000
+    },
+    {
+      "course_id": "C005",
+      "case_id": "CASE-C005-002",
+      "status": "published",
+      "revision_count": 1,
+      "publication_class": "case_derived_method",
+      "prompt_tokens": 518373,
+      "completion_tokens": 25732,
+      "estimated_cost": 3.299421,
+      "model_duration_ms": 763288
+    },
+    {
+      "course_id": "C008",
+      "case_id": "CASE-C008-001",
+      "status": "published",
+      "revision_count": 1,
+      "publication_class": "verified_method",
+      "prompt_tokens": 373895,
+      "completion_tokens": 26980,
+      "estimated_cost": 2.591847,
+      "model_duration_ms": 837196
+    },
+    {
+      "course_id": "C009",
+      "case_id": "CASE-C009-001",
+      "status": "published",
+      "revision_count": 0,
+      "publication_class": "case_derived_method",
+      "prompt_tokens": 310892,
+      "completion_tokens": 11822,
+      "estimated_cost": 1.85513,
+      "model_duration_ms": 377857
+    },
+    {
+      "course_id": "C011",
+      "case_id": "CASE-C011-001",
+      "status": "published",
+      "revision_count": 0,
+      "publication_class": "case_derived_method",
+      "prompt_tokens": 109951,
+      "completion_tokens": 12231,
+      "estimated_cost": 0.911114,
+      "model_duration_ms": 259914
+    },
+    {
+      "course_id": "C011",
+      "case_id": "CASE-C011-002",
+      "status": "published",
+      "revision_count": 0,
+      "publication_class": "case_derived_method",
+      "prompt_tokens": 331490,
+      "completion_tokens": 12579,
+      "estimated_cost": 1.977045,
+      "model_duration_ms": 273868
+    },
+    {
+      "course_id": "C011",
+      "case_id": "CASE-C011-003",
+      "status": "published",
+      "revision_count": 2,
+      "publication_class": "case_derived_method",
+      "prompt_tokens": 340724,
+      "completion_tokens": 26645,
+      "estimated_cost": 2.485457,
+      "model_duration_ms": 857305
+    },
+    {
+      "course_id": "C013",
+      "case_id": "CASE-C013-001",
+      "status": "published",
+      "revision_count": 0,
+      "publication_class": "case_derived_method",
+      "prompt_tokens": 532081,
+      "completion_tokens": 27897,
+      "estimated_cost": 3.404806,
+      "model_duration_ms": 335442
+    },
+    {
+      "course_id": "C013",
+      "case_id": "CASE-C013-002",
+      "status": "published",
+      "revision_count": 0,
+      "publication_class": "case_derived_method",
+      "prompt_tokens": 325480,
+      "completion_tokens": 12416,
+      "estimated_cost": 1.94292,
+      "model_duration_ms": 409025
+    },
+    {
+      "course_id": "C014",
+      "case_id": "CASE-C014-001",
+      "status": "rejected",
+      "revision_count": 2,
+      "publication_class": "insufficient_evidence",
+      "prompt_tokens": 264594,
+      "completion_tokens": 33591,
+      "estimated_cost": 2.257593,
+      "model_duration_ms": 904842
+    },
+    {
+      "course_id": "C014",
+      "case_id": "CASE-C014-002",
+      "status": "published",
+      "revision_count": 0,
+      "publication_class": "case_derived_method",
+      "prompt_tokens": 405268,
+      "completion_tokens": 18830,
+      "estimated_cost": 2.50221,
+      "model_duration_ms": 582865
+    },
+    {
+      "course_id": "C015",
+      "case_id": "CASE-C015-001",
+      "status": "rejected",
+      "revision_count": 0,
+      "publication_class": "case_derived_method",
+      "prompt_tokens": 319182,
+      "completion_tokens": 21482,
+      "estimated_cost": 2.13808,
+      "model_duration_ms": 475833
+    },
+    {
+      "course_id": "C015",
+      "case_id": "CASE-C015-002",
+      "status": "published",
+      "revision_count": 0,
+      "publication_class": "case_derived_method",
+      "prompt_tokens": 346910,
+      "completion_tokens": 14549,
+      "estimated_cost": 2.103395,
+      "model_duration_ms": 384015
+    },
+    {
+      "course_id": "C002",
+      "case_id": "CASE-C002-002",
+      "status": "published",
+      "revision_count": 0,
+      "publication_class": "case_derived_method",
+      "prompt_tokens": 171950,
+      "completion_tokens": 18745,
+      "estimated_cost": 1.358263,
+      "model_duration_ms": 381359
+    },
+    {
+      "course_id": "C008",
+      "case_id": "CASE-C008-002",
+      "status": "manual_review",
+      "revision_count": 2,
+      "publication_class": "",
+      "prompt_tokens": 49196,
+      "completion_tokens": 25687,
+      "estimated_cost": 1.108635,
+      "model_duration_ms": 496379
+    }
+  ],
+  "failures": []
+}

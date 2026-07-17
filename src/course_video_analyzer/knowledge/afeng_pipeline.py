@@ -16,6 +16,7 @@ from course_video_analyzer.knowledge.afeng import (
     cache_key,
     content_hash,
     normalize_method_source_time_range,
+    normalize_method_evidence_id_aliases,
     normalize_unbacked_method_conditions,
     render_afeng_markdown,
     validate_evidence_package,
@@ -112,6 +113,7 @@ def _load_and_normalize_method_draft(
     """Validate model output and persist deterministic fields calculated from evidence."""
     draft = AfengMethodDraft.model_validate(data)
     normalized = normalize_unbacked_method_conditions(draft)
+    normalized = normalize_method_evidence_id_aliases(package, normalized)
     normalized = normalize_method_source_time_range(package, normalized)
     if normalized != draft:
         atomic_write_text(path, normalized.model_dump_json(indent=2))
