@@ -101,3 +101,12 @@ uv run pytest -q -m "not integration"
 - 目标：OCR 模糊增量去重、短句人物归属、WeSpeaker/CAM++ 真实局部对比
 - 当前结果：TXT 课板块 366 → 175；未知人物片段 31 → 16；CAM++ 全片对比已落盘
 - 任务文件：[TASK-012-quality-iteration.md](TASK-012-quality-iteration.md)
+
+## TASK-013 ~ TASK-017
+
+- 状态：待执行
+- 当前基线：阿峰前 20 课 40 案例已完成，36 published / 2 manual_review / 2 rejected / 0 failed；
+- 当前离线包：`data/dify/afeng-release-v002.5/`，尚未正式导入；
+- 当前 Dify：平台、管理员、economy Dataset 和冒烟文档已完成，embedding/正式索引/Workflow 未完成；
+- 执行顺序：TASK-013 → TASK-014 → TASK-015 → TASK-016 → TASK-017；
+- 任务入口：[TASK-013-afeng-stable-identity.md](TASK-013-afeng-stable-identity.md)。
