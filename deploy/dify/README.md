@@ -96,9 +96,21 @@ $env:DIFY_API_KEY = "<local-only>"
 - 映射文件：`data/dify/document-map.json`（运行数据，不提交）。
 - 本地 `index-tidy` / SQLite **不能**当作 Dify 交付。
 
+## 本机引导（密钥不进 Git）
+
+管理员初始化、Dataset API Key、Dataset 创建脚本位于部署根（非本仓库）：
+
+```powershell
+.\.venv\Scripts\python.exe D:\Dev\dify-deploy\scripts\recover_and_finish_bootstrap.py
+# 密钥写入：D:\Dev\dify-deploy\local-credentials.env
+# 公开状态：D:\Dev\dify-deploy\bootstrap-status.json
+```
+
+加载后即可 `dify-sync-markdown`。`high_quality` / 语义检索需先在控制台配置 embedding，禁止编造供应商密钥。
+
 ## 验收清单
 
-- [ ] `docker compose -p dify ps` 中 Dify 服务 healthy，且 `cpa` 仍在
-- [ ] Dataset 已创建并记录 dataset_id
+- [x] `docker compose -p dify ps` 中 Dify 服务 healthy，且 `cpa` 仍在
+- [x] Dataset 已创建并记录 dataset_id（本机 `local-credentials.env`）
 - [ ] 最终包 Markdown 已导入且 indexing 完成
 - [ ] 映射表完整；20 问 Chatflow/Workflow 经 **Dify API** 通过
