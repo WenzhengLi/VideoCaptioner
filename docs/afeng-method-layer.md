@@ -286,3 +286,29 @@ manual_review 和 2 个 rejected 案例；全部 prompt version 为 `mimo-method
 通用 Dify Markdown 同步已使用内容 SHA-256 做幂等判断：首次创建、内容相同跳过、内容变化调用
 `update-by-text`。本地 document map 保存 knowledge ID、Dify document ID、内容哈希和 metadata。
 阿峰 metadata 从 frontmatter 读取 fidelity、发布分类、泛化等级、课程/案例和源时间范围。
+
+## 二十课正式扩展结果
+
+C016–C020 在十五课验收后切换到火山 Coding Pro 的 `glm-5-2-260617[1M]`（仍经 CC Switch -> Claude
+Code CLI headless，`mimo-method-v002` Prompt 不变）。C001–C015 的 mimo 历史产物原样保留作审计
+记录，未被复用或覆盖；C016–C020 使用独立 run-token，与历史 mimo 产物路径互不冲突。
+
+正式 pilot：`data/afeng/pilots/C001-C020-baseline-v002/`，C016–C020 共 10 个新案例，全部使用
+`knowledge-v003` P04。运行目录
+`data/afeng/model-runs/C001-C020-baseline-v002/C016-C020-v002/`。结果：
+
+- 10 案例，10 published，0 manual_review，0 rejected，0 failed；
+- C018/CASE-C018-002 首轮审查为 `revise`（`signals_used_by_course` 字段 interpretation 引用了
+  未列入 evidence_ids 的 segment），一轮修订后以 96 分通过；其余首轮通过；
+- 发布分类：6 `case_derived_method`、2 `verified_method`、2 `partial_method`；
+- 忠实度审查全部 `pass` 且 `release_allowed=true`，无 invalid evidence、课程外概念或课程观点客观化；
+- 发布 Markdown 每个主要判断均带 evidence IDs、课程归属表达和源时间范围；
+- 完整报告：`docs/evaluation/afeng-C016-C020-v002.md/.json`。
+
+20 课聚合报告 `docs/evaluation/afeng-twenty-course-v002.md/.json`：40 案例、0 失败、
+`status=complete`，模型为 `['mimo-v2.5-pro', 'glm-5-2-260617[1M]']`。统计 36 published /
+2 manual_review（C006-001、C008-002）/ 2 rejected（C014-001、C015-001），人工复核与拒绝均沿用
+十五课历史终态，未强行改写绕过闸门。
+
+最终 Dify 离线包为 `data/dify/afeng-release-v002.5/`：36 个文档，自动排除 2 个 manual_review
+和 2 个 rejected 案例共 4 个；v002.1–v002.4 未覆盖。离线包仍不等于 Dify 已在线部署或完成索引。
