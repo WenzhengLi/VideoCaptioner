@@ -157,3 +157,22 @@ uv run pytest -q -m "not integration"
   - 9 个重点案例审查完成，human_confirmation_required 仅用于排除案例
   - `pytest -q` 263 passed、1 skipped；`ruff` 通过
 - 下一任务 TASK-015 满足 Definition of Ready。
+
+### TASK-015
+
+- 状态：代码完成（embedding Provider 需 Web UI 配置）
+- 修改文件：
+  - `src/course_video_analyzer/knowledge/dify_sync.py`（`sync_markdown_dir` 新增 `indexing_technique` 参数 + 模式校验）
+  - `src/course_video_analyzer/knowledge/cli.py`（`dify-sync-markdown` 新增 `--indexing-technique`）
+  - `tests/test_knowledge/test_dify_sync.py`（新增 3 个测试）
+  - `scripts/probe_local_embedding.py`（embedding 探测工具）
+  - `scripts/create_formal_dataset.py`（正式 Dataset 创建脚本）
+  - `docs/evaluation/afeng-embedding-investigation.md`
+  - `docs/tasks/STATUS.md`
+- 关键发现：
+  - 本地 embedding 已验证可用：Ollama v0.32.1 + bge-m3 (1024 维, GGUF F16)
+  - Dify 1.15.0 的 model provider 管理通过插件系统实现，控制台 API 不直接暴露安装端点
+  - 需要通过 Dify Web UI 安装 Ollama 插件并配置 embedding
+  - 代码层面已移除硬编码、添加显式参数和模式校验
+- 验证结果：`pytest -q` 266 passed、1 skipped；`ruff` 通过；`pyright` 0 errors。
+- 阻塞：需用户通过 Dify Web UI 配置 Ollama embedding provider（一步操作）。

@@ -2,7 +2,7 @@
 
 ## 状态
 
-待执行；依赖 TASK-014。
+代码完成（embedding Provider 需 Web UI 配置）；依赖 TASK-014。
 
 ## 目标
 
@@ -65,3 +65,20 @@
 - 有 embedding 时 high_quality Dataset 创建成功；无 embedding 时阻塞说明准确；
 - 若落地本地 embedding，至少完成一次真实 embedding 调用和一个小样本 Dataset 的语义检索；
 - 全量测试通过。
+
+## 完成说明（代码部分）
+
+已完成：
+- `sync_markdown_dir` 新增 `indexing_technique` 显式参数，移除 `DIFY_DATASET_INDEXING` 环境变量硬编码；
+  优先级：CLI 参数 > 环境变量 > Dataset 模式 > 默认 economy。
+- `high_quality` 模式同步前校验 Dataset 已配置 embedding，否则抛出可读错误。
+- `dify-sync-markdown` CLI 新增 `--indexing-technique` 参数。
+- 本地 embedding 已验证可用：Ollama v0.32.1 + bge-m3 (1024 维, GGUF F16, RTX 4080)。
+- 探测脚本 `scripts/probe_local_embedding.py` 和正式 Dataset 创建脚本 `scripts/create_formal_dataset.py`。
+- 3 个新增测试覆盖显式参数传递、模式校验和回退逻辑。
+- `pytest -q` 266 passed、1 skipped；`ruff` 通过；`pyright` 0 errors。
+
+待完成（需人工 Web UI 操作）：
+- 在 Dify Web UI 安装 Ollama 插件并配置 embedding provider。
+- 创建正式 Dataset `阿峰课程方法库-研究版-v1`（high_quality + bge-m3）。
+- 详见 `docs/evaluation/afeng-embedding-investigation.md`。

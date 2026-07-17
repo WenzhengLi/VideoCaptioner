@@ -250,3 +250,103 @@ def test_sync_markdown_is_idempotent(tmp_path: Path, monkeypatch: pytest.MonkeyP
     mapping = json.loads(map_path.read_text(encoding="utf-8"))
     assert mapping["documents"]["KNOW-C001-CASE001-001"]["document_id"] == "doc-1"
     assert len(mapping["documents"]["KNOW-C001-CASE001-001"]["content_sha256"]) == 64
+
+
+def test_sync_indexing_technique_explicit_param(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Explicit indexing_technique parameter takes precedence over env var and dataset mode."""
+    monkeypatch.setenv("DIFY_BASE_URL", "http://127.0.0.1:3080/v1")
+    monkeypatch.setenv("DIFY_API_KEY", "test-key")
+    monkeypatch.setenv("DIFY_DATASET_ID", "ds-1")
+    cfg = DifyConfig.from_env(require_dataset=True)
+    md_dir = tmp_path / "markdown"
+    md_dir.mkdir()
+    (md_dir / "k.md").write_text(
+        "---\nknowledge_id: KNOW-IDX\n---\n# idx\n",
+        encoding="utf-8",
+    )
+    map_path = tmp_path / "map.json"
+
+    captured_payloads: list[dict] = []
+
+    def _capture_request(cfg_arg, method, path, **kwargs):
+        if kwargs.get("payload"):
+            captured_payloads.append(kwargs["payload"])
+        return {"document": {"id": "doc-idx"}, "batch": "b1"}
+
+    with patch(
+        "course_video_analyzer.knowledge.dify_sync.ensure_dataset_exists",
+        return_value={
+            "id": "ds-1",
+            "indexing_technique": "economy",
+            "embedding_model": "bge-m3",
+            "embedding_model_provider": "ollama",
+        },
+    ):
+        with patch(
+            "course_video_analyzer.knowledge.dify_sync._request",
+            side_effect=_capture_request,
+        ):
+            sync_markdown_dir(cfg, md_dir, map_path, indexing_technique="high_quality")
+    assert captured_payloads[0]["indexing_technique"] == "high_quality"
+
+
+def test_sync_high_quality_requires_embedding(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """high_quality mode raises DifyConfigError when dataset has no embedding configured."""
+    monkeypatch.setenv("DIFY_BASE_URL", "http://127.0.0.1:3080/v1")
+    monkeypatch.setenv("DIFY_API_KEY", "test-key")
+    monkeypatch.setenv("DIFY_DATASET_ID", "ds-1")
+    cfg = DifyConfig.from_env(require_dataset=True)
+    md_dir = tmp_path / "markdown"
+    md_dir.mkdir()
+    (md_dir / "k.md").write_text(
+        "---\nknowledge_id: KNOW-HQ\n---\n# hq\n",
+        encoding="utf-8",
+    )
+    map_path = tmp_path / "map.json"
+
+    with patch(
+        "course_video_analyzer.knowledge.dify_sync.ensure_dataset_exists",
+        return_value={
+            "id": "ds-1",
+            "indexing_technique": "economy",
+            "embedding_model": None,
+            "embedding_model_provider": None,
+        },
+    ):
+        with pytest.raises(DifyConfigError, match="embedding provider"):
+            sync_markdown_dir(cfg, md_dir, map_path, indexing_technique="high_quality")
+
+
+def test_sync_falls_back_to_dataset_mode(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """When no explicit indexing_technique, falls back to dataset mode."""
+    monkeypatch.setenv("DIFY_BASE_URL", "http://127.0.0.1:3080/v1")
+    monkeypatch.setenv("DIFY_API_KEY", "test-key")
+    monkeypatch.setenv("DIFY_DATASET_ID", "ds-1")
+    # Clear env var to test fallback
+    monkeypatch.delenv("DIFY_DATASET_INDEXING", raising=False)
+    cfg = DifyConfig.from_env(require_dataset=True)
+    md_dir = tmp_path / "markdown"
+    md_dir.mkdir()
+    (md_dir / "k.md").write_text(
+        "---\nknowledge_id: KNOW-FB\n---\n# fb\n",
+        encoding="utf-8",
+    )
+    map_path = tmp_path / "map.json"
+
+    captured_payloads: list[dict] = []
+
+    def _capture_request(cfg_arg, method, path, **kwargs):
+        if kwargs.get("payload"):
+            captured_payloads.append(kwargs["payload"])
+        return {"document": {"id": "doc-fb"}, "batch": "b1"}
+
+    with patch(
+        "course_video_analyzer.knowledge.dify_sync.ensure_dataset_exists",
+        return_value={"id": "ds-1", "indexing_technique": "economy"},
+    ):
+        with patch(
+            "course_video_analyzer.knowledge.dify_sync._request",
+            side_effect=_capture_request,
+        ):
+            sync_markdown_dir(cfg, md_dir, map_path)
+    assert captured_payloads[0]["indexing_technique"] == "economy"

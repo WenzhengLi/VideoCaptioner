@@ -339,6 +339,7 @@ def sync_markdown_dir(
     poll_timeout: float = 300.0,
     dry_run: bool = False,
     retries: int = 2,
+    indexing_technique: str | None = None,
 ) -> dict[str, Any]:
     if not markdown_root.exists():
         raise DifyConfigError(f"markdown_root 不存在: {markdown_root}")
@@ -352,10 +353,25 @@ def sync_markdown_dir(
     if not dataset_id:
         raise DifyConfigError("缺少 dataset_id")
     resolved_dataset_id: str = dataset_id
-    ensure_dataset_exists(cfg, resolved_dataset_id)
-    indexing_technique = (os.environ.get("DIFY_DATASET_INDEXING") or "economy").strip()
-    if indexing_technique not in {"economy", "high_quality"}:
-        indexing_technique = "economy"
+    dataset_info = ensure_dataset_exists(cfg, resolved_dataset_id)
+    # Resolve indexing technique: explicit parameter > env var > dataset mode > default economy
+    resolved_technique = (
+        indexing_technique
+        or os.environ.get("DIFY_DATASET_INDEXING", "").strip()
+        or dataset_info.get("indexing_technique", "")
+        or "economy"
+    )
+    if resolved_technique not in {"economy", "high_quality"}:
+        resolved_technique = "economy"
+    # Validate: high_quality requires embedding to be configured on the dataset
+    if resolved_technique == "high_quality":
+        ds_embedding = dataset_info.get("embedding_model")
+        ds_embedding_provider = dataset_info.get("embedding_model_provider")
+        if not ds_embedding or not ds_embedding_provider:
+            raise DifyConfigError(
+                "high_quality 模式需要 embedding provider 已在 Dataset 上配置；"
+                "当前 Dataset 未配置 embedding。请先在 Dify 控制台配置 embedding provider。"
+            )
     mapping = load_document_map(map_path)
     docs: dict[str, Any] = mapping.setdefault("documents", {})
     files = sorted(markdown_root.rglob("*.md"))
@@ -407,7 +423,7 @@ def sync_markdown_dir(
                     _name: str = knowledge_id,
                     _text: str = text,
                     _meta: dict[str, Any] = meta,
-                    _indexing: str = indexing_technique,
+                    _indexing: str = resolved_technique,
                 ) -> dict[str, Any]:
                     return create_document_by_text(
                         cfg,

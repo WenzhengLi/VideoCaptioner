@@ -292,6 +292,12 @@ def build_parser() -> argparse.ArgumentParser:
         default=2,
         help="retry count for transient Dify API failures (ignored with --dry-run)",
     )
+    dify_sync.add_argument(
+        "--indexing-technique",
+        default=None,
+        choices=["economy", "high_quality"],
+        help="indexing technique; defaults to dataset mode or economy",
+    )
     dify_status = subparsers.add_parser(
         "dify-status",
         help="show local Dify document map summary (does not imply Dify is running)",
@@ -675,6 +681,7 @@ def main() -> int:
                     limit=remaining,
                     poll_indexing=args.poll_indexing,
                     retries=args.retries,
+                    indexing_technique=args.indexing_technique,
                 )
                 totals["created"] += int(part["created"])
                 totals["updated"] += int(part.get("updated") or 0)
