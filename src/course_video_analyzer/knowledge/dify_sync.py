@@ -373,6 +373,17 @@ def sync_markdown_dir(
                 "当前 Dataset 未配置 embedding。请先在 Dify 控制台配置 embedding provider。"
             )
     mapping = load_document_map(map_path)
+    # Fail-fast: if the map was previously used for a different dataset, refuse to
+    # overwrite it. This prevents accidentally syncing v002.6 into the old economy
+    # working Dataset or corrupting the old map with new canonical keys.
+    mapped_dataset_id = str(mapping.get("dataset_id") or "")
+    if mapped_dataset_id and mapped_dataset_id != resolved_dataset_id:
+        raise DifyConfigError(
+            f"document map 已绑定 Dataset {mapped_dataset_id!r}，"
+            f"但目标 Dataset 为 {resolved_dataset_id!r}。"
+            "正式库必须使用独立 map（如 data/dify/document-map-v1.json），"
+            "禁止复用旧工作库 map 导致跨 Dataset 错绑。"
+        )
     docs: dict[str, Any] = mapping.setdefault("documents", {})
     files = sorted(markdown_root.rglob("*.md"))
     if limit is not None:

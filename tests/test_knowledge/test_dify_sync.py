@@ -350,3 +350,82 @@ def test_sync_falls_back_to_dataset_mode(tmp_path: Path, monkeypatch: pytest.Mon
         ):
             sync_markdown_dir(cfg, md_dir, map_path)
     assert captured_payloads[0]["indexing_technique"] == "economy"
+
+
+def test_sync_fails_fast_on_dataset_id_mismatch(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Sync refuses to proceed when map is bound to a different dataset.
+
+    This prevents accidentally syncing v002.6 into the old economy working
+    Dataset or corrupting the old map with new canonical keys.
+    """
+    monkeypatch.setenv("DIFY_BASE_URL", "http://127.0.0.1:3080/v1")
+    monkeypatch.setenv("DIFY_API_KEY", "test-key")
+    monkeypatch.setenv("DIFY_DATASET_ID", "ds-formal")
+    cfg = DifyConfig.from_env(require_dataset=True)
+    md_dir = tmp_path / "markdown"
+    md_dir.mkdir()
+    (md_dir / "k.md").write_text(
+        "---\nknowledge_id: AFENG-C001-CASE-C001-001\ncourse_id: C001\n"
+        "case_id: CASE-C001-001\n---\n# title\n",
+        encoding="utf-8",
+    )
+    # Pre-populate map with a DIFFERENT dataset_id (simulating old economy map)
+    map_path = tmp_path / "map.json"
+    save_document_map(
+        map_path,
+        {
+            "schema_version": "1.0",
+            "dataset_id": "ds-economy-old",
+            "documents": {},
+        },
+    )
+
+    with patch(
+        "course_video_analyzer.knowledge.dify_sync.ensure_dataset_exists",
+        return_value={"id": "ds-formal", "indexing_technique": "high_quality",
+                       "embedding_model": "bge-m3", "embedding_model_provider": "ollama"},
+    ):
+        with pytest.raises(DifyConfigError, match="document map 已绑定"):
+            sync_markdown_dir(cfg, md_dir, map_path, indexing_technique="high_quality")
+
+
+def test_sync_allows_fresh_map_for_new_dataset(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Sync proceeds when map has no dataset_id bound yet (fresh map)."""
+    monkeypatch.setenv("DIFY_BASE_URL", "http://127.0.0.1:3080/v1")
+    monkeypatch.setenv("DIFY_API_KEY", "test-key")
+    monkeypatch.setenv("DIFY_DATASET_ID", "ds-formal")
+    cfg = DifyConfig.from_env(require_dataset=True)
+    md_dir = tmp_path / "markdown"
+    md_dir.mkdir()
+    (md_dir / "k.md").write_text(
+        "---\nknowledge_id: AFENG-C001-CASE-C001-001\n---\n# title\n",
+        encoding="utf-8",
+    )
+    # Fresh map with no dataset_id
+    map_path = tmp_path / "map.json"
+    save_document_map(map_path, {"schema_version": "1.0", "documents": {}})
+
+    class _Resp:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            return False
+
+        def read(self) -> bytes:
+            return json.dumps({"document": {"id": "doc-new"}, "batch": "b1"}).encode()
+
+    with patch(
+        "course_video_analyzer.knowledge.dify_sync.ensure_dataset_exists",
+        return_value={"id": "ds-formal", "indexing_technique": "high_quality",
+                       "embedding_model": "bge-m3", "embedding_model_provider": "ollama"},
+    ):
+        with patch("urllib.request.urlopen", return_value=_Resp()):
+            result = sync_markdown_dir(
+                cfg, md_dir, map_path, indexing_technique="high_quality"
+            )
+    assert result["created"] == 1
+    assert result["failed"] == []
+    # After sync, map should be bound to the target dataset
+    mapping = json.loads(map_path.read_text(encoding="utf-8"))
+    assert mapping["dataset_id"] == "ds-formal"
