@@ -70,15 +70,35 @@ deploy/dify/
 .\deploy\dify\scripts\backup.ps1 -DeployRoot D:\Dev\dify-deploy -BackupRoot D:\Dev\dify-deploy\backups
 ```
 
-## 与本仓库的同步（后续代码）
+## 与本仓库的同步
 
-- CLI 将新增 `dify-*` 子命令：创建 Dataset、导入通过 P06 QA 的 Markdown、维护 knowledge_id ↔ document_id 映射。
-- 映射文件建议：`data/dify/document-map.json`（运行数据，不提交）。
-- 本地 `index-tidy` 可逐步改名为 `local-index-*`，保留别名；**不能**把 SQLite 成功当作 Dify 交付。
+CLI 子命令（密钥仅来自环境变量，勿写入 Git）：
+
+```powershell
+# 创建 Dataset（需已完成 /install 并取得 API Key）
+$env:DIFY_BASE_URL = "http://127.0.0.1:3080/v1"
+$env:DIFY_API_KEY = "<local-only>"
+.\.venv\Scripts\python.exe -m course_video_analyzer.knowledge.cli dify-create-dataset
+
+# 最终阿峰包到位后再同步（占位路径；勿用旧 v002.4 冒充）
+.\.venv\Scripts\python.exe -m course_video_analyzer.knowledge.cli dify-sync-markdown `
+  --markdown-root data/dify/afeng-release-v002.N/documents `
+  --map-path data/dify/document-map.json `
+  --poll-indexing
+
+# 无密钥 dry-run
+.\.venv\Scripts\python.exe -m course_video_analyzer.knowledge.cli dify-sync-markdown `
+  --markdown-root data/dify/afeng-release-v002.N/documents `
+  --map-path data/dify/document-map.json `
+  --dry-run
+```
+
+- 映射文件：`data/dify/document-map.json`（运行数据，不提交）。
+- 本地 `index-tidy` / SQLite **不能**当作 Dify 交付。
 
 ## 验收清单
 
-- [ ] `docker compose ps` 中 Dify 服务 healthy，且 `cpa` 仍在
+- [ ] `docker compose -p dify ps` 中 Dify 服务 healthy，且 `cpa` 仍在
 - [ ] Dataset 已创建并记录 dataset_id
-- [ ] P06 Markdown 已导入且 indexing 完成
+- [ ] 最终包 Markdown 已导入且 indexing 完成
 - [ ] 映射表完整；20 问 Chatflow/Workflow 经 **Dify API** 通过

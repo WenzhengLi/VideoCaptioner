@@ -14,7 +14,10 @@ import urllib.error
 import urllib.request
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from collections.abc import Callable
+from typing import Any, TypeVar
+
+T = TypeVar("T")
 
 
 class DifyConfigError(RuntimeError):
@@ -194,6 +197,86 @@ def _metadata_from_markdown(path: Path, text: str) -> dict[str, Any]:
     return meta
 
 
+def _with_retries(
+    operation: str,
+    fn: Callable[[], T],
+    *,
+    retries: int = 2,
+    backoff_seconds: float = 1.0,
+) -> T:
+    """Retry transient Dify API failures; never log secrets."""
+    attempt = 0
+    while True:
+        try:
+            return fn()
+        except DifyApiError:
+            attempt += 1
+            if attempt > retries:
+                raise
+            # Keep error short; DifyApiError already truncates response bodies.
+            time.sleep(backoff_seconds * attempt)
+            _ = operation  # retained for call-site clarity / future structured logs
+
+
+def plan_markdown_sync(
+    markdown_root: Path,
+    map_path: Path,
+    *,
+    limit: int | None = None,
+) -> dict[str, Any]:
+    """Dry-run plan: classify create / update / skip without calling Dify API."""
+    if not markdown_root.exists():
+        raise DifyConfigError(f"markdown_root 不存在: {markdown_root}")
+    if not markdown_root.is_dir():
+        raise DifyConfigError(f"markdown_root 不是目录: {markdown_root}")
+    mapping = load_document_map(map_path)
+    docs: dict[str, Any] = mapping.get("documents") or {}
+    files = sorted(markdown_root.rglob("*.md"))
+    if limit is not None:
+        if limit < 0:
+            raise DifyConfigError("--limit 不能为负数")
+        files = files[:limit]
+    planned: list[dict[str, str]] = []
+    create = update = skip = 0
+    for path in files:
+        text = path.read_text(encoding="utf-8")
+        meta = _metadata_from_markdown(path, text)
+        knowledge_id = str(meta.get("knowledge_id") or path.stem)
+        digest = hashlib.sha256(text.encode("utf-8")).hexdigest()
+        existing = docs.get(knowledge_id)
+        if (
+            existing
+            and existing.get("document_id")
+            and existing.get("content_sha256") == digest
+        ):
+            action = "skip"
+            skip += 1
+        elif existing and existing.get("document_id"):
+            action = "update"
+            update += 1
+        else:
+            action = "create"
+            create += 1
+        planned.append(
+            {
+                "knowledge_id": knowledge_id,
+                "action": action,
+                "content_sha256": digest,
+                "source_path": str(path).replace("\\", "/"),
+            }
+        )
+    return {
+        "dry_run": True,
+        "markdown_root": str(markdown_root),
+        "map_path": str(map_path),
+        "create": create,
+        "update": update,
+        "skip": skip,
+        "planned": planned,
+        "note": "未调用 Dify API；最终包到位后再去掉 --dry-run 执行真实同步",
+    }
+
+
 def sync_markdown_dir(
     cfg: DifyConfig,
     markdown_root: Path,
@@ -204,10 +287,21 @@ def sync_markdown_dir(
     poll_indexing: bool = False,
     poll_seconds: float = 5.0,
     poll_timeout: float = 300.0,
+    dry_run: bool = False,
+    retries: int = 2,
 ) -> dict[str, Any]:
+    if not markdown_root.exists():
+        raise DifyConfigError(f"markdown_root 不存在: {markdown_root}")
+    if not markdown_root.is_dir():
+        raise DifyConfigError(f"markdown_root 不是目录: {markdown_root}")
+    if limit is not None and limit < 0:
+        raise DifyConfigError("--limit 不能为负数")
+    if dry_run:
+        return plan_markdown_sync(markdown_root, map_path, limit=limit)
     dataset_id = dataset_id or cfg.dataset_id
     if not dataset_id:
         raise DifyConfigError("缺少 dataset_id")
+    resolved_dataset_id: str = dataset_id
     mapping = load_document_map(map_path)
     docs: dict[str, Any] = mapping.setdefault("documents", {})
     files = sorted(markdown_root.rglob("*.md"))
@@ -232,23 +326,43 @@ def sync_markdown_dir(
             continue
         try:
             if existing and existing.get("document_id"):
-                result = update_document_by_text(
-                    cfg,
-                    dataset_id=dataset_id,
-                    document_id=str(existing["document_id"]),
-                    name=knowledge_id,
-                    text=text,
-                    metadata=meta,
-                )
+                document_id_existing = str(existing["document_id"])
+
+                def _do_update(
+                    _dataset_id: str = resolved_dataset_id,
+                    _document_id: str = document_id_existing,
+                    _name: str = knowledge_id,
+                    _text: str = text,
+                    _meta: dict[str, Any] = meta,
+                ) -> dict[str, Any]:
+                    return update_document_by_text(
+                        cfg,
+                        dataset_id=_dataset_id,
+                        document_id=_document_id,
+                        name=_name,
+                        text=_text,
+                        metadata=_meta,
+                    )
+
+                result = _with_retries("update", _do_update, retries=retries)
                 updated += 1
             else:
-                result = create_document_by_text(
-                    cfg,
-                    dataset_id=dataset_id,
-                    name=knowledge_id,
-                    text=text,
-                    metadata=meta,
-                )
+
+                def _do_create(
+                    _dataset_id: str = resolved_dataset_id,
+                    _name: str = knowledge_id,
+                    _text: str = text,
+                    _meta: dict[str, Any] = meta,
+                ) -> dict[str, Any]:
+                    return create_document_by_text(
+                        cfg,
+                        dataset_id=_dataset_id,
+                        name=_name,
+                        text=_text,
+                        metadata=_meta,
+                    )
+
+                result = _with_retries("create", _do_create, retries=retries)
                 created += 1
             document = result.get("document") or result
             document_id = str(
@@ -266,14 +380,21 @@ def sync_markdown_dir(
                 "synced_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
             }
             if poll_indexing and batch:
-                _wait_indexing(cfg, dataset_id=dataset_id, batch=batch, timeout=poll_timeout, interval=poll_seconds)
+                _wait_indexing(
+                    cfg,
+                    dataset_id=resolved_dataset_id,
+                    batch=batch,
+                    timeout=poll_timeout,
+                    interval=poll_seconds,
+                )
         except DifyApiError as exc:
+            # Never include Authorization headers; DifyApiError truncates bodies.
             failed.append({"knowledge_id": knowledge_id, "error": str(exc)})
-    mapping["dataset_id"] = dataset_id
+    mapping["dataset_id"] = resolved_dataset_id
     mapping["updated_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
     save_document_map(map_path, mapping)
     return {
-        "dataset_id": dataset_id,
+        "dataset_id": resolved_dataset_id,
         "created": created,
         "updated": updated,
         "skipped": skipped,

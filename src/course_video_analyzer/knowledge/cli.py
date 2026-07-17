@@ -273,6 +273,17 @@ def build_parser() -> argparse.ArgumentParser:
     dify_sync.add_argument("--dataset-id", default=None)
     dify_sync.add_argument("--limit", type=int, default=None)
     dify_sync.add_argument("--poll-indexing", action="store_true")
+    dify_sync.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="plan create/update/skip without calling Dify API or requiring API keys",
+    )
+    dify_sync.add_argument(
+        "--retries",
+        type=int,
+        default=2,
+        help="retry count for transient Dify API failures (ignored with --dry-run)",
+    )
     dify_status = subparsers.add_parser(
         "dify-status",
         help="show local Dify document map summary (does not imply Dify is running)",
@@ -602,33 +613,73 @@ def main() -> int:
         if dataset_id:
             print(f"请将 DIFY_DATASET_ID={dataset_id} 写入本地环境（勿提交）。")
     elif args.command == "dify-sync-markdown":
-        cfg = DifyConfig.from_env(require_dataset=args.dataset_id is None)
+        from course_video_analyzer.knowledge.dify_sync import plan_markdown_sync
+
         root = Path(args.markdown_root)
         if root.is_dir() and any(root.glob("*.md")):
             markdown_dirs = [root]
         else:
             markdown_dirs = sorted({p.parent for p in root.glob("**/markdown-*/*.md")})
-        totals: dict = {"created": 0, "skipped": 0, "failed": [], "dirs": []}
-        remaining = args.limit
-        for md_dir in markdown_dirs:
-            part = sync_markdown_dir(
-                cfg,
-                md_dir,
-                args.map_path,
-                dataset_id=args.dataset_id,
-                limit=remaining,
-                poll_indexing=args.poll_indexing,
+        if args.dry_run:
+            if not markdown_dirs:
+                raise SystemExit(f"未找到 Markdown 目录: {root}")
+            remaining = args.limit
+            totals: dict = {
+                "dry_run": True,
+                "create": 0,
+                "update": 0,
+                "skip": 0,
+                "planned": [],
+                "dirs": [],
+            }
+            for md_dir in markdown_dirs:
+                part = plan_markdown_sync(md_dir, args.map_path, limit=remaining)
+                totals["create"] += int(part["create"])
+                totals["update"] += int(part["update"])
+                totals["skip"] += int(part["skip"])
+                totals["planned"].extend(part["planned"])
+                totals["dirs"].append(str(md_dir))
+                if remaining is not None:
+                    remaining = max(0, remaining - len(part["planned"]))
+                    if remaining == 0:
+                        break
+            totals["map_path"] = str(args.map_path)
+            totals["note"] = (
+                "未调用 Dify API；最终包到位后使用 "
+                "data/dify/afeng-release-v002.N/documents 去掉 --dry-run 同步"
             )
-            totals["created"] += int(part["created"])
-            totals["skipped"] += int(part["skipped"])
-            totals["failed"].extend(part["failed"])
-            totals["dirs"].append(str(md_dir))
-            if remaining is not None:
-                remaining = max(0, remaining - int(part["created"]))
-                if remaining == 0:
-                    break
-        totals["map_path"] = str(args.map_path)
-        print(json.dumps(totals, ensure_ascii=False, indent=2))
+            print(json.dumps(totals, ensure_ascii=False, indent=2))
+        else:
+            cfg = DifyConfig.from_env(require_dataset=args.dataset_id is None)
+            totals = {"created": 0, "updated": 0, "skipped": 0, "failed": [], "dirs": []}
+            remaining = args.limit
+            for md_dir in markdown_dirs:
+                part = sync_markdown_dir(
+                    cfg,
+                    md_dir,
+                    args.map_path,
+                    dataset_id=args.dataset_id,
+                    limit=remaining,
+                    poll_indexing=args.poll_indexing,
+                    retries=args.retries,
+                )
+                totals["created"] += int(part["created"])
+                totals["updated"] += int(part.get("updated") or 0)
+                totals["skipped"] += int(part["skipped"])
+                totals["failed"].extend(part["failed"])
+                totals["dirs"].append(str(md_dir))
+                if remaining is not None:
+                    remaining = max(
+                        0,
+                        remaining
+                        - int(part["created"])
+                        - int(part.get("updated") or 0)
+                        - int(part["skipped"]),
+                    )
+                    if remaining == 0:
+                        break
+            totals["map_path"] = str(args.map_path)
+            print(json.dumps(totals, ensure_ascii=False, indent=2))
     elif args.command == "dify-status":
         from course_video_analyzer.knowledge.dify_sync import load_document_map
 
