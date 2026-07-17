@@ -74,3 +74,57 @@ def test_p04_bundle_and_evidence_qa(tmp_path: Path) -> None:
     report = validate_p04_output("C001", "CASE-C001-001", case_input, output)
 
     assert report["status"] == "pass"
+
+
+def test_p04_qa_accepts_v003_prompt_version(tmp_path: Path) -> None:
+    case_input = tmp_path / "case-input.json"
+    case_input.write_text(
+        json.dumps(
+            {
+                "segments": [
+                    {"segment_id": "SEG-C003-000001"},
+                    {"segment_id": "SEG-C003-000002"},
+                ]
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    output = tmp_path / "p04.json"
+    evidence = ["SEG-C003-000001"]
+    output.write_text(
+        json.dumps(
+            {
+                "schema_version": "1.0",
+                "prompt_version": "knowledge-v003-p04",
+                "source_ids": ["C003"],
+                "course_id": "C003",
+                "case_id": "CASE-C003-001",
+                "summary": "摘要",
+                "participants": [{"evidence_segment_ids": evidence}],
+                "timeline": [{"evidence_segment_ids": evidence}],
+                "observations": [{"evidence_segment_ids": evidence}],
+                "instructor_claims": [{"evidence_segment_ids": evidence}],
+                "alternative_explanations": [{"basis_evidence_segment_ids": evidence}],
+                "outcomes": [{"evidence_segment_ids": evidence}],
+                "quoted_expressions": [{"evidence_segment_ids": evidence}],
+                "evidence_spans": [{"evidence_id": "EVD-001", "segment_ids": evidence}],
+                "uncertainties": [],
+                "confidence": 0.8,
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    report = validate_p04_output(
+        "C003",
+        "CASE-C003-001",
+        case_input,
+        output,
+        expected_prompt_version="knowledge-v003-p04",
+    )
+
+    assert report["status"] == "pass"
+    assert report["checks"]["prompt_version"] is True
+

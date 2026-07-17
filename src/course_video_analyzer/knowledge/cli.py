@@ -175,6 +175,7 @@ def build_parser() -> argparse.ArgumentParser:
     p04_qa.add_argument("case_input", type=Path)
     p04_qa.add_argument("output", type=Path)
     p04_qa.add_argument("report", type=Path)
+    p04_qa.add_argument("--prompt-version", default="knowledge-v002-p04")
     p05_input = subparsers.add_parser("build-p05-input", help="build P05 evidence review bundle")
     p05_input.add_argument("course_id")
     p05_input.add_argument("case_id")
@@ -539,6 +540,7 @@ def main() -> int:
             args.case_input,
             args.output,
             args.report,
+            expected_prompt_version=args.prompt_version,
         )
         print(f"P04 QA 报告: {output}")
     elif args.command == "build-p05-input":

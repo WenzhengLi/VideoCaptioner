@@ -151,7 +151,15 @@ def write_p04_qa(
     case_input_path: Path,
     output_path: Path,
     report_path: Path,
+    *,
+    expected_prompt_version: str = "knowledge-v002-p04",
 ) -> Path:
-    report = validate_p04_output(course_id, case_id, case_input_path, output_path)
+    report = validate_p04_output(
+        course_id,
+        case_id,
+        case_input_path,
+        output_path,
+        expected_prompt_version=expected_prompt_version,
+    )
     atomic_write_text(report_path, json.dumps(report, ensure_ascii=False, indent=2))
     return Path(report_path)
