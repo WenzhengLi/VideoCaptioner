@@ -162,20 +162,22 @@ uv run pytest -q -m "not integration"
 
 - 状态：代码完成（embedding Provider 需 Web UI 配置）
 - 修改文件：
-  - `src/course_video_analyzer/knowledge/dify_sync.py`（`sync_markdown_dir` 新增 `indexing_technique` 参数 + 模式校验）
+  - `src/course_video_analyzer/knowledge/dify_sync.py`（`sync_markdown_dir` 新增 `indexing_technique` 参数 + 模式校验 + dataset_id 不一致 fail-fast 防护）
   - `src/course_video_analyzer/knowledge/cli.py`（`dify-sync-markdown` 新增 `--indexing-technique`）
-  - `tests/test_knowledge/test_dify_sync.py`（新增 3 个测试）
+  - `tests/test_knowledge/test_dify_sync.py`（新增 5 个测试：显式参数、模式校验、回退逻辑、dataset_id 不一致 fail-fast、新 map 允许同步）
   - `scripts/probe_local_embedding.py`（embedding 探测工具）
   - `scripts/create_formal_dataset.py`（正式 Dataset 创建脚本）
   - `docs/evaluation/afeng-embedding-investigation.md`
   - `docs/tasks/STATUS.md`
-- 关键发现：
+- 关键决策：
   - 本地 embedding 已验证可用：Ollama v0.32.1 + bge-m3 (1024 维, GGUF F16)
-  - Dify 1.15.0 的 model provider 管理通过插件系统实现，控制台 API 不直接暴露安装端点
-  - 需要通过 Dify Web UI 安装 Ollama 插件并配置 embedding
+  - `sync_markdown_dir` 新增 dataset_id 不一致校验：map 已绑定不同 dataset_id 时 fail-fast，防止跨 Dataset 错绑
+  - 正式库必须使用独立 map（如 `data/dify/document-map-v1.json`），禁止复用旧 economy 工作库 map
   - 代码层面已移除硬编码、添加显式参数和模式校验
-- 验证结果：`pytest -q` 266 passed、1 skipped；`ruff` 通过；`pyright` 0 errors。
+- 验证结果：`pytest -q` 268 passed、1 skipped；`ruff` 通过；`pyright` 0 errors。
 - 阻塞：需用户通过 Dify Web UI 配置 Ollama embedding provider（一步操作）。
+- Gate 1 状态：Ollama + bge-m3 宿主机验证 OK，Dify 侧需 Web UI 配置
+- 详见 `docs/evaluation/afeng-embedding-investigation.md` 第六节精确 UI 步骤
 
 ### TASK-016
 
@@ -183,6 +185,7 @@ uv run pytest -q -m "not integration"
 - 已完成：
   - `data/dify/afeng-retrieval-test-v001.json`（20 问检索测试集，覆盖课程/案例/方法/条件/限制/话术/时间戳/evidence）
   - `scripts/run_afeng_retrieval_test.py`（检索验收脚本，生成 JSON + Markdown 报告）
+  - `scripts/validate_afeng_citations.py`（引用校验器）
 - 待完成：正式 Dataset 创建后执行真实同步和检索验收
 - 阻塞：依赖 TASK-015 的 embedding Provider 配置
 
@@ -197,8 +200,9 @@ uv run pytest -q -m "not integration"
 
 ### TASK-018
 
-- 状态：代码完成
+- 状态：代码完成（离线审计已通过）
 - 已完成：
-  - `scripts/audit_afeng_production.py`（一键只读审计，Bundle + Aggregate 全部 PASS）
-- 待完成：Dify Dataset + Workflow 审计（依赖 TASK-016/017）
-- 验证结果：`pytest -q` 266 passed、1 skipped；`ruff` 通过；`pyright` 0 errors。
+  - `scripts/audit_afeng_production.py`（一键只读审计）
+  - 离线审计结果：Bundle PASS（36 docs, 4 exclusions, canonical 36 unique, lineage 100%, hash 100%）、Aggregate PASS（40 cases, 36 published, 2 manual_review, 2 rejected, 0 failures）
+  - Dify Dataset + Workflow 审计：待 TASK-016/017 完成后执行
+- 验证结果：`pytest -q` 268 passed、1 skipped；`ruff` 通过；`pyright` 0 errors。
