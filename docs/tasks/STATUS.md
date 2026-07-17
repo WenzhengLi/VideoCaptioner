@@ -102,7 +102,7 @@ uv run pytest -q -m "not integration"
 - 当前结果：TXT 课板块 366 → 175；未知人物片段 31 → 16；CAM++ 全片对比已落盘
 - 任务文件：[TASK-012-quality-iteration.md](TASK-012-quality-iteration.md)
 
-## TASK-013 ~ TASK-017
+## TASK-013 ~ TASK-018
 
 - 状态：待执行（交 CC Switch；见 `docs/cursor-handoff/CCSWITCH-NEXT-AFENG-DIFY-PRODUCTIONIZATION.md`）
 - 当前基线：阿峰前 20 课 40 案例已完成，36 published / 2 manual_review / 2 rejected / 0 failed；
@@ -113,5 +113,8 @@ uv run pytest -q -m "not integration"
   - 历史冒烟条目已从 document-map 清除；远端无 SMOKE
   - embedding / `high_quality` / Chatflow 可回答应用：**未完成**（外部密钥阻塞）
 - 注意：TASK-013 须在已导入的 v002.5 之上做 canonical ID 迁移（v002.6），不能假设“尚未入库”
-- 执行顺序：TASK-013 → TASK-014 → TASK-015 → TASK-016 → TASK-017；
+- 执行顺序：TASK-013 → TASK-014 → TASK-015 → TASK-016 → TASK-017 → TASK-018；
+- TASK-015 优先走本地 embedding（候选 `BAAI/bge-m3`，必须以 Dify 1.15.0 实际兼容性验证为准）；
+- TASK-016 使用新的正式 high_quality Dataset 和独立 map；已有 economy Dataset 只保留作工作/历史库；
+- TASK-018 负责最终只读审计、备份/恢复 dry-run 和无上下文运维交接；
 - 任务入口：[TASK-013-afeng-stable-identity.md](TASK-013-afeng-stable-identity.md)。

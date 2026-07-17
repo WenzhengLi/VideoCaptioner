@@ -88,6 +88,42 @@ def cache_key(input_hash: str, prompt_version: str, model: str, stage: str) -> s
     )
 
 
+def canonical_knowledge_id(course_id: str, case_id: str) -> str:
+    """Program-controlled stable knowledge id, independent of model output.
+
+    Format: ``AFENG-{course_id}-{case_id}`` (e.g. ``AFENG-C007-CASE-C007-001``).
+    The model is still free to emit a knowledge_id in its draft, but that value
+    must never be used as the remote idempotency key; this canonical form is the
+    only stable, cross-run, cross-model identity for a published document.
+    """
+    return f"AFENG-{course_id}-{case_id}"
+
+
+def normalize_method_knowledge_id(draft: AfengMethodDraft) -> AfengMethodDraft:
+    """Force a method draft's knowledge_id to the canonical program-controlled value."""
+    canonical = canonical_knowledge_id(draft.course_id, draft.case_id)
+    if draft.knowledge_id == canonical:
+        return draft
+    return draft.model_copy(update={"knowledge_id": canonical})
+
+
+def normalize_fidelity_audit_knowledge_id(audit: FidelityAudit) -> FidelityAudit:
+    """Force a fidelity audit's knowledge_id to the canonical value."""
+    canonical = canonical_knowledge_id(audit.course_id, audit.case_id)
+    if audit.knowledge_id == canonical:
+        return audit
+    return audit.model_copy(update={"knowledge_id": canonical})
+
+
+def normalize_publication_knowledge_id(publication: PublicationRecord) -> PublicationRecord:
+    """Force a publication record's knowledge_id to the canonical value."""
+    canonical = canonical_knowledge_id(publication.course_id, publication.case_id)
+    if publication.knowledge_id == canonical:
+        return publication
+    return publication.model_copy(update={"knowledge_id": canonical})
+
+
+
 def _load_json(path: Path) -> dict[str, Any]:
     value = json.loads(Path(path).read_text(encoding="utf-8"))
     if not isinstance(value, dict):

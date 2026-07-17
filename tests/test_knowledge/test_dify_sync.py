@@ -169,6 +169,45 @@ def test_create_dataset_defaults_to_economy(monkeypatch: pytest.MonkeyPatch) -> 
     assert body["indexing_technique"] == "economy"
 
 
+def test_plan_uses_canonical_id_when_course_and_case_present(tmp_path: Path) -> None:
+    """When frontmatter has course_id+case_id, the canonical id is the map key,
+    not any model-authored knowledge_id value. This prevents duplicate Dify
+    documents on re-run or cross-model rerender."""
+    md_dir = tmp_path / "documents"
+    md_dir.mkdir()
+    # Model-authored knowledge id in frontmatter; course_id+case_id also present.
+    (md_dir / "doc.md").write_text(
+        "---\n"
+        'knowledge_id: "mimo-freehand-C007-001"\n'
+        "course_id: C007\n"
+        "case_id: CASE-C007-001\n"
+        "fidelity_status: passed\n"
+        "---\n# 方法\n",
+        encoding="utf-8",
+    )
+    map_path = tmp_path / "map.json"
+    plan = plan_markdown_sync(md_dir, map_path)
+    assert plan["create"] == 1
+    planned_id = plan["planned"][0]["knowledge_id"]
+    assert planned_id == "AFENG-C007-CASE-C007-001"
+    assert planned_id != "mimo-freehand-C007-001"
+
+    # A second markdown for the SAME course/case but a different model-authored id
+    # must map to the SAME canonical key (update, not a duplicate create).
+    (md_dir / "doc2.md").write_text(
+        "---\n"
+        'knowledge_id: "glm-freehand-C007-001"\n'
+        "course_id: C007\n"
+        "case_id: CASE-C007-001\n"
+        "fidelity_status: passed\n"
+        "---\n# 方法\n",
+        encoding="utf-8",
+    )
+    plan2 = plan_markdown_sync(md_dir, map_path)
+    ids = {item["knowledge_id"] for item in plan2["planned"]}
+    assert ids == {"AFENG-C007-CASE-C007-001"}
+
+
 def test_sync_markdown_is_idempotent(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("DIFY_BASE_URL", "http://127.0.0.1:3080/v1")
     monkeypatch.setenv("DIFY_API_KEY", "test-key")

@@ -6,7 +6,7 @@
 
 - 事实与证据层到 P04 已完成。
 - 阿峰方法层 C001–C015 批量生产与修复已完成。
-- 阿峰方法层 C016–C020 已用 `glm-5-2-260617[1M]` 完成生产；20 课聚合报告与离线包 v002.5 已生成；未做 Dify 在线发布。
+- 阿峰方法层 C016–C020 已用 `glm-5-2-260617[1M]` 完成生产；20 课聚合报告与离线包 v002.5 已生成；v002.5 已导入 economy 工作 Dataset，36/36 indexing completed，keyword 检索有命中。
 
 ## 当前结论
 
@@ -68,7 +68,7 @@
 1. 人工忠实度抽检 C016–C020 发布结果（尤其 2 个 `partial_method`）。
 2. 保持 C006-001、C008-002 的人工复核状态；保持 C014-001、C015-001 的拒绝状态，不绕过闸门。
 3. Dify 平台与 `afeng-release-v002.5` 在线入库/indexing/keyword 检索已完成（见 `DIFY-STATUS.md`）。
-4. 下一生产化轮次：CC Switch 执行 TASK-013～017（canonical ID → v002.6 → indexing 就绪 → 再同步 → 应用）；缺 embedding/LLM 时标记 `external_blocked`。
+4. 下一生产化轮次：执行 TASK-013～018（canonical ID → v002.6 → 正式语义库 → 同步检索 → 应用 → 终审交接）；embedding 优先验证本地方案，真实不可行时才标记 `external_blocked`。
 
 ## 仓库验收
 

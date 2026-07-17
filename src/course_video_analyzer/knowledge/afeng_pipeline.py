@@ -14,9 +14,13 @@ from course_video_analyzer.knowledge.afeng import (
     approve_method,
     build_external_payload,
     cache_key,
+    canonical_knowledge_id,
     content_hash,
-    normalize_method_source_time_range,
     normalize_method_evidence_id_aliases,
+    normalize_method_knowledge_id,
+    normalize_method_source_time_range,
+    normalize_fidelity_audit_knowledge_id,
+    normalize_publication_knowledge_id,
     normalize_unbacked_method_conditions,
     render_afeng_markdown,
     validate_evidence_package,
@@ -115,6 +119,7 @@ def _load_and_normalize_method_draft(
     normalized = normalize_unbacked_method_conditions(draft)
     normalized = normalize_method_evidence_id_aliases(package, normalized)
     normalized = normalize_method_source_time_range(package, normalized)
+    normalized = normalize_method_knowledge_id(normalized)
     if normalized != draft:
         atomic_write_text(path, normalized.model_dump_json(indent=2))
     return normalized
@@ -146,6 +151,7 @@ def _load_and_normalize_fidelity_audit(
             "revision_number": revision_number,
             "invalid_evidence_ids": invalid_ids,
             "field_reviews": field_reviews,
+            "knowledge_id": canonical_knowledge_id(audit.course_id, audit.case_id),
         }
     )
     if normalized != audit:
@@ -202,7 +208,7 @@ def run_afeng_method_pipeline(
         }
     )[:12]
     run_path = run_dir / f"{package.case_id}-{run_token}.json"
-    initial_knowledge_id = f"AFENG-{package.course_id}-{package.case_id}"
+    initial_knowledge_id = canonical_knowledge_id(package.course_id, package.case_id)
     manifest = AfengRunManifest(
         model=executor.model_name,
         course_id=package.course_id,
@@ -265,7 +271,7 @@ def run_afeng_method_pipeline(
             draft_data,
             draft_dir / f"{package.case_id}-{run_token}-r0.json",
         )
-        manifest.knowledge_id = draft.knowledge_id
+        manifest.knowledge_id = canonical_knowledge_id(package.course_id, package.case_id)
         draft_report = validate_method_draft(package, draft)
         if draft_report["status"] != "pass":
             raise ValueError(f"method draft failed deterministic QA: {draft_report}")
@@ -372,7 +378,13 @@ def run_afeng_method_pipeline(
             revision_number=revision_number,
         )
         manifest.events.append(event)
-        publication = PublicationRecord.model_validate(publication_data)
+        publication_raw = PublicationRecord.model_validate(publication_data)
+        publication = normalize_publication_knowledge_id(publication_raw)
+        if publication != publication_raw:
+            atomic_write_text(
+                publication_dir / f"{package.case_id}-{run_token}.json",
+                publication.model_dump_json(indent=2),
+            )
         validate_publication(package, approved, audit, publication)
         manifest.artifact_paths["publication"] = str(
             publication_dir / f"{package.case_id}-{run_token}.json"

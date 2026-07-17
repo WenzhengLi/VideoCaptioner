@@ -18,6 +18,7 @@ from collections.abc import Callable
 from typing import Any, TypeVar
 
 from course_video_analyzer.jobs.workspace import atomic_write_text
+from course_video_analyzer.knowledge.afeng import canonical_knowledge_id
 
 T = TypeVar("T")
 
@@ -235,6 +236,14 @@ def _metadata_from_markdown(path: Path, text: str) -> dict[str, Any]:
             "safety_flags",
         }:
             meta[key] = value
+    # The canonical knowledge id is the only stable idempotency key. When the
+    # frontmatter carries course_id and case_id, derive the canonical id from
+    # them and ignore any model-authored knowledge_id value. This keeps re-runs
+    # and cross-model rerenders from creating duplicate Dify documents.
+    course_id = str(meta.get("course_id") or "").strip()
+    case_id = str(meta.get("case_id") or "").strip()
+    if course_id and case_id:
+        meta["knowledge_id"] = canonical_knowledge_id(course_id, case_id)
     return meta
 
 

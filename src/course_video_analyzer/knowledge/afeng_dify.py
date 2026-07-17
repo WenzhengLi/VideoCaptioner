@@ -9,6 +9,12 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from course_video_analyzer.jobs.workspace import atomic_write_text
+from course_video_analyzer.knowledge.afeng import (
+    canonical_knowledge_id,
+    normalize_fidelity_audit_knowledge_id,
+    normalize_method_knowledge_id,
+    normalize_publication_knowledge_id,
+)
 from course_video_analyzer.knowledge.afeng_models import (
     AfengMethodDraft,
     AfengRunManifest,
@@ -40,6 +46,58 @@ def _safe_filename(knowledge_id: str) -> str:
     return value
 
 
+_RUN_TOKEN_TAIL = re.compile(r"[0-9a-f]{12}$")
+
+
+def _extract_run_token(manifest: AfengRunManifest) -> str:
+    """Recover the 12-hex run token embedded in artifact filenames.
+
+    The run token ties a published document to the exact pipeline run that
+    produced it. It is not stored as a manifest field, so it is recovered from
+    the approved-method / publication artifact path stems.
+    """
+    for key in (
+        "approved_method",
+        "publication",
+        "method_draft_r0",
+        "fidelity_audit_r0",
+        "markdown",
+    ):
+        value = manifest.artifact_paths.get(key) or ""
+        stem = Path(value).stem
+        match = _RUN_TOKEN_TAIL.search(stem)
+        if match:
+            return match.group(0)
+    return ""
+
+
+_KNOWLEDGE_ID_QUOTED_LINE = re.compile(r'(?m)^knowledge_id:\s*"[^"]*"\s*$')
+_KNOWLEDGE_ID_BARE_LINE = re.compile(r"(?m)^knowledge_id:\s*\S+\s*$")
+
+
+def _canonicalize_markdown(text: str, canonical_id: str) -> str:
+    """Override the YAML frontmatter knowledge_id with the canonical value.
+
+    The rendered body never references knowledge_id, so replacing only the
+    frontmatter field is sufficient and avoids re-rendering from the evidence
+    package (which the bundle builder does not load). This is the deterministic
+    migration path for historical model-authored knowledge IDs.
+    """
+    if not text.startswith("---"):
+        raise ValueError("afeng markdown must start with YAML frontmatter")
+    parts = text.split("---", 2)
+    if len(parts) < 3:
+        raise ValueError("afeng markdown has unclosed YAML frontmatter")
+    frontmatter = parts[1]
+    replacement = f'knowledge_id: "{canonical_id}"'
+    new_frontmatter, count = _KNOWLEDGE_ID_QUOTED_LINE.subn(replacement, frontmatter, count=1)
+    if count == 0:
+        new_frontmatter, count = _KNOWLEDGE_ID_BARE_LINE.subn(replacement, frontmatter, count=1)
+    if count == 0:
+        raise ValueError("afeng markdown frontmatter has no knowledge_id field")
+    return "---" + new_frontmatter + "---" + parts[2]
+
+
 def _require_artifact(manifest: AfengRunManifest, key: str) -> Path:
     value = manifest.artifact_paths.get(key)
     if not value:
@@ -55,7 +113,15 @@ def build_afeng_dify_bundle(
     output_dir: Path,
     manifest_path: Path,
 ) -> dict[str, Any]:
-    """Collect only fully released Afeng Markdown documents into an immutable bundle."""
+    """Collect only fully released Afeng Markdown documents into an immutable bundle.
+
+    Each published document is re-identified under the program-controlled
+    canonical knowledge id ``AFENG-{course_id}-{case_id}``, regardless of what
+    the model wrote. Model lineage (model, run token, input hash, source
+    summary) is recorded per document so MiMo- and GLM-sourced documents are
+    distinguishable. Historical model artifacts are read only; they are never
+    modified.
+    """
     output_dir = Path(output_dir)
     documents: dict[str, dict[str, Any]] = {}
     excluded: list[dict[str, str]] = []
@@ -73,26 +139,29 @@ def build_afeng_dify_bundle(
                     }
                 )
                 continue
+            canonical_id = canonical_knowledge_id(run.course_id, run.case_id)
             method_path = _require_artifact(run, "approved_method")
-            audit_path = _require_artifact(
-                run, f"fidelity_audit_r{run.revision_count}"
-            )
+            audit_path = _require_artifact(run, f"fidelity_audit_r{run.revision_count}")
             publication_path = _require_artifact(run, "publication")
             markdown_path = _require_artifact(run, "markdown")
-            method = AfengMethodDraft.model_validate(_read_object(method_path))
-            audit = FidelityAudit.model_validate(_read_object(audit_path))
-            publication = PublicationRecord.model_validate(_read_object(publication_path))
-            identity = (run.course_id, run.case_id, run.knowledge_id)
-            if identity != (method.course_id, method.case_id, method.knowledge_id):
-                raise ValueError(f"approved method identity mismatch: {run.case_id}")
-            if identity != (audit.course_id, audit.case_id, audit.knowledge_id):
-                raise ValueError(f"fidelity audit identity mismatch: {run.case_id}")
-            if identity != (
-                publication.course_id,
-                publication.case_id,
-                publication.knowledge_id,
+            method = normalize_method_knowledge_id(
+                AfengMethodDraft.model_validate(_read_object(method_path))
+            )
+            audit = normalize_fidelity_audit_knowledge_id(
+                FidelityAudit.model_validate(_read_object(audit_path))
+            )
+            publication = normalize_publication_knowledge_id(
+                PublicationRecord.model_validate(_read_object(publication_path))
+            )
+            for artifact, name in (
+                (method, "approved_method"),
+                (audit, "fidelity_audit"),
+                (publication, "publication"),
             ):
-                raise ValueError(f"publication identity mismatch: {run.case_id}")
+                if (artifact.course_id, artifact.case_id) != (run.course_id, run.case_id):
+                    raise ValueError(f"{name} course/case mismatch: {run.case_id}")
+                if artifact.knowledge_id != canonical_id:
+                    raise ValueError(f"{name} knowledge_id is not canonical: {run.case_id}")
             if method.draft_fidelity_status != "reviewed":
                 raise ValueError(f"method is not approved for release: {run.case_id}")
             if audit.audit_result != "pass" or not audit.release_allowed:
@@ -102,18 +171,25 @@ def build_afeng_dify_bundle(
                 or publication.publication_class == PublicationClass.REJECT
             ):
                 raise ValueError(f"publication is not publishable: {run.case_id}")
-            markdown = markdown_path.read_text(encoding="utf-8")
+            markdown = _canonicalize_markdown(
+                markdown_path.read_text(encoding="utf-8"), canonical_id
+            )
             digest = hashlib.sha256(markdown.encode("utf-8")).hexdigest()
-            filename = f"{_safe_filename(run.knowledge_id)}.md"
+            filename = f"{_safe_filename(canonical_id)}.md"
             target = output_dir / filename
-            existing = documents.get(run.knowledge_id)
+            existing = documents.get(canonical_id)
             if existing and existing["content_sha256"] != digest:
-                raise ValueError(f"duplicate knowledge_id has different content: {run.knowledge_id}")
+                raise ValueError(
+                    f"duplicate canonical knowledge_id has different content: {canonical_id}"
+                )
             _write_new_or_same(target, markdown)
-            documents[run.knowledge_id] = {
-                "knowledge_id": run.knowledge_id,
+            documents[canonical_id] = {
+                "knowledge_id": canonical_id,
                 "course_id": run.course_id,
                 "case_id": run.case_id,
+                "model": run.model,
+                "run_token": _extract_run_token(run),
+                "input_hash": run.input_hash,
                 "publication_class": publication.publication_class.value,
                 "generalization_level": publication.generalization_level,
                 "source_start_ms": method.source_time_range.start_ms,

@@ -2,7 +2,8 @@
 
 ## 状态
 
-待执行；依赖 TASK-014、TASK-015，且正式 high_quality Dataset 已可用。
+待执行；依赖 TASK-014、TASK-015，且正式 high_quality Dataset 已可用。已有 economy 工作 Dataset
+不是本任务目标库。
 
 ## 目标
 
@@ -10,12 +11,15 @@
 
 ## 必须完成
 
-1. 真实同步 `data/dify/afeng-release-v002.6/documents`；
-2. 首次同步预期 create=36、failed=0；
+1. 真实同步 `data/dify/afeng-release-v002.6/documents` 到
+   `阿峰课程方法库-研究版-v1`，禁止同步到已有 v002.5 工作库；
+2. 使用正式库独立 map。空正式库首次同步预期 create=36、failed=0；如果正式库已有同 canonical ID
+   文档，则必须按内容哈希得到 update/skip，禁止 duplicate create；
 3. 轮询全部 indexing 到 completed；
 4. 二次同步预期 skip=36；
 5. 修改一份测试副本验证 update-by-text，不改正式 v002.6；
-6. document map 覆盖 36 个 canonical ID，远端 document ID 唯一；
+6. 正式库 document map 覆盖 36 个 canonical ID，远端 document ID 唯一；不得混入旧 v002.5
+   working map、SMOKE 条目或其他 Dataset 的 document ID；
 7. 设计不少于 20 个检索问题，覆盖课程、案例、方法、条件、限制、话术、时间戳和证据；
 8. 记录 top-k、召回文档、相关性、来源课程、时间范围和错误召回；
 9. 检查 `partial_method` 能被识别，manual_review/rejected 不得出现在 Dataset；
@@ -32,13 +36,15 @@
 ## 禁止事项
 
 - 不导入 v002.5 或更早包冒充最终包；
+- 不删除或改写已有 economy 工作 Dataset；
 - 不上传 4 个排除案例；
 - 不修改 v002.6；
 - 不把接口可达当成检索通过。
 
 ## 验收标准
 
-- create=36、failed=0、indexing completed=36；
+- 空正式库时 create=36、failed=0、indexing completed=36；已有文档时 create/update/skip 数量必须与
+  内容哈希和 canonical ID 一致，duplicate=0；
 - 二次同步 skip=36；
 - Dataset 中无 manual_review/rejected；
 - 20 问检索报告完整；

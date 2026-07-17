@@ -12,10 +12,11 @@
 ## 当前事实
 
 - Dify 1.15.0 已运行于 `http://127.0.0.1:3080`；
-- 管理员和冒烟 Dataset 已创建；
-- 当前 Dataset 为 `economy`；
+- 管理员和工作 Dataset `阿峰课程方法库-研究版` 已创建；
+- 当前工作 Dataset 为 `economy`，其中已经导入 v002.5 的 36 篇文档，indexing 36/36 completed，
+  keyword retrieval 有真实命中；该 Dataset 保留为历史/工作库，不冒充最终语义库；
 - semantic retrieve 因缺 embedding 返回 400；
-- 正式 v002.5/v002.6 尚未导入；
+- v002.5 已导入工作库；v002.6 尚未生成，也尚未导入任何正式库；
 - `create_document_by_text` 当前硬编码 `high_quality`。
 
 ## 必须完成
@@ -23,12 +24,18 @@
 1. 让 Dataset 创建和文档同步显式支持 `economy` / `high_quality`，禁止隐藏硬编码；
 2. CLI 增加明确参数和环境配置，并校验 Dataset 模式与文档模式一致；
 3. 为无 embedding 的失败路径增加可读错误，不泄露密钥；
-4. 核对 Dify 当前可用 embedding 供应商，但不得编造 API Key；
-5. 若本机已有合法 embedding 配置，创建正式 Dataset：`阿峰课程方法库-研究版-v1`，使用
-   `high_quality`；
-6. 若缺少 embedding 密钥，完成所有代码、测试、文档和 dry-run，并把唯一人工阻塞写清楚；
-7. 不使用冒烟 Dataset 冒充正式 Dataset；
-8. 保持 `cpa` 容器和端口 8317 不变。
+4. 以 Dify 1.15.0 的真实插件/Provider 能力为准，核对 Ollama、Xinference、OpenAI-compatible
+   embedding 等本地接入方式，并把核对证据写入报告；不得凭印象选型；
+5. 优先采用本地 embedding，用磁盘和本机计算换取后续批量入库成本。候选模型优先评估
+   `BAAI/bge-m3`，但只有在 Dify 1.15.0 实际兼容、健康检查和小样本向量调用均通过时才能落地；
+6. 本地 embedding 可行时，创建正式 Dataset：`阿峰课程方法库-研究版-v1`，使用
+   `high_quality`，并记录 Provider 类型、模型名、维度和健康状态，但不得记录密钥；
+7. 本地方案不可行且本机没有合法外部 embedding 配置时，仍须完成代码、测试、Provider
+   可用性探测、部署模板、dry-run 和故障说明，再标记 `external_blocked`；不得停在调研或计划；
+8. 工作 Dataset 与正式 Dataset 必须使用不同名称和独立 document map，禁止复用旧 map 导致
+   跨 Dataset 错绑远端 document ID；
+9. 不删除、不清空、不重建已有工作 Dataset；
+10. 保持 `cpa` 容器和端口 8317 不变。
 
 ## 允许修改
 
@@ -45,6 +52,8 @@
 - 不输出 Token、密码或 API Key；
 - 不删除 volume；
 - 不停止或修改 `cpa`；
+- 不复制 CC Switch/Cursor/Claude Code 的 Token 到 Dify；
+- 不修改已有 economy 工作 Dataset 中的 36 篇 v002.5 文档；
 - 未配置 embedding 时不得声称语义检索可用。
 
 ## 验收标准
@@ -52,6 +61,7 @@
 - indexing technique 可配置且有测试；
 - 模式不匹配能在同步前失败；
 - Dify 容器健康；
-- 正式 Dataset 与冒烟 Dataset 明确区分；
+- 正式 Dataset 与已有 economy 工作 Dataset 明确区分，map 也相互隔离；
 - 有 embedding 时 high_quality Dataset 创建成功；无 embedding 时阻塞说明准确；
+- 若落地本地 embedding，至少完成一次真实 embedding 调用和一个小样本 Dataset 的语义检索；
 - 全量测试通过。

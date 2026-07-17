@@ -11,8 +11,12 @@ from course_video_analyzer.knowledge.afeng import (
     approve_method,
     build_afeng_evidence_package,
     build_external_payload,
-    normalize_method_source_time_range,
+    canonical_knowledge_id,
+    normalize_fidelity_audit_knowledge_id,
     normalize_method_evidence_id_aliases,
+    normalize_method_knowledge_id,
+    normalize_method_source_time_range,
+    normalize_publication_knowledge_id,
     normalize_unbacked_method_conditions,
     render_afeng_markdown,
     validate_evidence_package,
@@ -410,3 +414,71 @@ def test_pipeline_revises_once_and_reuses_completed_run(tmp_path: Path) -> None:
     cached = run_afeng_method_pipeline(evidence_path, tmp_path / "course", second_executor)
     assert cached.status == "published"
     assert second_executor.calls == []
+
+
+def test_canonical_knowledge_id_format() -> None:
+    assert canonical_knowledge_id("C007", "CASE-C007-001") == "AFENG-C007-CASE-C007-001"
+    assert canonical_knowledge_id("C016", "CASE-C016-001") == "AFENG-C016-CASE-C016-001"
+
+
+def test_normalize_method_knowledge_id_overrides_model_value() -> None:
+    draft = AfengMethodDraft.model_validate(_draft())
+    draft = draft.model_copy(update={"knowledge_id": "mimo-freehand-id"})
+    normalized = normalize_method_knowledge_id(draft)
+    assert normalized.knowledge_id == "AFENG-C001-CASE-C001-001"
+    # Audit and publication must move in lockstep so cross-artifact identity checks still pass.
+    audit = FidelityAudit.model_validate(_audit("pass"))
+    audit = audit.model_copy(update={"knowledge_id": "mimo-freehand-id"})
+    assert normalize_fidelity_audit_knowledge_id(audit).knowledge_id == "AFENG-C001-CASE-C001-001"
+    publication = PublicationRecord.model_validate(_publication())
+    publication = publication.model_copy(update={"knowledge_id": "mimo-freehand-id"})
+    assert (
+        normalize_publication_knowledge_id(publication).knowledge_id
+        == "AFENG-C001-CASE-C001-001"
+    )
+
+
+class _ModelAuthoredIdExecutor:
+    """Emits a model that writes its own non-canonical knowledge id."""
+
+    model_name = "mimo-v2.5-pro"
+
+    def __init__(self) -> None:
+        self.calls: list[str] = []
+
+    def execute(self, stage: str, payload: dict[str, Any]) -> dict[str, Any]:
+        self.calls.append(stage)
+        if stage == "extract_method":
+            value = _draft()
+            value["knowledge_id"] = "mimo-freehand-C001-001"
+            return value
+        if stage == "audit_fidelity":
+            value = _audit("pass")
+            value["knowledge_id"] = "mimo-freehand-C001-001"
+            return value
+        if stage == "classify_publication":
+            value = _publication()
+            value["knowledge_id"] = "mimo-freehand-C001-001"
+            return value
+        raise AssertionError(stage)
+
+
+def test_pipeline_forces_canonical_knowledge_id(tmp_path: Path) -> None:
+    package = _build_package(tmp_path / "input")
+    evidence_path = tmp_path / "input" / "evidence.json"
+    evidence_path.write_text(package.model_dump_json(indent=2), encoding="utf-8")
+    executor = _ModelAuthoredIdExecutor()
+    manifest = run_afeng_method_pipeline(evidence_path, tmp_path / "course", executor)
+
+    assert manifest.status == "published"
+    # The manifest never takes the model-authored id; it is always canonical.
+    assert manifest.knowledge_id == "AFENG-C001-CASE-C001-001"
+    # The published markdown carries the canonical id, not the model's.
+    markdown_path = Path(manifest.artifact_paths["markdown"])
+    markdown = markdown_path.read_text(encoding="utf-8")
+    assert 'knowledge_id: "AFENG-C001-CASE-C001-001"' in markdown
+    assert "mimo-freehand" not in markdown
+    assert markdown_path.name.startswith("AFENG-C001-CASE-C001-001-")
+    # The canonical id is stable across a re-run (cached terminal run).
+    repeat = run_afeng_method_pipeline(evidence_path, tmp_path / "course", executor)
+    assert repeat.knowledge_id == "AFENG-C001-CASE-C001-001"
