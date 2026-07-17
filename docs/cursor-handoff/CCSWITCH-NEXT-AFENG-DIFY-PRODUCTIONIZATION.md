@@ -1,4 +1,7 @@
-# CC Switch / Claude Code 交接：阿峰知识库生产化 TASK-013～TASK-017
+# CC Switch / Claude Code 历史交接：阿峰知识库生产化 TASK-013～TASK-017
+
+> 本文件保留作历史记录，不再作为最新执行入口。最新事实、TASK-018 和正式 Dataset 隔离要求见：
+> `docs/cursor-handoff/CURSOR-NEXT-AFENG-V0026-PRODUCTION.md`。
 
 你现在接手 `D:\Dev\VideoCaptioner` 的阿峰知识库生产化任务。你没有此前会话上下文；本文和本文列出的
 任务文件就是完整上下文。使用 Flow 持续执行：审计 → 计划 → 实现 → 测试 → 定点修复 → 复测 →

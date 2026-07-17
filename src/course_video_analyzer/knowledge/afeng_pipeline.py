@@ -19,7 +19,6 @@ from course_video_analyzer.knowledge.afeng import (
     normalize_method_evidence_id_aliases,
     normalize_method_knowledge_id,
     normalize_method_source_time_range,
-    normalize_fidelity_audit_knowledge_id,
     normalize_publication_knowledge_id,
     normalize_unbacked_method_conditions,
     render_afeng_markdown,

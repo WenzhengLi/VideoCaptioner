@@ -2,7 +2,7 @@
 
 ## 状态
 
-待执行。
+已完成。
 
 ## 目标
 
@@ -70,3 +70,32 @@
 - bundle 中 model metadata 覆盖率 100%；
 - 同 ID 同内容为 skip，不同内容为 update；
 - 全量 pytest、Ruff、Pyright 通过。
+
+## 完成说明
+
+实现设计（不重新调用模型，不覆盖 v002.1–v002.5，不修改历史模型原始产物）：
+
+- `afeng.py`：新增 `canonical_knowledge_id(course_id, case_id) -> "AFENG-{course_id}-{case_id}"`，
+  以及 `normalize_method_knowledge_id` / `normalize_fidelity_audit_knowledge_id` /
+  `normalize_publication_knowledge_id`，把任意模型自写 ID 强制归一到 canonical。
+- `afeng_pipeline.py`：manifest 的 `knowledge_id` 永远取 canonical（移除
+  `manifest.knowledge_id = draft.knowledge_id` 这条让模型控制远端主键的赋值）；draft、audit、
+  publication 在归一化阶段一并写入 canonical，使草稿/审查/发布分类/Markdown/run manifest 身份一致。
+  terminal 案例重跑走 early-return，不触发归一化写入，历史产物不被覆盖。
+- `afeng_dify.py`：bundle 构建器对每个 published 文档以 `AFENG-{course_id}-{case_id}` 为权威身份，
+  读取历史 approved/audit/publication/markdown（只读，不修改），在内存归一到 canonical，
+  重新改写 Markdown frontmatter 的 `knowledge_id` 为 canonical 并写入新包；manifest 每份文档增加
+  `model`、`run_token`（从 artifact 文件名 12-hex 尾缀恢复）、`input_hash`、`source_summary`。
+- `dify_sync.py`：`_metadata_from_markdown` 在 frontmatter 同时含 `course_id`+`case_id` 时，用
+  canonical 作为 document map 幂等键，忽略任何模型自写 `knowledge_id`；因此同案例跨模型/跨重跑
+  不会 create duplicate，内容相同 skip、内容变化 update。这是对已入库 v002.5（economy）做
+  update/skip 迁移的基础。
+- `scripts/verify_afeng_release_bundle.py`：新增 bundle 完整性校验工具，检查 canonical 唯一性、
+  model/run_token/input_hash/source_summary 覆盖率、内容 SHA-256 与 frontmatter 一致性。
+- 测试：新增 canonical 格式、模型乱写 ID 被归一、pipeline 强制 canonical、bundle canonical 化、
+  重复 canonical ID 不同内容报错、dify_sync canonical 幂等键等用例。
+
+验证：`pytest -q` 全量 263 passed、1 skipped（基线 255）；`ruff check .` 通过；`pyright` 0 errors。
+historical 40 案例产物未被修改；canonical 覆盖与血缘将在 TASK-014 的 v002.6 包中落地并校验。
+
+下一任务 TASK-014 满足 Definition of Ready：稳定 ID 与血缘实现已就绪并有测试。

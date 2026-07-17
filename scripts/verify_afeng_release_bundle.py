@@ -14,8 +14,8 @@ import argparse
 import hashlib
 import json
 import re
-import sys
 from pathlib import Path
+from typing import Any
 
 CANONICAL_RE = re.compile(r"^AFENG-(C\d{3})-(CASE-C\d{3}-\d{3})$")
 
@@ -35,7 +35,7 @@ def _read_frontmatter_knowledge_id(text: str) -> str:
     return ""
 
 
-def verify_bundle(manifest_path: Path) -> dict[str, object]:
+def verify_bundle(manifest_path: Path) -> dict[str, Any]:
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     documents = manifest.get("documents") or []
     seen: set[str] = set()

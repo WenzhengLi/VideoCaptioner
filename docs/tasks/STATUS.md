@@ -118,3 +118,22 @@ uv run pytest -q -m "not integration"
 - TASK-016 使用新的正式 high_quality Dataset 和独立 map；已有 economy Dataset 只保留作工作/历史库；
 - TASK-018 负责最终只读审计、备份/恢复 dry-run 和无上下文运维交接；
 - 任务入口：[TASK-013-afeng-stable-identity.md](TASK-013-afeng-stable-identity.md)。
+
+### TASK-013
+
+- 状态：已完成
+- 修改文件：
+  - `src/course_video_analyzer/knowledge/afeng.py`（`canonical_knowledge_id` + 三个 ID 归一化器）
+  - `src/course_video_analyzer/knowledge/afeng_pipeline.py`（manifest 永远取 canonical；draft/audit/publication 归一化写入）
+  - `src/course_video_analyzer/knowledge/afeng_dify.py`（bundle 以 canonical 为权威身份 + model/run_token/input_hash/source_summary 血缘 + Markdown frontmatter 归一）
+  - `src/course_video_analyzer/knowledge/dify_sync.py`（course+case 在场时用 canonical 作 map 幂等键）
+  - `scripts/verify_afeng_release_bundle.py`（新增 bundle 完整性校验工具）
+  - `tests/test_knowledge/test_afeng.py`、`tests/test_knowledge/test_afeng_dify.py`、`tests/test_knowledge/test_dify_sync.py`
+  - `docs/tasks/TASK-013-afeng-stable-identity.md`、`docs/tasks/STATUS.md`
+- 关键决策：
+  - canonical ID `AFENG-{course_id}-{case_id}` 由程序控制，模型自写 ID 一律归一，不再作远端幂等主键；
+  - historical 40 案例产物只读，不修改；迁移在 v002.6 bundle 层完成身份归一；
+  - terminal 案例重跑 early-return，归一化写入只对新运行生效；
+  - dify_sync 在 frontmatter 含 course+case 时用 canonical 作 map 键，使已入库 v002.5 可按 canonical 做 update/skip。
+- 验证结果：`pytest -q` 263 passed、1 skipped；`ruff` 通过；`pyright` 0 errors。
+- 下一任务 TASK-014 满足 Definition of Ready。
