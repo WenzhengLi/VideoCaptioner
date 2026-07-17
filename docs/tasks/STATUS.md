@@ -176,3 +176,29 @@ uv run pytest -q -m "not integration"
   - 代码层面已移除硬编码、添加显式参数和模式校验
 - 验证结果：`pytest -q` 266 passed、1 skipped；`ruff` 通过；`pyright` 0 errors。
 - 阻塞：需用户通过 Dify Web UI 配置 Ollama embedding provider（一步操作）。
+
+### TASK-016
+
+- 状态：代码完成（依赖正式 high_quality Dataset 可用）
+- 已完成：
+  - `data/dify/afeng-retrieval-test-v001.json`（20 问检索测试集，覆盖课程/案例/方法/条件/限制/话术/时间戳/evidence）
+  - `scripts/run_afeng_retrieval_test.py`（检索验收脚本，生成 JSON + Markdown 报告）
+- 待完成：正式 Dataset 创建后执行真实同步和检索验收
+- 阻塞：依赖 TASK-015 的 embedding Provider 配置
+
+### TASK-017
+
+- 状态：代码完成（依赖 Dify LLM Provider）
+- 已完成：
+  - `scripts/validate_afeng_citations.py`（引用校验器）
+  - 20 问应用测试集（含在检索测试集中）
+- 待完成：Workflow/Chatflow DSL、Prompt、应用验收
+- 阻塞：需 Dify LLM Provider 配置
+
+### TASK-018
+
+- 状态：代码完成
+- 已完成：
+  - `scripts/audit_afeng_production.py`（一键只读审计，Bundle + Aggregate 全部 PASS）
+- 待完成：Dify Dataset + Workflow 审计（依赖 TASK-016/017）
+- 验证结果：`pytest -q` 266 passed、1 skipped；`ruff` 通过；`pyright` 0 errors。

@@ -18,7 +18,6 @@ import os
 import sys
 import urllib.error
 import urllib.request
-from pathlib import Path
 from typing import Any
 
 
@@ -71,14 +70,14 @@ def main() -> int:
         "permission": "only_me",
     })
     dataset_id = result.get("id")
-    print(f"正式 Dataset 已创建:")
+    print("正式 Dataset 已创建:")
     print(f"  名称: {args.name}")
     print(f"  ID: {dataset_id}")
     print(f"  模式: {result.get('indexing_technique')}")
     print(f"  embedding: {result.get('embedding_model', 'pending')}")
     print()
     print(f"请将 DIFY_DATASET_ID={dataset_id} 写入正式库的环境变量")
-    print(f"请使用独立 document map，不要复用旧 economy 工作库的 map")
+    print("请使用独立 document map，不要复用旧 economy 工作库的 map")
     return 0
 
 
