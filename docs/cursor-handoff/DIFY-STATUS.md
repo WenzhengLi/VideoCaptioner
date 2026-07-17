@@ -99,7 +99,17 @@ mapped=36（已清除历史 KNOW-SMOKE-001 污染条目；远端无 SMOKE）
 - semantic / embedding 检索：未完成（缺 embedding 供应商）
 - Chatflow 20 问端到端：未开始（缺 LLM）
 
-## 当前唯一外部阻塞
+## 当前外部阻塞（Gate 1）
 
-1. 在 Dify 控制台配置 **embedding**（及后续 LLM）供应商密钥后，可将 Dataset 升为 `high_quality`，并导入/启用「阿峰」Chatflow 做完整问答验收。
-2. 除此之外，本地管理员、Dataset、API、前20课文档同步与 keyword 检索均已完成。
+**Ollama + bge-m3 已在宿主机验证可用**（1024 维，L2=1.0），但 Dify 1.15.0 的 Provider 安装只能通过 Web UI 完成。
+
+需在浏览器中完成：
+1. http://127.0.0.1:3080 → 设置 → 模型供应商 → 安装 Ollama 插件
+2. 配置 Base URL: `http://host.docker.internal:11434`
+3. 添加 embedding 模型: `bge-m3` (text-embedding, 1024 维)
+4. 创建正式 Dataset `阿峰课程方法库-研究版-v1` (high_quality + bge-m3)
+5. 创建 API Key 并记录 Dataset ID
+
+详细步骤见 `docs/evaluation/afeng-embedding-investigation.md` 第六节。
+
+完成后 Gate 2～5 可自动执行。
