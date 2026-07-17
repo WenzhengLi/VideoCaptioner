@@ -137,3 +137,23 @@ uv run pytest -q -m "not integration"
   - dify_sync 在 frontmatter 含 course+case 时用 canonical 作 map 键，使已入库 v002.5 可按 canonical 做 update/skip。
 - 验证结果：`pytest -q` 263 passed、1 skipped；`ruff` 通过；`pyright` 0 errors。
 - 下一任务 TASK-014 满足 Definition of Ready。
+
+### TASK-014
+
+- 状态：已完成
+- 修改文件：
+  - `data/dify/afeng-release-v002.6/`（36 文档 bundle + manifest + verify-report + case-review-report）
+  - `docs/evaluation/afeng-v0026-case-review.md`
+  - `docs/tasks/TASK-014-afeng-v0026-review.md`、`docs/tasks/STATUS.md`
+- 关键决策：
+  - v002.6 使用 7 个模型运行汇总文件构建，不调用模型；
+  - 仅纳入 36 个 published 文档，4 个排除（manual_review/rejected）；
+  - 所有文档使用 canonical ID `AFENG-{course_id}-{case_id}`；
+  - Lineage 字段（model/run_token/input_hash/source_summary）100% 覆盖；
+  - v002.5 历史包未被覆盖。
+- 验证结果：
+  - Bundle 校验：canonical 唯一 36/36、lineage 缺失 0、hash 不匹配 0、frontmatter 不匹配 0
+  - Dry-run：create=36, update=0, skip=0, duplicate=0
+  - 9 个重点案例审查完成，human_confirmation_required 仅用于排除案例
+  - `pytest -q` 263 passed、1 skipped；`ruff` 通过
+- 下一任务 TASK-015 满足 Definition of Ready。

@@ -2,7 +2,7 @@
 
 ## 状态
 
-待执行；依赖 TASK-013。
+已完成；依赖 TASK-013。
 
 ## 目标
 
@@ -63,3 +63,26 @@
 - 文本哈希校验 100%；
 - dry-run 无重复知识 ID；
 - 全量测试通过。
+
+## 完成说明
+
+v002.6 bundle 已使用 7 个模型运行汇总文件构建，覆盖全部 20 课 40 案例：
+
+- 输出目录：`data/dify/afeng-release-v002.6/`（gitignored 运行时产物）
+- 文档数：36（仅 published）
+- 排除数：4（2 manual_review + 2 rejected）
+- Canonical ID 唯一率：36/36 (100%)
+- Lineage 元数据（model/run_token/input_hash/source_summary/content_sha256）覆盖率：100%
+- 内容 SHA-256 与 frontmatter 一致率：100%
+- Bundle 校验脚本 `verify_afeng_release_bundle.py` 全部通过
+- Dry-run（空 map）：create=36, update=0, skip=0, duplicate=0
+- v002.5 历史包未被覆盖
+
+重点案例审查（9 个）：
+- 5 个 published 案例全部通过内容、hash、evidence ID 和 frontmatter 校验
+- 4 个排除案例（manual_review/rejected）全部标记 `human_confirmation_required=True`
+- 机器审查未冒充真人确认
+- 审查报告：`docs/evaluation/afeng-v0026-case-review.md` + `case-review-report.json`
+
+验证：`pytest -q` 263 passed、1 skipped；`ruff` 通过。
+下一任务 TASK-015 满足 Definition of Ready。
