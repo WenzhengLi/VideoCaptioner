@@ -252,8 +252,16 @@ def build_parser() -> argparse.ArgumentParser:
         "dify-create-dataset",
         help="create a Dify Knowledge dataset via official API",
     )
-    dify_create.add_argument("--name", default="VideoCaptioner Courses")
-    dify_create.add_argument("--description", default="Course knowledge from P06 Markdown")
+    dify_create.add_argument("--name", default="阿峰课程方法库-研究版")
+    dify_create.add_argument(
+        "--description",
+        default="阿峰课程方法库（研究版）",
+    )
+    dify_create.add_argument(
+        "--indexing-technique",
+        default="economy",
+        choices=["economy", "high_quality"],
+    )
     dify_sync = subparsers.add_parser(
         "dify-sync-markdown",
         help="idempotently sync Markdown knowledge files into a Dify dataset",
@@ -607,7 +615,12 @@ def main() -> int:
         print(f"本地多方案回答完成: {output}; QA={qa}（非 Dify Chatflow）")
     elif args.command == "dify-create-dataset":
         cfg = DifyConfig.from_env(require_dataset=False)
-        result = create_dataset(cfg, args.name, description=args.description)
+        result = create_dataset(
+            cfg,
+            args.name,
+            description=args.description,
+            indexing_technique=args.indexing_technique,
+        )
         print(json.dumps(result, ensure_ascii=False, indent=2))
         dataset_id = result.get("id")
         if dataset_id:

@@ -17,6 +17,8 @@ from pathlib import Path
 from collections.abc import Callable
 from typing import Any, TypeVar
 
+from course_video_analyzer.jobs.workspace import atomic_write_text
+
 T = TypeVar("T")
 
 
@@ -51,6 +53,20 @@ class DifyConfig:
         return cls(base_url=base, api_key=key, dataset_id=dataset)
 
 
+def _redact_secrets(text: str) -> str:
+    """Best-effort redaction if response bodies echo Authorization material."""
+    lower = text.lower()
+    marker = "bearer "
+    idx = lower.find(marker)
+    if idx < 0:
+        return text
+    start = idx + len(marker)
+    end = start
+    while end < len(text) and not text[end].isspace() and text[end] not in {",", '"', "'", "}"}:
+        end += 1
+    return text[:start] + "<redacted>" + text[end:]
+
+
 def _request(
     cfg: DifyConfig,
     method: str,
@@ -76,13 +92,37 @@ def _request(
             body = resp.read().decode("utf-8")
             return json.loads(body) if body else {}
     except urllib.error.HTTPError as exc:
-        detail = exc.read().decode("utf-8", errors="replace")
+        detail = _redact_secrets(exc.read().decode("utf-8", errors="replace"))
         raise DifyApiError(f"Dify API {method} {path} -> HTTP {exc.code}: {detail[:500]}") from exc
     except urllib.error.URLError as exc:
-        raise DifyApiError(f"Dify API 不可达 {url}: {exc}") from exc
+        raise DifyApiError(f"Dify API 不可达 {cfg.base_url}{path}: {exc}") from exc
 
 
-def create_dataset(cfg: DifyConfig, name: str, *, description: str = "") -> dict[str, Any]:
+def get_dataset(cfg: DifyConfig, dataset_id: str) -> dict[str, Any]:
+    return _request(cfg, "GET", f"/datasets/{dataset_id}")
+
+
+def ensure_dataset_exists(cfg: DifyConfig, dataset_id: str) -> dict[str, Any]:
+    try:
+        return get_dataset(cfg, dataset_id)
+    except DifyApiError as exc:
+        if "HTTP 404" in str(exc):
+            raise DifyConfigError(
+                f"Dify Dataset 不存在: {dataset_id}。"
+                "请先运行 deploy/dify/scripts/initialize-dataset.ps1 或 dify-create-dataset。"
+            ) from exc
+        raise
+
+
+def create_dataset(
+    cfg: DifyConfig,
+    name: str,
+    *,
+    description: str = "",
+    indexing_technique: str = "economy",
+) -> dict[str, Any]:
+    if indexing_technique not in {"economy", "high_quality"}:
+        raise DifyConfigError("indexing_technique 必须是 economy 或 high_quality")
     return _request(
         cfg,
         "POST",
@@ -90,7 +130,7 @@ def create_dataset(cfg: DifyConfig, name: str, *, description: str = "") -> dict
         payload={
             "name": name,
             "description": description,
-            "indexing_technique": "high_quality",
+            "indexing_technique": indexing_technique,
             "permission": "only_me",
         },
     )
@@ -103,11 +143,12 @@ def create_document_by_text(
     name: str,
     text: str,
     metadata: dict[str, Any] | None = None,
+    indexing_technique: str = "economy",
 ) -> dict[str, Any]:
     payload: dict[str, Any] = {
         "name": name,
         "text": text,
-        "indexing_technique": "high_quality",
+        "indexing_technique": indexing_technique,
         "process_rule": {"mode": "automatic"},
     }
     if metadata:
@@ -160,7 +201,7 @@ def load_document_map(path: Path) -> dict[str, Any]:
 
 def save_document_map(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    atomic_write_text(path, json.dumps(payload, ensure_ascii=False, indent=2) + "\n")
 
 
 def _metadata_from_markdown(path: Path, text: str) -> dict[str, Any]:
@@ -302,6 +343,10 @@ def sync_markdown_dir(
     if not dataset_id:
         raise DifyConfigError("缺少 dataset_id")
     resolved_dataset_id: str = dataset_id
+    ensure_dataset_exists(cfg, resolved_dataset_id)
+    indexing_technique = (os.environ.get("DIFY_DATASET_INDEXING") or "economy").strip()
+    if indexing_technique not in {"economy", "high_quality"}:
+        indexing_technique = "economy"
     mapping = load_document_map(map_path)
     docs: dict[str, Any] = mapping.setdefault("documents", {})
     files = sorted(markdown_root.rglob("*.md"))
@@ -353,6 +398,7 @@ def sync_markdown_dir(
                     _name: str = knowledge_id,
                     _text: str = text,
                     _meta: dict[str, Any] = meta,
+                    _indexing: str = indexing_technique,
                 ) -> dict[str, Any]:
                     return create_document_by_text(
                         cfg,
@@ -360,6 +406,7 @@ def sync_markdown_dir(
                         name=_name,
                         text=_text,
                         metadata=_meta,
+                        indexing_technique=_indexing,
                     )
 
                 result = _with_retries("create", _do_create, retries=retries)

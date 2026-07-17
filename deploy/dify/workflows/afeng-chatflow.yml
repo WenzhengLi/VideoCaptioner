@@ -1,0 +1,122 @@
+# 阿峰 Chatflow / Workflow DSL 模板（Dify 1.15.x）
+# 用途：本地导入模板；未配置 LLM 供应商时仅验证结构，不声称可回答。
+#
+# 固定流程：
+#   用户问题 → 知识检索 → 课程证据整理 → 多方案生成 → 引用检查 → 输出
+#
+# 必须区分：课程原话 / 课程方法总结 / 基于课程的组合 / 证据不足
+# 主要判断必须带 evidence_id；不增加独立安全审查节点。
+
+app:
+  name: 阿峰
+  mode: advanced-chat
+  description: 基于「阿峰课程方法库-研究版」的课程方法检索与多方案回答（研究版）
+  icon: 📚
+  icon_background: "#E8F5E9"
+
+workflow:
+  graph:
+    nodes:
+      - id: start
+        type: start
+        data:
+          title: 用户问题
+          variables:
+            - variable: query
+              label: 用户问题
+              type: paragraph
+              required: true
+
+      - id: knowledge_retrieval
+        type: knowledge-retrieval
+        data:
+          title: 知识检索
+          query_variable_selector:
+            - start
+            - query
+          dataset_ids: []  # 导入后绑定 DIFY_DATASET_ID 对应 Dataset
+          retrieval_mode: multiple
+          multiple_retrieval_config:
+            top_k: 6
+            score_threshold_enabled: false
+            reranking_enable: false
+
+      - id: evidence_organize
+        type: llm
+        data:
+          title: 课程证据整理
+          prompt_template:
+            - role: system
+              text: |
+                你是课程证据整理器。只使用检索到的阿峰课程方法库片段。
+                输出结构化要点，每条必须带 evidence_id（若原文有）。
+                明确标注类别之一：
+                - 课程原话
+                - 课程方法总结
+                - 基于课程的组合
+                - 证据不足
+                禁止引入课程外常识当作课程事实。
+            - role: user
+              text: |
+                用户问题：{{#start.query#}}
+                检索结果：{{#knowledge_retrieval.result#}}
+
+      - id: multi_plan
+        type: llm
+        data:
+          title: 多方案生成
+          prompt_template:
+            - role: system
+              text: |
+                基于「课程证据整理」结果，给出 2–3 个可执行方案。
+                每个方案必须：
+                1) 写明依据的 evidence_id；
+                2) 区分「课程原话 / 方法总结 / 课程组合」；
+                3) 证据不足时明确写「证据不足」，不要硬编。
+                不要增加独立安全审查段落。
+            - role: user
+              text: |
+                用户问题：{{#start.query#}}
+                证据整理：{{#evidence_organize.text#}}
+
+      - id: citation_check
+        type: llm
+        data:
+          title: 引用检查
+          prompt_template:
+            - role: system
+              text: |
+                检查上一阶段方案：
+                - 每个关键主张是否带 evidence_id；
+                - 是否把「课程组合」误写成「课程原话」；
+                - 是否在证据不足处仍给出确定结论。
+                输出修订后的最终回答；若需降级，改为「证据不足」并保留已有 evidence_id。
+            - role: user
+              text: |
+                方案草稿：{{#multi_plan.text#}}
+                证据整理：{{#evidence_organize.text#}}
+
+      - id: answer
+        type: answer
+        data:
+          title: 输出
+          answer: "{{#citation_check.text#}}"
+
+    edges:
+      - source: start
+        target: knowledge_retrieval
+      - source: knowledge_retrieval
+        target: evidence_organize
+      - source: evidence_organize
+        target: multi_plan
+      - source: multi_plan
+        target: citation_check
+      - source: citation_check
+        target: answer
+
+meta:
+  version: "1.0"
+  pipeline: afeng-method-v001
+  notes:
+    - LLM / embedding 供应商未配置时，本文件仅作 DSL 模板，不可声称应用已可回答。
+    - 导入后请在 Dify 控制台绑定 Dataset「阿峰课程方法库-研究版」与可用模型。

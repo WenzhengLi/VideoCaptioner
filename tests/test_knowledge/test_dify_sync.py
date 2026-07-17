@@ -108,16 +108,42 @@ def test_sync_retries_transient_api_error(tmp_path: Path, monkeypatch: pytest.Mo
             raise DifyApiError("transient 503")
         return {"document": {"id": "doc-r"}, "batch": "b1"}
 
-    with patch("course_video_analyzer.knowledge.dify_sync._request", side_effect=_flaky_request):
-        with patch("course_video_analyzer.knowledge.dify_sync.time.sleep", return_value=None):
-            result = sync_markdown_dir(cfg, md_dir, map_path, retries=2)
+    with patch("course_video_analyzer.knowledge.dify_sync.ensure_dataset_exists", return_value={"id": "ds-1"}):
+        with patch("course_video_analyzer.knowledge.dify_sync._request", side_effect=_flaky_request):
+            with patch("course_video_analyzer.knowledge.dify_sync.time.sleep", return_value=None):
+                result = sync_markdown_dir(cfg, md_dir, map_path, retries=2)
     assert result["created"] == 1
     assert calls["n"] == 2
     mapping = json.loads(map_path.read_text(encoding="utf-8"))
     assert mapping["documents"]["KNOW-RETRY"]["document_id"] == "doc-r"
 
 
-def test_create_dataset_posts_json(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_ensure_dataset_maps_404_to_config_error(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("DIFY_BASE_URL", "http://127.0.0.1:3080/v1")
+    monkeypatch.setenv("DIFY_API_KEY", "test-key")
+    cfg = DifyConfig.from_env()
+
+    def _not_found(*_args, **_kwargs):
+        raise DifyApiError("Dify API GET /datasets/x -> HTTP 404: missing")
+
+    with patch("course_video_analyzer.knowledge.dify_sync._request", side_effect=_not_found):
+        with pytest.raises(DifyConfigError, match="不存在"):
+            from course_video_analyzer.knowledge.dify_sync import ensure_dataset_exists
+
+            ensure_dataset_exists(cfg, "x")
+
+
+def test_save_document_map_is_atomic(tmp_path: Path) -> None:
+    target = tmp_path / "map.json"
+    save_document_map(target, {"schema_version": "1.0", "documents": {"A": {"document_id": "1"}}})
+    assert target.is_file()
+    payload = json.loads(target.read_text(encoding="utf-8"))
+    assert payload["documents"]["A"]["document_id"] == "1"
+    leftovers = list(tmp_path.glob("*.tmp"))
+    assert leftovers == []
+
+
+def test_create_dataset_defaults_to_economy(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("DIFY_BASE_URL", "http://127.0.0.1:3080/v1")
     monkeypatch.setenv("DIFY_API_KEY", "test-key")
     cfg = DifyConfig.from_env()
@@ -130,15 +156,17 @@ def test_create_dataset_posts_json(monkeypatch: pytest.MonkeyPatch) -> None:
             return False
 
         def read(self) -> bytes:
-            return json.dumps({"id": "ds-1", "name": "VideoCaptioner Courses"}).encode()
+            return json.dumps({"id": "ds-eco", "name": "阿峰课程方法库-研究版"}).encode()
 
     with patch("urllib.request.urlopen", return_value=_Resp()) as mocked:
-        result = create_dataset(cfg, "VideoCaptioner Courses")
-    assert result["id"] == "ds-1"
+        result = create_dataset(cfg, "阿峰课程方法库-研究版")
+    assert result["id"] == "ds-eco"
     req = mocked.call_args.args[0]
     assert req.full_url.endswith("/datasets")
     assert req.get_method() == "POST"
     assert "Bearer test-key" in req.headers["Authorization"]
+    body = json.loads(req.data.decode("utf-8"))
+    assert body["indexing_technique"] == "economy"
 
 
 def test_sync_markdown_is_idempotent(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -166,14 +194,15 @@ def test_sync_markdown_is_idempotent(tmp_path: Path, monkeypatch: pytest.MonkeyP
         def read(self) -> bytes:
             return json.dumps({"document": {"id": "doc-1"}, "batch": "batch-1"}).encode()
 
-    with patch("urllib.request.urlopen", return_value=_Resp()):
-        first = sync_markdown_dir(cfg, md_dir, map_path)
-        second = sync_markdown_dir(cfg, md_dir, map_path)
-        document_path.write_text(
-            document_path.read_text(encoding="utf-8") + "\n更新内容\n",
-            encoding="utf-8",
-        )
-        third = sync_markdown_dir(cfg, md_dir, map_path)
+    with patch("course_video_analyzer.knowledge.dify_sync.ensure_dataset_exists", return_value={"id": "ds-1"}):
+        with patch("urllib.request.urlopen", return_value=_Resp()):
+            first = sync_markdown_dir(cfg, md_dir, map_path)
+            second = sync_markdown_dir(cfg, md_dir, map_path)
+            document_path.write_text(
+                document_path.read_text(encoding="utf-8") + "\n更新内容\n",
+                encoding="utf-8",
+            )
+            third = sync_markdown_dir(cfg, md_dir, map_path)
     assert first["created"] == 1
     assert first["updated"] == 0
     assert second["created"] == 0
