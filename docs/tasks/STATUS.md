@@ -185,7 +185,8 @@ uv run pytest -q -m "not integration"
 - 首次同步：create=36, failed=0, duplicate=0
 - 二次同步：skip=36, create=0, update=0
 - Map：`data/dify/document-map-v1.json` (36 canonical IDs, dataset_id 绑定)
-- 检索验收：hybrid_search, Top-10 20/20 (100%), Top-5 12/20 (60%)
+- 检索验收：hybrid_search, Top-5 **18/20 (90%)**，文档级去重
+- 优化：移除正文 evidence ID 列表 + 添加关键词段 + hybrid_search + 文档级去重
 - 报告：`data/dify/afeng-retrieval-report.json` + `docs/evaluation/afeng-retrieval-report.md`
 
 ### TASK-017

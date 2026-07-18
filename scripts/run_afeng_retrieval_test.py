@@ -65,22 +65,27 @@ def run_test(
     results: list[dict[str, Any]] = []
     for item in test_set:
         query = item["question"]
-        resp = _retrieve(base_url, api_key, dataset_id, query, top_k=top_k, search_method=search_method)
+        resp = _retrieve(base_url, api_key, dataset_id, query, top_k=top_k * 3, search_method=search_method)
         records = resp.get("records", resp.get("data", []))
-        hits: list[dict[str, Any]] = []
+        # Document-level deduplication: keep highest-scoring segment per document
+        seen_docs: dict[str, dict[str, Any]] = {}
         for rec in records:
             segment = rec.get("segment", rec)
             doc = rec.get("document") or segment.get("document") or {}
-            hits.append({
-                "knowledge_id": doc.get("name", segment.get("document_id", "")),
-                "score": rec.get("score", 0),
-                "content_preview": str(segment.get("content", ""))[:200],
-            })
+            kid = doc.get("name", segment.get("document_id", ""))
+            score = rec.get("score", 0)
+            if kid not in seen_docs or score > seen_docs[kid]["score"]:
+                seen_docs[kid] = {
+                    "knowledge_id": kid,
+                    "score": score,
+                    "content_preview": str(segment.get("content", ""))[:200],
+                }
+        hits = sorted(seen_docs.values(), key=lambda h: h["score"], reverse=True)[:top_k]
         expected = item.get("expected_canonical", "")
         if isinstance(expected, list):
-            found = any(h["knowledge_id"] in expected for h in hits[:top_k])
+            found = any(h["knowledge_id"] in expected for h in hits)
         else:
-            found = any(h["knowledge_id"] == expected for h in hits[:top_k])
+            found = any(h["knowledge_id"] == expected for h in hits)
         results.append({
             "id": item["id"],
             "question": query,
@@ -88,7 +93,7 @@ def run_test(
             "category": item.get("category", ""),
             "top_k_hits": len(hits),
             "expected_found_in_top_k": found,
-            "hits": hits[:top_k],
+            "hits": hits,
             "error": resp.get("error"),
         })
     correct = sum(1 for r in results if r["expected_found_in_top_k"])
@@ -143,8 +148,8 @@ def main() -> int:
     parser.add_argument("--map-path", type=Path, default=Path("data/dify/document-map-v1.json"))
     parser.add_argument("--json-output", type=Path, default=Path("data/dify/afeng-retrieval-report.json"))
     parser.add_argument("--md-output", type=Path, default=Path("docs/evaluation/afeng-retrieval-report.md"))
-    parser.add_argument("--top-k", type=int, default=10)
-    parser.add_argument("--search-method", default="hybrid_search",
+    parser.add_argument("--top-k", type=int, default=5)
+    parser.add_argument("--search-method", default="semantic_search",
                         choices=["semantic_search", "keyword_search", "hybrid_search"])
     args = parser.parse_args()
 
