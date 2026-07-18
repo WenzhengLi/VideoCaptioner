@@ -1,0 +1,202 @@
+{
+  "schema_version": "1.0",
+  "test_set_version": "v002",
+  "description": "阿峰检索验收冻结测试集 — 基于 v001 原始问题，无改写",
+  "baseline_commit": "648d458",
+  "freeze_commit": "f10cc46",
+  "change_audit": "v001→v002 仅 JSON 格式化（数组缩进），无问题文本或预期答案变更",
+  "questions": [
+    {
+      "id": "Q01",
+      "question": "C003 课程中，阿峰讲的第一个案例是什么问题？",
+      "expected_course": "C003",
+      "expected_case": "CASE-C003-001",
+      "expected_canonical": "AFENG-C003-CASE-C003-001",
+      "category": "course_case",
+      "description": "单课单案例定位"
+    },
+    {
+      "id": "Q02",
+      "question": "阿峰在 C007 课程中讲的远程维系至奔现方法的核心逻辑是什么？",
+      "expected_course": "C007",
+      "expected_case": "CASE-C007-001",
+      "expected_canonical": "AFENG-C007-CASE-C007-001",
+      "category": "method_core",
+      "description": "核心逻辑检索"
+    },
+    {
+      "id": "Q03",
+      "question": "C010 课程中旧资源重新激活的方法适用于什么条件？",
+      "expected_course": "C010",
+      "expected_case": "CASE-C010-001",
+      "expected_canonical": "AFENG-C010-CASE-C010-001",
+      "category": "conditions",
+      "description": "适用条件检索"
+    },
+    {
+      "id": "Q04",
+      "question": "阿峰讲的佛山案例中，操作步骤有哪些？",
+      "expected_course": "C010",
+      "expected_case": "CASE-C010-001",
+      "expected_canonical": "AFENG-C010-CASE-C010-001",
+      "category": "steps",
+      "description": "操作步骤检索"
+    },
+    {
+      "id": "Q05",
+      "question": "C006 的第二个案例中，课程示例表达是什么？",
+      "expected_course": "C006",
+      "expected_case": "CASE-C006-002",
+      "expected_canonical": "AFENG-C006-CASE-C006-002",
+      "category": "expression",
+      "description": "话术检索"
+    },
+    {
+      "id": "Q06",
+      "question": "C018 的别墅相遇摄影方法的时间范围是什么？",
+      "expected_course": "C018",
+      "expected_case": "CASE-C018-001",
+      "expected_canonical": "AFENG-C018-CASE-C018-001",
+      "category": "timestamp",
+      "description": "时间范围检索"
+    },
+    {
+      "id": "Q07",
+      "question": "阿峰的方法中，哪些被归类为 verified_method？",
+      "expected_course": "multiple",
+      "expected_case": "multiple",
+      "expected_canonical": [
+        "AFENG-C008-CASE-C008-001",
+        "AFENG-C018-CASE-C018-003",
+        "AFENG-C019-CASE-C019-001"
+      ],
+      "category": "publication_class",
+      "description": "发布分类检索"
+    },
+    {
+      "id": "Q08",
+      "question": "C018 第三个案例中，课程对私密空间流程的解释是什么？",
+      "expected_course": "C018",
+      "expected_case": "CASE-C018-003",
+      "expected_canonical": "AFENG-C018-CASE-C018-003",
+      "category": "course_perspective",
+      "description": "课程理解检索"
+    },
+    {
+      "id": "Q09",
+      "question": "阿峰讲的 C004 第二个案例中，课程声称或展示的结果是什么？",
+      "expected_course": "C004",
+      "expected_case": "CASE-C004-002",
+      "expected_canonical": "AFENG-C004-CASE-C004-002",
+      "category": "outcome",
+      "description": "结果检索"
+    },
+    {
+      "id": "Q10",
+      "question": "C011 的第一个案例中，课程明确提出了哪些限制？",
+      "expected_course": "C011",
+      "expected_case": "CASE-C011-001",
+      "expected_canonical": "AFENG-C011-CASE-C011-001",
+      "category": "limits",
+      "description": "限制检索"
+    },
+    {
+      "id": "Q11",
+      "question": "阿峰的 ASD 突破方法是哪个课程的？核心逻辑是什么？",
+      "expected_course": "C019",
+      "expected_case": "CASE-C019-001",
+      "expected_canonical": "AFENG-C019-CASE-C019-001",
+      "category": "method_lookup",
+      "description": "方法名反查课程"
+    },
+    {
+      "id": "Q12",
+      "question": "哪些案例的方法属于 partial_method？",
+      "expected_course": "multiple",
+      "expected_case": "multiple",
+      "expected_canonical": [
+        "AFENG-C020-CASE-C020-002",
+        "AFENG-C020-CASE-C020-003"
+      ],
+      "category": "publication_class",
+      "description": "partial_method 检索"
+    },
+    {
+      "id": "Q13",
+      "question": "C005 第二个案例中，课程使用的判断信号有哪些？",
+      "expected_course": "C005",
+      "expected_case": "CASE-C005-002",
+      "expected_canonical": "AFENG-C005-CASE-C005-002",
+      "category": "signals",
+      "description": "判断信号检索"
+    },
+    {
+      "id": "Q14",
+      "question": "阿峰方法中，哪些案例经历了修订？",
+      "expected_course": "multiple",
+      "expected_case": "multiple",
+      "expected_canonical": [
+        "AFENG-C010-CASE-C010-001",
+        "AFENG-C012-CASE-C012-001",
+        "AFENG-C018-CASE-C018-002"
+      ],
+      "category": "revision",
+      "description": "修订案例检索"
+    },
+    {
+      "id": "Q15",
+      "question": "C009 第一个案例的证据不足部分是什么？",
+      "expected_course": "C009",
+      "expected_case": "CASE-C009-001",
+      "expected_canonical": "AFENG-C009-CASE-C009-001",
+      "category": "insufficient_evidence",
+      "description": "证据不足检索"
+    },
+    {
+      "id": "Q16",
+      "question": "阿峰方法中，C013 的第二个案例关于抗拒推进的方法核心逻辑是什么？",
+      "expected_course": "C013",
+      "expected_case": "CASE-C013-002",
+      "expected_canonical": "AFENG-C013-CASE-C013-002",
+      "category": "method_core",
+      "description": "核心逻辑检索"
+    },
+    {
+      "id": "Q17",
+      "question": "C014 的第二个案例中，适用条件和不适用条件分别是什么？",
+      "expected_course": "C014",
+      "expected_case": "CASE-C014-002",
+      "expected_canonical": "AFENG-C014-CASE-C014-002",
+      "category": "conditions",
+      "description": "条件检索"
+    },
+    {
+      "id": "Q18",
+      "question": "阿峰讲的 C017 案例中，课程对这个情境的理解是什么？",
+      "expected_course": "C017",
+      "expected_case": "CASE-C017-001",
+      "expected_canonical": "AFENG-C017-CASE-C017-001",
+      "category": "course_perspective",
+      "description": "课程理解检索"
+    },
+    {
+      "id": "Q19",
+      "question": "C002 的第三个案例中，evidence IDs 引用了哪些 segment？",
+      "expected_course": "C002",
+      "expected_case": "CASE-C002-003",
+      "expected_canonical": "AFENG-C002-CASE-C002-003",
+      "category": "evidence_ids",
+      "description": "证据 ID 检索"
+    },
+    {
+      "id": "Q20",
+      "question": "阿峰的课程方法中，哪些是 course_claim 类型的？",
+      "expected_course": "C001",
+      "expected_case": "CASE-C001-001",
+      "expected_canonical": "AFENG-C001-CASE-C001-001",
+      "category": "publication_class",
+      "description": "course_claim 检索"
+    }
+  ],
+  "questions_hash": "9defbe03dc4077dceed5d86e2a3895db1cc7452696692c4f175109cfbcc5035a"
+}

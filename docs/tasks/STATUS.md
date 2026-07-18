@@ -191,19 +191,31 @@ uv run pytest -q -m "not integration"
 
 ### TASK-017
 
-- 状态：**external_blocked**（需 Dify LLM Provider）
+- 状态：**external_blocked**（需外部 LLM Provider）
 - 已完成：
   - `scripts/validate_afeng_citations.py`（引用校验器）
   - 20 问应用测试集（含在检索测试集中）
 - 待完成：Workflow/Chatflow DSL、Prompt、应用验收
-- 阻塞：需 Dify LLM Provider 配置
+- 阻塞：需外部 LLM Provider 配置
 
 ### TASK-018
 
-- 状态：**已完成**（生产审计 PASS）
-- 审计结果：overall=PASS
-  - Bundle: PASS (36 docs, 4 excluded, canonical 36 unique, lineage 100%, hash 100%)
-  - Aggregate: PASS (40 cases, 36 published, 2 manual_review, 2 rejected, 0 failures)
-  - Dify: PASS (dataset exists, 36 docs, high_quality, embedding configured)
-- 报告：`data/dify/afeng-production-audit.json`
-- 验证结果：`pytest -q` 268 passed、1 skipped；`ruff` 通过；`pyright` 0 errors。
+- 状态：**in_progress**（外部模型迁移中）
+- 已完成：
+  - `scripts/audit_afeng_production.py`（生产审计脚本）
+  - 离线审计：Bundle PASS + Aggregate PASS
+  - v1 Dataset 审计：PASS（Ollama/bge-m3 实验库）
+- 待完成：v2 Dataset 审计、备份/恢复验证、最终报告
+- 阻塞：依赖外部 Provider 配置和 v2 Dataset 创建
+
+### 外部模型迁移（2026-07-18）
+
+- 用户决策：正式链路取消 Ollama 依赖，改用外部模型服务
+- 可用 Provider：智谱 GLM / DeepSeek / OpenAI（用户均有 API Key）
+- 已完成：
+  - `scripts/setup_v2_dataset.py`（v2 Dataset 创建脚本）
+  - `scripts/sync_and_test_v2.py`（v2 同步和检索验收脚本）
+  - `data/dify/afeng-retrieval-test-v002.json`（冻结测试集，无问题改写）
+  - `docs/evaluation/afeng-external-provider-guide.md`（配置指南）
+- 待完成：用户配置 Provider → Gate B → Gate C → Gate D → Gate E
+- 状态：**external_blocked**（等用户配置 Provider API Key）
