@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0",
+  "report_type": "afeng-task-020a",
+  "batch_id": "BATCH-C021-C025-V003",
+  "source_locked": 5,
+  "sha256_unique": 5,
+  "media_probe_passed": 5,
+  "batch_succeeded": 5,
+  "raw_qa_passed": 5,
+  "missing_audio_video": 0,
+  "failed_courses": 0,
+  "results": [
+    {
+      "course_id": "C021",
+      "sha256": "0a458de8e4c29edcf28fa4009a46b7eb5e20d5941bed77fdac6581b8b1ca559c",
+      "size_bytes": 666723275,
+      "batch_status": "succeeded",
+      "qa_status": "pass",
+      "has_analysis": true,
+      "has_media": true,
+      "has_run_qa": true
+    },
+    {
+      "course_id": "C022",
+      "sha256": "d2bf5bd8b215fd4e531c4554ca1a7bdb3c21c5c80066809325e16f994767eecc",
+      "size_bytes": 639573095,
+      "batch_status": "succeeded",
+      "qa_status": "pass",
+      "has_analysis": true,
+      "has_media": true,
+      "has_run_qa": true
+    },
+    {
+      "course_id": "C023",
+      "sha256": "a4d295298225c84b89fff999d7892af654d6339c265ae265b825dbe7860d815c",
+      "size_bytes": 702292893,
+      "batch_status": "succeeded",
+      "qa_status": "pass",
+      "has_analysis": true,
+      "has_media": true,
+      "has_run_qa": true
+    },
+    {
+      "course_id": "C024",
+      "sha256": "98bdeddb09ae59afb75df8dc69e34a18aa2687e8d0594a9d888d0b2ebceb79d5",
+      "size_bytes": 822416575,
+      "batch_status": "succeeded",
+      "qa_status": "pass",
+      "has_analysis": true,
+      "has_media": true,
+      "has_run_qa": true
+    },
+    {
+      "course_id": "C025",
+      "sha256": "135443f370970ad201c0a46ce1b0888de7f2444c6cc6c53265754fefd74d6427",
+      "size_bytes": 536277213,
+      "batch_status": "succeeded",
+      "qa_status": "pass",
+      "has_analysis": true,
+      "has_media": true,
+      "has_run_qa": true
+    }
+  ]
+}

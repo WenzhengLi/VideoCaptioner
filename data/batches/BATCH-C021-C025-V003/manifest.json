@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0",
+  "batch_id": "BATCH-C021-C025-V003",
+  "created_at": "2026-07-18T10:58:27.861648+00:00",
+  "prompt_version": "knowledge-v003",
+  "items": [
+    {
+      "course_id": "C021",
+      "source_id": "C021",
+      "status": "succeeded",
+      "attempts": 1,
+      "last_run_id": "RUN-C021-C025-V003-V001",
+      "error": null
+    },
+    {
+      "course_id": "C022",
+      "source_id": "C022",
+      "status": "succeeded",
+      "attempts": 1,
+      "last_run_id": "RUN-C021-C025-V003-V001",
+      "error": null
+    },
+    {
+      "course_id": "C023",
+      "source_id": "C023",
+      "status": "succeeded",
+      "attempts": 1,
+      "last_run_id": "RUN-C021-C025-V003-V001",
+      "error": null
+    },
+    {
+      "course_id": "C024",
+      "source_id": "C024",
+      "status": "succeeded",
+      "attempts": 1,
+      "last_run_id": "RUN-C021-C025-V003-V001",
+      "error": null
+    },
+    {
+      "course_id": "C025",
+      "source_id": "C025",
+      "status": "succeeded",
+      "attempts": 1,
+      "last_run_id": "RUN-C021-C025-V003-V001",
+      "error": null
+    }
+  ]
+}

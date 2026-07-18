@@ -1,0 +1,76 @@
+{
+  "schema_version": "1.0",
+  "batch_id": "BATCH-C021-C025-V003",
+  "courses": {
+    "C021": {
+      "sha256": "0a458de8e4c29edcf28fa4009a46b7eb5e20d5941bed77fdac6581b8b1ca559c",
+      "size_bytes": 666723275,
+      "media_probe": {
+        "duration_s": 6890.85,
+        "video_codec": "h264",
+        "width": 1920,
+        "height": 1080,
+        "fps": 25.0,
+        "audio_codec": "aac",
+        "sample_rate": 44100,
+        "channels": 2
+      }
+    },
+    "C022": {
+      "sha256": "d2bf5bd8b215fd4e531c4554ca1a7bdb3c21c5c80066809325e16f994767eecc",
+      "size_bytes": 639573095,
+      "media_probe": {
+        "duration_s": 6214.03,
+        "video_codec": "h264",
+        "width": 1024,
+        "height": 576,
+        "fps": 25.0,
+        "audio_codec": "aac",
+        "sample_rate": 32000,
+        "channels": 2
+      }
+    },
+    "C023": {
+      "sha256": "a4d295298225c84b89fff999d7892af654d6339c265ae265b825dbe7860d815c",
+      "size_bytes": 702292893,
+      "media_probe": {
+        "duration_s": 6744.42,
+        "video_codec": "h264",
+        "width": 1920,
+        "height": 1080,
+        "fps": 25.0,
+        "audio_codec": "aac",
+        "sample_rate": 44100,
+        "channels": 2
+      }
+    },
+    "C024": {
+      "sha256": "98bdeddb09ae59afb75df8dc69e34a18aa2687e8d0594a9d888d0b2ebceb79d5",
+      "size_bytes": 822416575,
+      "media_probe": {
+        "duration_s": 6589.27,
+        "video_codec": "h264",
+        "width": 1024,
+        "height": 576,
+        "fps": 25.0,
+        "audio_codec": "aac",
+        "sample_rate": 32000,
+        "channels": 2
+      }
+    },
+    "C025": {
+      "sha256": "135443f370970ad201c0a46ce1b0888de7f2444c6cc6c53265754fefd74d6427",
+      "size_bytes": 536277213,
+      "media_probe": {
+        "duration_s": 4876.49,
+        "video_codec": "h264",
+        "width": 1024,
+        "height": 576,
+        "fps": 25.0,
+        "audio_codec": "aac",
+        "sample_rate": 32000,
+        "channels": 2
+      }
+    }
+  }
+}

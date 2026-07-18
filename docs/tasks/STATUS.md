@@ -238,15 +238,19 @@ uv run pytest -q -m "not integration"
   - 测试：新增 schema/test_type/citation/update>0 等 17 个测试
 - 验证：在线审计 PASS、恢复 dry-run PASSED、备份 96 artifacts/16 required/0 missing
 - 质量门禁：ruff PASS、pyright 0 errors、pytest 285 passed / 1 skipped
-- 提交：`c69053c` (已推送) + follow-up (待推送)
+- 提交：`c69053c` + `c0022ba` (均已推送)
 
 ### TASK-020A
 
-- 状态：**待执行**（C021–C025 源锁定与视频分析）
-- 已盘点：5 个原视频全部存在，登记大小与实际一致，总计 3.14 GiB；SHA-256 尚未冻结
-- 当前产物：每课只有 `source.json`，无 ASR/OCR、P01–P04、方法层产物；批次状态均为 pending
-- 目标：完成源 hash/媒体探针、新独立批次、C021–C025 视频分析与 raw QA；本阶段禁止提前进入 Dify
-- 计划：见 `docs/claude-handoff/CLAUDE-NEXT-TASK-019-CLOSE-TASK-020A.md`
+- 状态：**已完成**（C021–C025 源锁定与视频分析）
+- 源锁定：5/5 文件存在、大小匹配、SHA-256 唯一、媒体探针通过
+- 批次：`BATCH-C021-C025-V003`，5/5 succeeded，0 failed
+- QA：5/5 pass
+- 产物：每课 8 个文件（analysis/job/media/qa/run + 原始输出）
+- 报告：`data/batches/BATCH-C021-C025-V003/task-020a-report.json`
+- 清单：`docs/evaluation/afeng-C021-C025-source-inventory.md`
+- 质量门禁：ruff PASS、pyright 0 errors、pytest 285 passed / 1 skipped
+- 未进入：P01–P04、方法生成、Dify 同步
 
 ### 模型运行决策（2026-07-18）
 
