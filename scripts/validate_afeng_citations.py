@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 from typing import Any
@@ -23,8 +24,11 @@ from typing import Any
 def validate_citations(
     output: dict[str, Any],
     known_canonical_ids: set[str],
+    citation_index: dict[str, set[str]] | None = None,
 ) -> dict[str, Any]:
     """Validate citations in an application output."""
+    if isinstance(output.get("answer"), dict) and not output.get("claims") and not output.get("sections"):
+        output = output["answer"]
     issues: list[str] = []
     claims = output.get("claims", output.get("sections", []))
     if not isinstance(claims, list):
@@ -42,6 +46,8 @@ def validate_citations(
             continue
         total_claims += 1
         kid = str(claim.get("knowledge_id", ""))
+        course_id = str(claim.get("course_id", ""))
+        case_id = str(claim.get("case_id", ""))
         eids = claim.get("evidence_ids", [])
         tr = claim.get("time_range", claim.get("source_time_range", ""))
 
@@ -56,9 +62,21 @@ def validate_citations(
             invalid_ids.append(kid)
             issues.append(f"Invalid knowledge_id: {kid}")
 
+        canonical_match = re.fullmatch(r"AFENG-(C\d{3})-(CASE-C\d{3}-\d{3})", kid)
+        if canonical_match and (
+            course_id != canonical_match.group(1) or case_id != canonical_match.group(2)
+        ):
+            issues.append(
+                f"Course/case mismatch for {kid}: course_id={course_id!r}, case_id={case_id!r}"
+            )
+
         if not eids:
             missing_evidence.append(kid)
             issues.append(f"Missing evidence_ids for {kid}")
+        elif citation_index is not None and kid in citation_index:
+            unknown_eids = sorted(set(map(str, eids)) - citation_index[kid])
+            if unknown_eids:
+                issues.append(f"Evidence IDs do not belong to {kid}: {unknown_eids}")
 
         if not tr:
             missing_time_range.append(kid)
@@ -85,18 +103,28 @@ def main() -> int:
     output = json.loads(args.output_json.read_text(encoding="utf-8"))
 
     # Load known canonical IDs from manifest or provided file
+    citation_index: dict[str, set[str]] = {}
     if args.known_ids:
         known = set(json.loads(args.known_ids.read_text(encoding="utf-8")))
     else:
         manifest_path = Path("data/dify/afeng-release-v002.6/manifest.json")
         if manifest_path.exists():
             manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-            known = {d["knowledge_id"] for d in manifest.get("documents", [])}
+            documents = manifest.get("documents", [])
+            known = {d["knowledge_id"] for d in documents}
+            for document in documents:
+                document_path = Path(str(document.get("document_path") or ""))
+                if document_path.exists():
+                    text = document_path.read_text(encoding="utf-8")
+                    citation_index[str(document["knowledge_id"])] = set(
+                        re.findall(r"SEG-C\d{3}-\d{6}", text)
+                    )
         else:
             print("WARNING: No known IDs source found", file=sys.stderr)
             known = set()
+            citation_index = {}
 
-    result = validate_citations(output, known)
+    result = validate_citations(output, known, citation_index)
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0 if result["valid"] else 1
 

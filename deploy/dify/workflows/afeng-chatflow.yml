@@ -1,122 +1,374 @@
-# 阿峰 Chatflow / Workflow DSL 模板（Dify 1.15.x）
-# 用途：本地导入模板；未配置 LLM 供应商时仅验证结构，不声称可回答。
-#
-# 固定流程：
-#   用户问题 → 知识检索 → 课程证据整理 → 多方案生成 → 引用检查 → 输出
-#
-# 必须区分：课程原话 / 课程方法总结 / 基于课程的组合 / 证据不足
-# 主要判断必须带 evidence_id；不增加独立安全审查节点。
-
 app:
-  name: 阿峰
-  mode: advanced-chat
-  description: 基于「阿峰课程方法库-研究版」的课程方法检索与多方案回答（研究版）
+  description: 基于阿峰课程方法库的课程证据检索与忠实复现助手
   icon: 📚
-  icon_background: "#E8F5E9"
-
+  icon_background: '#E8F5E9'
+  icon_type: emoji
+  mode: advanced-chat
+  name: 阿峰
+  use_icon_as_answer_icon: false
+dependencies: []
+kind: app
+version: 0.6.0
 workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions: []
+      allowed_file_types: []
+      allowed_file_upload_methods: []
+      enabled: false
+      image:
+        enabled: false
+        number_limits: 0
+        transfer_methods: []
+      number_limits: 0
+    opening_statement: >-
+      我是“阿峰”课程方法复现助手。请描述你想查询的课程、案例或情境；
+      我只依据课程证据回答，并明确区分课程原话、方法总结、组合建议和证据不足。
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions:
+    - C019 的 ASD 突破方法核心逻辑是什么？
+    - C010 佛山案例的操作步骤是什么？
+    - 哪些案例的证据仍然不足？
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
   graph:
-    nodes:
-      - id: start
-        type: start
-        data:
-          title: 用户问题
-          variables:
-            - variable: query
-              label: 用户问题
-              type: paragraph
-              required: true
-
-      - id: knowledge_retrieval
-        type: knowledge-retrieval
-        data:
-          title: 知识检索
-          query_variable_selector:
-            - start
-            - query
-          dataset_ids: []  # 导入后绑定 DIFY_DATASET_ID 对应 Dataset
-          retrieval_mode: multiple
-          multiple_retrieval_config:
-            top_k: 6
-            score_threshold_enabled: false
-            reranking_enable: false
-
-      - id: evidence_organize
-        type: llm
-        data:
-          title: 课程证据整理
-          prompt_template:
-            - role: system
-              text: |
-                你是课程证据整理器。只使用检索到的阿峰课程方法库片段。
-                输出结构化要点，每条必须带 evidence_id（若原文有）。
-                明确标注类别之一：
-                - 课程原话
-                - 课程方法总结
-                - 基于课程的组合
-                - 证据不足
-                禁止引入课程外常识当作课程事实。
-            - role: user
-              text: |
-                用户问题：{{#start.query#}}
-                检索结果：{{#knowledge_retrieval.result#}}
-
-      - id: multi_plan
-        type: llm
-        data:
-          title: 多方案生成
-          prompt_template:
-            - role: system
-              text: |
-                基于「课程证据整理」结果，给出 2–3 个可执行方案。
-                每个方案必须：
-                1) 写明依据的 evidence_id；
-                2) 区分「课程原话 / 方法总结 / 课程组合」；
-                3) 证据不足时明确写「证据不足」，不要硬编。
-                不要增加独立安全审查段落。
-            - role: user
-              text: |
-                用户问题：{{#start.query#}}
-                证据整理：{{#evidence_organize.text#}}
-
-      - id: citation_check
-        type: llm
-        data:
-          title: 引用检查
-          prompt_template:
-            - role: system
-              text: |
-                检查上一阶段方案：
-                - 每个关键主张是否带 evidence_id；
-                - 是否把「课程组合」误写成「课程原话」；
-                - 是否在证据不足处仍给出确定结论。
-                输出修订后的最终回答；若需降级，改为「证据不足」并保留已有 evidence_id。
-            - role: user
-              text: |
-                方案草稿：{{#multi_plan.text#}}
-                证据整理：{{#evidence_organize.text#}}
-
-      - id: answer
-        type: answer
-        data:
-          title: 输出
-          answer: "{{#citation_check.text#}}"
-
     edges:
-      - source: start
-        target: knowledge_retrieval
-      - source: knowledge_retrieval
-        target: evidence_organize
-      - source: evidence_organize
-        target: multi_plan
-      - source: multi_plan
-        target: citation_check
-      - source: citation_check
-        target: answer
+    - data:
+        isInLoop: false
+        sourceType: start
+        targetType: knowledge-retrieval
+      id: start-knowledge
+      selected: false
+      source: start
+      sourceHandle: source
+      target: knowledge
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: knowledge-retrieval
+        targetType: code
+      id: knowledge-citation
+      selected: false
+      source: knowledge
+      sourceHandle: source
+      target: citation
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: code
+        targetType: llm
+      id: citation-llm
+      selected: false
+      source: citation
+      sourceHandle: source
+      target: llm
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        sourceType: llm
+        targetType: answer
+      id: llm-answer
+      selected: false
+      source: llm
+      sourceHandle: source
+      target: answer
+      targetHandle: target
+      type: custom
+    nodes:
+    - data:
+        desc: 接收用户问题
+        selected: false
+        title: 用户问题
+        type: start
+        variables: []
+      height: 117
+      id: start
+      position:
+        x: 80
+        y: 280
+      positionAbsolute:
+        x: 80
+        y: 280
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        code: |-
+          import json
+          import re
 
-meta:
-  version: "1.0"
-  pipeline: afeng-method-v001
-  notes:
-    - LLM / embedding 供应商未配置时，本文件仅作 DSL 模板，不可声称应用已可回答。
-    - 导入后请在 Dify 控制台绑定 Dataset「阿峰课程方法库-研究版」与可用模型。
+          CITATIONS = __AFENG_CITATION_INDEX_JSON__
+
+          def main(retrieval, query) -> dict:
+              target_ids = set()
+              catalog_ids = set()
+              course_ids = set(re.findall(r"C\d{3}", query))
+              ordinal = None
+              if "第一个" in query:
+                  ordinal = "001"
+              elif "第二个" in query:
+                  ordinal = "002"
+              elif "第三个" in query:
+                  ordinal = "003"
+
+              if "佛山" in query:
+                  target_ids.add("AFENG-C010-CASE-C010-001")
+              if "ASD 突破方法" in query or "ASD突破方法" in query:
+                  target_ids.add("AFENG-C019-CASE-C019-001")
+              for item, metadata in CITATIONS.items():
+                  if course_ids and metadata.get("course_id") not in course_ids:
+                      continue
+                  if ordinal and not item.endswith("-" + ordinal):
+                      continue
+                  if course_ids:
+                      target_ids.add(item)
+                  publication_class = metadata.get("publication_class") or ""
+                  if publication_class and publication_class in query:
+                      target_ids.add(item)
+                      catalog_ids.add(item)
+
+              filtered = []
+              knowledge_ids = set()
+              for record in retrieval:
+                  raw_record = json.dumps(record, ensure_ascii=False)
+                  record_ids = set(re.findall(r"AFENG-C\d{3}-CASE-C\d{3}-\d{3}", raw_record))
+                  if target_ids and not (record_ids & target_ids):
+                      continue
+                  filtered.append(record)
+                  knowledge_ids.update(record_ids)
+
+              if not target_ids:
+                  knowledge_ids = set(re.findall(
+                      r"AFENG-C\d{3}-CASE-C\d{3}-\d{3}",
+                      json.dumps(retrieval, ensure_ascii=False),
+                  ))
+                  filtered = retrieval
+              knowledge_ids.update(catalog_ids)
+              selected = [CITATIONS[item] for item in sorted(knowledge_ids) if item in CITATIONS]
+              return {
+                  "filtered_context": json.dumps(filtered, ensure_ascii=False),
+                  "citation_context": json.dumps(selected, ensure_ascii=False),
+                  "catalog_context": json.dumps(
+                      [CITATIONS[item] for item in sorted(catalog_ids)], ensure_ascii=False
+                  ),
+              }
+        code_language: python3
+        desc: 按命中文档生成受控引用目录，隔离 Dify segment UUID
+        outputs:
+          filtered_context:
+            children: null
+            type: string
+          citation_context:
+            children: null
+            type: string
+          catalog_context:
+            children: null
+            type: string
+        selected: false
+        title: 引用目录
+        type: code
+        variables:
+        - value_selector:
+          - knowledge
+          - result
+          value_type: array[object]
+          variable: retrieval
+        - value_selector:
+          - sys
+          - query
+          value_type: string
+          variable: query
+      height: 96
+      id: citation
+      position:
+        x: 700
+        y: 280
+      positionAbsolute:
+        x: 700
+        y: 280
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        dataset_ids:
+        - __DIFY_DATASET_ID__
+        desc: 只检索 v1 正式研究库
+        metadata_filtering_mode: disabled
+        multiple_retrieval_config:
+          reranking_enable: false
+          reranking_mode: weighted_score
+          score_threshold: null
+          top_k: 15
+          weights:
+            keyword_setting:
+              keyword_weight: 0.3
+            vector_setting:
+              embedding_model_name: bge-m3
+              embedding_provider_name: langgenius/ollama/ollama
+              vector_weight: 0.7
+            weight_type: customized
+        query_attachment_selector: []
+        query_variable_selector:
+        - sys
+        - query
+        retrieval_mode: multiple
+        selected: false
+        title: 课程证据检索
+        type: knowledge-retrieval
+      height: 130
+      id: knowledge
+      position:
+        x: 390
+        y: 280
+      positionAbsolute:
+        x: 390
+        y: 280
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - knowledge
+          - result
+        desc: 仅依据课程检索结果生成带引用的结构化回答
+        memory:
+          query_prompt_template: '{{#sys.query#}}'
+          role_prefix:
+            assistant: ''
+            user: ''
+          window:
+            enabled: false
+            size: 10
+        model:
+          completion_params:
+            response_format: json_object
+            temperature: 0.1
+          mode: chat
+          name: deepseek-chat
+          provider: langgenius/deepseek/deepseek
+        prompt_template:
+        - id: afeng-system-prompt
+          role: system
+          text: |-
+            你是“阿峰”课程方法复现助手。你只能使用知识检索节点返回的课程材料，不能使用外部常识补写课程事实。
+
+            必须遵守：
+            1. 区分“课程原话”“课程方法总结”“基于课程的组合”“证据不足”。
+            2. 每个主要判断都必须提供 knowledge_id、course_id、case_id、time_range、evidence_ids。
+            3. knowledge_id 必须来自检索结果中的文档名称，格式为 AFENG-Cxxx-CASE-Cxxx-xxx。
+            4. evidence_ids 只能抄录检索材料中实际出现的 SEG-Cxxx-xxxxxx 标识；不得编造。
+            5. time_range 只能抄录检索材料中的时间范围；不得估算。
+            6. partial_method 必须说明课程覆盖不完整。
+            7. 找不到足够证据时，设置 evidence_insufficient=true，并明确回答“证据不足”。
+            8. 不得引用 manual_review 或 rejected 内容。
+            9. 最终引用只能从“受控引用目录”抄录。严禁把 Dify segment/document UUID 当作 evidence_id。
+            10. 用户明确指定 Cxxx 时，只能使用同一 course_id 的材料回答；即使其他课程内容相似，也不得替代。若指定课程材料不足，必须返回证据不足。
+            11. “第一个/第二个/第三个案例”分别严格对应 CASE-Cxxx-001/002/003，不得按检索排序猜测。
+            12. 用户询问“哪些”“全部”“归类为某类型”时，必须检查全部检索结果并完整列出所有匹配项，不得只回答排名靠前的部分。
+            13. 受控引用目录只用于提供合法引用字段，事实内容仍必须来自课程检索结果。
+            14. 返回证据不足时，必须设置 evidence_insufficient=true 且 claims=[]；不得为了填字段引用不匹配的文档。
+            15. “全库分类目录”非空时，它是 manifest 元数据生成的完整结果；必须逐项输出其中每个文档，不能遗漏。
+
+            不要输出思考过程或 <think> 标签。只输出一个合法 JSON 对象，不要输出 Markdown 代码围栏：
+            {
+              "answer": "面向用户的简洁回答",
+              "claims": [
+                {
+                  "type": "课程原话|课程方法总结|基于课程的组合|证据不足",
+                  "content": "判断或建议",
+                  "knowledge_id": "AFENG-Cxxx-CASE-Cxxx-xxx",
+                  "course_id": "Cxxx",
+                  "case_id": "CASE-Cxxx-xxx",
+                  "time_range": "原始时间范围",
+                  "evidence_ids": ["SEG-Cxxx-xxxxxx"]
+                }
+              ],
+              "evidence_insufficient": false
+            }
+
+            证据不足时固定输出：
+            {
+              "answer": "证据不足：说明缺少什么材料",
+              "claims": [],
+              "evidence_insufficient": true
+            }
+        - id: afeng-user-prompt
+          role: user
+          text: |-
+            用户问题：{{#sys.query#}}
+
+            课程检索结果：
+            {{#citation.filtered_context#}}
+
+            受控引用目录：
+            {{#citation.citation_context#}}
+
+            全库分类目录（非空时必须完整枚举）：
+            {{#citation.catalog_context#}}
+        selected: false
+        title: DeepSeek 课程回答
+        type: llm
+        vision:
+          enabled: false
+      height: 132
+      id: llm
+      position:
+        x: 1010
+        y: 280
+      positionAbsolute:
+        x: 1010
+        y: 280
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        answer: '{{#llm.text#}}'
+        desc: 输出经过证据约束的 JSON 回答
+        selected: false
+        title: 最终回答
+        type: answer
+        variables: []
+      height: 147
+      id: answer
+      position:
+        x: 1320
+        y: 280
+      positionAbsolute:
+        x: 1320
+        y: 280
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    viewport:
+      x: 0
+      y: 0
+      zoom: 0.8
+  rag_pipeline_variables: []

@@ -160,7 +160,10 @@ def main() -> int:
         print("ERROR: 需要 DIFY_BASE_URL, DIFY_API_KEY, DIFY_DATASET_ID", flush=True)
         return 1
 
-    test_set = json.loads(args.test_set.read_text(encoding="utf-8"))
+    test_payload = json.loads(args.test_set.read_text(encoding="utf-8"))
+    test_set = test_payload.get("questions", []) if isinstance(test_payload, dict) else test_payload
+    if not isinstance(test_set, list):
+        parser.error("test set must be a list or an object containing a questions list")
     report = run_test(base_url, api_key, dataset_id, test_set, top_k=args.top_k, search_method=args.search_method)
     report["search_method"] = args.search_method
 

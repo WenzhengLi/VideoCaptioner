@@ -191,31 +191,44 @@ uv run pytest -q -m "not integration"
 
 ### TASK-017
 
-- 状态：**external_blocked**（需外部 LLM Provider）
+- 状态：**已完成**（真实部署 + 引用硬校验 + 20 问应用级验收）
 - 已完成：
   - `scripts/validate_afeng_citations.py`（引用校验器）
   - 20 问应用测试集（含在检索测试集中）
-- 待完成：Workflow/Chatflow DSL、Prompt、应用验收
-- 阻塞：需外部 LLM Provider 配置
+  - Dify DeepSeek Provider 已配置并通过真实 API 验证
+  - 工作空间默认推理模型：`deepseek-v4-pro`
+  - “阿峰” advanced-chat 应用已导入、发布并绑定已验收的正式 v1 Dataset
+  - 应用 LLM 使用 `deepseek-chat`，embedding 使用本地 Ollama `bge-m3`
+  - `scripts/prepare_afeng_app_index.py`：由 v002.7 检索正文 + v002.6 来源证据生成受控引用索引，不修改正式发布包
+  - 独立 Dataset 对照实验：相同正文重建索引仅 14/20（70%）；正式 v1 复跑保持 18/20（90%），故应用继续绑定正式 v1
+  - Workflow 增加受控引用目录节点，禁止将 Dify segment UUID 当作 evidence ID
+  - C019 真实冒烟：JSON 成功，全部 claims 引用完整，canonical/evidence/time-range 硬校验 `valid=true`
+  - 检索后确定性路由：课程号、案例序号、佛山/ASD 别名和 publication_class 全库枚举先由代码节点筛选，避免模型猜文档
+  - 20 问真实应用验收：**20/20（100%）**；JSON、Workflow 错误、引用归属和预期文档/证据不足契约全部通过
+  - 报告：`data/dify/afeng-app-acceptance.json` + `docs/evaluation/afeng-app-acceptance.md`
+  - 部署、备份与恢复：`docs/deployment/afeng-dify-operations.md`
+- 待完成：无
+- 阻塞：无
 
 ### TASK-018
 
-- 状态：**in_progress**（外部模型迁移中）
+- 状态：**待执行**（TASK-017 已完成；无 Provider 阻塞）
 - 已完成：
   - `scripts/audit_afeng_production.py`（生产审计脚本）
   - 离线审计：Bundle PASS + Aggregate PASS
-  - v1 Dataset 审计：PASS（Ollama/bge-m3 实验库）
-- 待完成：v2 Dataset 审计、备份/恢复验证、最终报告
-- 阻塞：依赖外部 Provider 配置和 v2 Dataset 创建
+  - 正式 v1 Dataset 基础审计：PASS（high_quality + Ollama/bge-m3）
+- 待完成：增强只读在线审计、备份清单、恢复 dry-run、无上下文运维手册、全量质量门禁、最终提交与推送
+- 阻塞：无；不再创建或迁移外部 embedding/v2 Dataset
 
-### 外部模型迁移（2026-07-18）
+### 模型运行决策（2026-07-18）
 
-- 用户决策：正式链路取消 Ollama 依赖，改用外部模型服务
-- 可用 Provider：智谱 GLM / DeepSeek / OpenAI（用户均有 API Key）
+- 用户最终决策：LLM 使用外部 DeepSeek；已工作的本地 Ollama `bge-m3` 继续承担 embedding，不再继续折腾本地生成模型或外部视觉 embedding
+- 已确认 Provider：DeepSeek（LLM，凭据来自用户授权的 CC Switch 配置）
+- 外部 embedding：已试配火山方舟 `Doubao-embedding-vision`，但纯文本探针虽能完成索引和分段，语义检索返回 0 条；该视觉向量模型不适合作为课程文本知识库 embedding，默认模型已恢复为 `bge-m3`
 - 已完成：
   - `scripts/setup_v2_dataset.py`（v2 Dataset 创建脚本）
   - `scripts/sync_and_test_v2.py`（v2 同步和检索验收脚本）
   - `data/dify/afeng-retrieval-test-v002.json`（冻结测试集，无问题改写）
   - `docs/evaluation/afeng-external-provider-guide.md`（配置指南）
-- 待完成：用户配置 Provider → Gate B → Gate C → Gate D → Gate E
-- 状态：**external_blocked**（等用户配置 Provider API Key）
+- 待完成：完成 TASK-017 应用级 20 问验收；外部纯文本 embedding 迁移不再是当前阻塞项
+- 状态：**current**（DeepSeek LLM + Ollama/bge-m3 embedding）
