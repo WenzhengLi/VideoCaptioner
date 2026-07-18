@@ -1,148 +1,61 @@
 # Dify 状态报告
 
-生成时间：2026-07-17（管理员初始化 + Dataset「阿峰课程方法库-研究版」+ 前20课最终包同步后）
-
-> 本地 SQLite / `index-tidy` **不是** Dify。下表严格区分各层完成度。
+最后更新：2026-07-18
 
 ## 总览
 
 | 项 | 状态 |
 |---|---|
-| Docker 部署 | **已完成**（project=`dify`，HTTP 3080，cpa 8317 未改动） |
-| 管理员初始化 | **已完成**（`GET/POST /console/api/setup` + 登录校验；凭据仅在 secrets） |
-| Dataset | **已完成**（名称=`阿峰课程方法库-研究版`，`economy`；无 embedding 故未用 `high_quality`） |
-| API Key | **已完成**（Dataset API Key 已写入 runtime secrets；值不入库） |
-| 文档同步 | **已完成**：`afeng-release-v002.5` 36 篇 create；幂等 map 已更新 |
-| indexing | **已完成**：Service API 抽样/全量均为 `completed`（36/36） |
-| Workflow / Chatflow | **DSL 已准备**（`deploy/dify/workflows/afeng-chatflow.yml`）；**未在控制台创建可回答应用**（缺 LLM 供应商） |
-| 真实检索 | **部分完成**：`keyword_search` 有命中；semantic/`high_quality` 需 embedding 供应商 |
-| 模型供应商 | **未配置**（外部阻塞） |
+| Docker 部署 | **已完成**（Dify 1.15.0，HTTP 3080，cpa 8317 未改动） |
+| 管理员 | **已完成**（凭据仅在 secrets） |
+| Embedding | **已完成**（Ollama bge-m3，1024 维） |
+| LLM | **已完成**（DeepSeek deepseek-chat） |
+| 正式 Dataset | **已完成**（`阿峰课程方法库-研究版-v1`，high_quality，36 docs） |
+| 文档同步 | **已完成**（v002.6 → v1 Dataset，create=36，indexing 36/36 completed） |
+| 检索验收 | **已完成**（hybrid_search, Top-5 18/20 = 90%，文档级去重） |
+| 应用 | **已完成**（`阿峰` advanced-chat，已发布，绑定 v1 Dataset + DeepSeek） |
+| 应用验收 | **已完成**（20/20 = 100%） |
+| 生产审计 | **已完成**（overall=PASS） |
 
-## Docker 部署状态
-
-- **版本**：官方 Git tag `1.15.0`
-- **部署目录**：`D:\Dev\dify-deploy`
-- **Compose project**：`dify`
-- **访问 URL**：http://127.0.0.1:3080
-- **cpa**：仍在 `8317`，未停止/删除/修改
-- **公开状态**：`D:\Dev\dify-deploy\bootstrap-status.json`（无密码/Token）
-
-运维：
-
-```powershell
-.\deploy\dify\scripts\up.ps1 -DeployRoot D:\Dev\dify-deploy
-.\deploy\dify\scripts\health.ps1 -DeployRoot D:\Dev\dify-deploy
-.\deploy\dify\scripts\initialize-admin.ps1 -DeployRoot D:\Dev\dify-deploy
-.\deploy\dify\scripts\initialize-dataset.ps1 -DeployRoot D:\Dev\dify-deploy
-.\deploy\dify\scripts\smoke-test.ps1 -DeployRoot D:\Dev\dify-deploy
-.\deploy\dify\scripts\down.ps1 -DeployRoot D:\Dev\dify-deploy
-```
-
-## 管理员初始化状态
-
-- **已完成且登录校验通过**。
-- 凭据仅保存：`D:\Dev\dify-deploy\secrets\admin.env`（ACL 限制当前用户）。
-- 禁止把邮箱/密码输出到终端、日志、聊天或 Git。
-
-## Dataset 状态
-
-- **已创建**：`阿峰课程方法库-研究版`
-- **模式**：`economy`（无默认 text-embedding）
-- 运行时变量仅在：`D:\Dev\dify-deploy\secrets\dify-runtime.env`
-  - `DIFY_BASE_URL`
-  - `DIFY_API_KEY`
-  - `DIFY_DATASET_ID`
-- 升 `high_quality` 前需在控制台配置 embedding（勿编造密钥）。
-
-## 文档同步状态
-
-最终包闸门（已满足，故允许导入 `v002.5`，未使用 v002.1–v002.4 冒充）：
-
-- 报告：`docs/evaluation/afeng-twenty-course-v002.json`
-- `case_count=40`，`failure_count=0`，`status=complete`
-- course/case 唯一；发布包排除 `manual_review`/`rejected`（36 文档 / 4 排除）
-- `pipeline_version=afeng-method-v001`，`prompt_version=mimo-method-v002`
-- manifest 文档数与 `documents/*.md` 一致
-
-同步结果：
-
-```text
-create=36, update=0, skip=0, failed=0
-indexing completed=36
-map: data/dify/document-map.json（运行时，勿提交密钥）
-mapped=36（已清除历史 KNOW-SMOKE-001 污染条目；远端无 SMOKE）
-```
-
-再次同步命令（加载 runtime env 后）：
-
-```powershell
-.\.venv\Scripts\python.exe -m course_video_analyzer.knowledge.cli dify-sync-markdown `
-  --markdown-root data/dify/afeng-release-v002.5/documents `
-  --map-path data/dify/document-map.json `
-  --poll-indexing
-```
-
-## indexing 状态
-
-- 阿峰最终包 36 文档：**completed**
-
-## Workflow / Chatflow 状态
-
-- DSL 模板已写入仓库：`deploy/dify/workflows/afeng-chatflow.yml`
-- 流程：用户问题 → 知识检索 → 课程证据整理 → 多方案生成 → 引用检查 → 输出
-- **未**在 Dify 控制台导入为可回答应用（缺 LLM 供应商密钥；不编造）
-
-## 真实检索验收状态
-
-- `GET /v1/datasets/{id}/documents`：36 文档可见
-- `POST /v1/datasets/{id}/retrieve` + `keyword_search`：**有命中**（探针 hits>0）
-- semantic / embedding 检索：未完成（缺 embedding 供应商）
-- Chatflow 20 问端到端：未开始（缺 LLM）
-
-## 正式 Dataset 状态（Gate 2 完成）
+## 正式 Dataset
 
 | 项 | 值 |
 |---|---|
 | 名称 | 阿峰课程方法库-研究版-v1 |
 | 模式 | high_quality |
-| Embedding | bge-m3 (langgenius/ollama/ollama, 1024 维) |
+| Embedding | bge-m3 (langgenius/ollama/ollama) |
 | 文档数 | 36 |
-| 索引状态 | 36/36 completed |
+| 索引 | 36/36 completed |
 | Map | data/dify/document-map-v1.json (36 canonical IDs) |
 
-## 同步验收（Gate 3 完成）
+## 历史 Dataset（保留，不修改）
 
-| 指标 | 结果 |
+| 名称 | 模式 | 用途 |
+|---|---|---|
+| 阿峰课程方法库-研究版 | economy | 历史工作库（v002.5，36 docs） |
+
+## 应用
+
+| 项 | 值 |
 |---|---|
-| 首次同步 | create=36, failed=0, duplicate=0 |
-| 二次同步 | skip=36, create=0, update=0 |
-| Map canonical ID | 36/36 (100%) |
-| Map dataset_id | 匹配正式 Dataset |
-
-## 检索验收
-
-| 指标 | 结果 |
-|---|---|
-| 搜索模式 | hybrid_search |
-| Top-5 命中率 | **18/20 (90%)** |
-| 文档级去重 | 是（同文档多 segment 合并） |
-| manual_review/rejected 泄漏 | 0 |
-
-优化措施：
-1. 移除正文 evidence ID 列表（保留 frontmatter YAML 中的完整列表）
-2. 添加关键词段（课程编号/案例编号/方法名称/课程主题）
-3. 文档级去重（同一文档多个 segment 取最高分）
-4. 使用 hybrid_search（语义 + 关键词）
-
-未通过的 2 个问题：
-- Q04: "佛山案例" 查询未提及 C010，语义相似度过低
-- Q14: 跨文档修订查询（多文档属性检索），非单文档定位
+| 名称 | 阿峰 |
+| 模式 | advanced-chat（已发布） |
+| Dataset | 阿峰课程方法库-研究版-v1 |
+| LLM | DeepSeek deepseek-chat |
+| 工作流 | start → knowledge-retrieval → citation-validation → llm → answer |
 
 ## 生产审计
 
 ```
-audit_overall: PASS
+overall: PASS
+aggregate: PASS (40 cases = 36 published + 2 manual_review + 2 rejected)
 bundle: PASS (36 docs, 4 excluded, canonical unique, lineage 100%)
-aggregate: PASS (40 cases, 36 published, 2 manual_review, 2 rejected)
-dify: PASS (dataset exists, 36 docs, high_quality, embedding configured)
+map: PASS (36 canonical keys, dataset_id match)
+remote: PASS (36 docs, high_quality, bge-m3, indexing completed)
+app: PASS (published, DeepSeek LLM, dataset bound, citation validation)
+reports: PASS (retrieval 18/20, app 20/20)
 ```
+
+## 运维
+
+详见 `docs/operations/afeng-operations-manual.md`
