@@ -191,24 +191,76 @@ def test_check_reports_no_files(tmp_path: Path, monkeypatch: pytest.MonkeyPatch)
     assert result["status"] == "FAIL"
 
 
+def _make_reports(tmp_path: Path, *, retrieval_acc: float = 90.0, app_passed: int = 20, app_total: int = 20) -> None:
+    """Helper to create both reports."""
+    (tmp_path / "data" / "dify").mkdir(parents=True)
+    # Retrieval
+    results = [{"expected_found_in_top_k": i < int(app_total * retrieval_acc / 100)} for i in range(20)]
+    retrieval = {
+        "schema_version": "1.0",
+        "test_type": "afeng-retrieval-validation",
+        "accuracy": retrieval_acc,
+        "total_questions": 20,
+        "correct_in_top_k": int(20 * retrieval_acc / 100),
+        "results": results,
+        "search_method": "hybrid_search",
+    }
+    (tmp_path / "data" / "dify" / "afeng-retrieval-report.json").write_text(
+        json.dumps(retrieval, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+    # App acceptance
+    app_results = [{"passed": i < app_passed} for i in range(app_total)]
+    app_report = {
+        "schema_version": "1.0",
+        "test_type": "afeng-app-acceptance",
+        "total": app_total,
+        "passed": app_passed,
+        "pass_rate": round(app_passed / app_total * 100, 1) if app_total else 0,
+        "results": app_results,
+    }
+    (tmp_path / "data" / "dify" / "afeng-app-acceptance.json").write_text(
+        json.dumps(app_report, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+
+
 def test_check_reports_pass(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.chdir(tmp_path)
-    # Create retrieval report
-    retrieval = {
-        "document_dedup_top5": {"accuracy": 90.0, "correct": 18, "total": 20},
-        "accuracy": 90.0,
-    }
+    _make_reports(tmp_path)
+    result = _check_reports()
+    assert result["status"] == "PASS"
+
+
+def test_check_reports_19_of_20_fails(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.chdir(tmp_path)
+    _make_reports(tmp_path, retrieval_acc=85.0)
+    result = _check_reports()
+    assert result["status"] == "FAIL"
+
+
+def test_check_reports_app_one_failed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.chdir(tmp_path)
+    _make_reports(tmp_path, app_passed=19)
+    result = _check_reports()
+    assert result["status"] == "FAIL"
+    assert result["checks"]["app_all_passed"] is False
+
+
+def test_check_reports_only_markdown_fails(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Only Markdown without JSON must FAIL."""
+    monkeypatch.chdir(tmp_path)
     (tmp_path / "data" / "dify").mkdir(parents=True)
+    # Retrieval JSON exists
+    retrieval = {"accuracy": 90.0, "total_questions": 20, "correct_in_top_k": 18,
+                 "results": [{"expected_found_in_top_k": True}] * 18 + [{"expected_found_in_top_k": False}] * 2}
     (tmp_path / "data" / "dify" / "afeng-retrieval-report.json").write_text(
         json.dumps(retrieval), encoding="utf-8"
     )
-    # Create app acceptance report
-    app_report = {"passed": 20, "total": 20, "correct": 20}
-    (tmp_path / "data" / "dify" / "afeng-app-acceptance-report.json").write_text(
-        json.dumps(app_report), encoding="utf-8"
-    )
+    # Only Markdown for app, no JSON
+    (tmp_path / "docs" / "evaluation").mkdir(parents=True)
+    (tmp_path / "docs" / "evaluation" / "afeng-app-acceptance.md").write_text("# Report\n", encoding="utf-8")
     result = _check_reports()
-    assert result["status"] == "PASS"
+    assert result["status"] == "FAIL"
+    assert result["checks"].get("app_report_exists") is False
 
 
 def test_canonical_re() -> None:

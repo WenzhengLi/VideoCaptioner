@@ -100,9 +100,11 @@ $env:DIFY_BASE_URL = "http://127.0.0.1:3080/v1"
 
 ## 七、幂等同步
 
+同步源为检索优化版 v002.7：
+
 ```powershell
 .\.venv\Scripts\python.exe -m course_video_analyzer.knowledge.cli dify-sync-markdown `
-  --markdown-root data\dify\afeng-release-v002.6\documents `
+  --markdown-root data\dify\afeng-release-v002.7\documents `
   --map-path data\dify\document-map-v1.json `
   --dataset-id $env:DIFY_DATASET_ID `
   --indexing-technique high_quality `
@@ -134,18 +136,21 @@ $env:DIFY_BASE_URL = "http://127.0.0.1:3080/v1"
 .\.venv\Scripts\python.exe scripts\deploy_afeng_dify_app.py
 ```
 
-### C019 Smoke
+### C019 Smoke 引用校验
 
 ```powershell
-.\.venv\Scripts\python.exe scripts\run_afeng_app_acceptance.py --smoke-only
+.\.venv\Scripts\python.exe scripts\validate_afeng_citations.py data\dify\afeng-app-smoke.json
 ```
 
 ### 20 问应用验收
 
 ```powershell
-.\.venv\Scripts\python.exe scripts\run_afeng_app_acceptance.py `
-  --json-output data\dify\afeng-app-acceptance-report.json
+.\.venv\Scripts\python.exe scripts\run_afeng_app_acceptance.py
 ```
+
+输出固定为：
+- JSON: `data/dify/afeng-app-acceptance.json`
+- Markdown: `docs/evaluation/afeng-app-acceptance.md`
 
 预期：20/20 (100%)
 

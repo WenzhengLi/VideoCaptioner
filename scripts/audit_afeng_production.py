@@ -310,33 +310,38 @@ def _check_reports() -> dict[str, Any]:
     """Gate A.12-13: Retrieval and app acceptance reports traceable."""
     checks: dict[str, Any] = {}
 
-    # Retrieval report
+    # Retrieval report — must be real JSON with accuracy >= 90
     retrieval_path = Path("data/dify/afeng-retrieval-report.json")
     if retrieval_path.exists():
         report = json.loads(retrieval_path.read_text(encoding="utf-8"))
-        dedup = report.get("document_dedup_top5", report)
-        accuracy = dedup.get("accuracy", report.get("accuracy", 0))
+        accuracy = report.get("accuracy", 0)
+        total = report.get("total_questions", 0)
+        correct = report.get("correct_in_top_k", 0)
+        results = report.get("results", [])
         checks["retrieval_report_exists"] = True
         checks["retrieval_accuracy"] = accuracy
         checks["retrieval_18_of_20"] = accuracy >= 90
+        checks["retrieval_consistent"] = (
+            len(results) == total and correct == sum(1 for r in results if r.get("expected_found_in_top_k"))
+        )
     else:
         checks["retrieval_report_exists"] = False
 
-    # App acceptance report
-    app_path = Path("data/dify/afeng-app-acceptance-report.json")
-    if not app_path.exists():
-        app_path = Path("docs/evaluation/afeng-app-acceptance.md")
+    # App acceptance report — must be real JSON, not Markdown fallback
+    app_path = Path("data/dify/afeng-app-acceptance.json")
     if app_path.exists():
-        if app_path.suffix == ".json":
-            report = json.loads(app_path.read_text(encoding="utf-8"))
-            passed = report.get("passed", report.get("correct", 0))
-            total = report.get("total", 20)
-            checks["app_report_exists"] = True
-            checks["app_passed"] = passed
-            checks["app_20_of_20"] = passed >= total
-        else:
-            checks["app_report_exists"] = True
-            checks["app_report_format"] = "markdown"
+        report = json.loads(app_path.read_text(encoding="utf-8"))
+        total = report.get("total", 0)
+        passed = report.get("passed", 0)
+        pass_rate = report.get("pass_rate", 0)
+        results = report.get("results", [])
+        all_results_passed = all(r.get("passed") for r in results) if results else False
+        checks["app_report_exists"] = True
+        checks["app_total_20"] = total == 20
+        checks["app_passed_20"] = passed == 20
+        checks["app_pass_rate_100"] = pass_rate == 100
+        checks["app_results_count"] = len(results) == 20
+        checks["app_all_passed"] = all_results_passed
     else:
         checks["app_report_exists"] = False
 
