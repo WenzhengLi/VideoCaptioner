@@ -5,15 +5,45 @@
   "p02_version": "knowledge-v003-p02",
   "p03_version": "knowledge-v003-p03",
   "p04_version": "knowledge-v003-p04",
-  "case_count": 2,
+  "case_count": 3,
   "segment_count": 4885,
   "qa_results": {
     "P01": "pass",
     "P02": "pass",
     "P03": "pass",
     "P04-CASE-C021-001": "pass",
-    "P04-CASE-C021-002": "pass"
+    "P04-CASE-C021-002": "pass",
+    "P04-CASE-C021-003": "pass"
   },
+  "case_stats": [
+    {
+      "case_id": "CASE-C021-001",
+      "evidence_count": 38,
+      "spans": 15,
+      "timeline": 10,
+      "observations": 8,
+      "claims": 8,
+      "quotes": 8
+    },
+    {
+      "case_id": "CASE-C021-002",
+      "evidence_count": 38,
+      "spans": 15,
+      "timeline": 10,
+      "observations": 8,
+      "claims": 8,
+      "quotes": 8
+    },
+    {
+      "case_id": "CASE-C021-003",
+      "evidence_count": 37,
+      "spans": 15,
+      "timeline": 10,
+      "observations": 8,
+      "claims": 8,
+      "quotes": 8
+    }
+  ],
   "outside_case_evidence": 0,
   "failed_cases": 0
 }

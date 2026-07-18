@@ -18,7 +18,7 @@
   },
   "metrics": {
     "input_segment_count": 4885,
-    "case_count": 2,
+    "case_count": 3,
     "assigned_segment_count": 4839,
     "unassigned_segment_count": 46,
     "missing_segment_count": 0,

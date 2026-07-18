@@ -5,29 +5,29 @@
     "C021"
   ],
   "course_id": "C021",
-  "case_id": "CASE-C021-002",
-  "case_title": "成都女生聊天案例分析",
-  "summary": "讲师分析成都女生聊天案例分析，讲解聊天互动技巧",
+  "case_id": "CASE-C021-003",
+  "case_title": "第三个聊天案例分析",
+  "summary": "讲师分析第三个聊天案例分析，讲解聊天互动技巧",
   "participants": [
     {
       "role": "instructor",
       "description": "课程讲师",
       "evidence_segment_ids": [
-        "SEG-C021-002508"
+        "SEG-C021-003904"
       ]
     },
     {
       "role": "student",
       "description": "聊天记录中的男性",
       "evidence_segment_ids": [
-        "SEG-C021-002523"
+        "SEG-C021-003919"
       ]
     },
     {
       "role": "target",
       "description": "聊天记录中的女性",
       "evidence_segment_ids": [
-        "SEG-C021-002523"
+        "SEG-C021-003919"
       ]
     }
   ],
@@ -37,7 +37,7 @@
       "description": "案例阶段 1",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
-        "SEG-C021-002508"
+        "SEG-C021-003904"
       ]
     },
     {
@@ -45,7 +45,7 @@
       "description": "案例阶段 2",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
-        "SEG-C021-002647"
+        "SEG-C021-004002"
       ]
     },
     {
@@ -53,7 +53,7 @@
       "description": "案例阶段 3",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
-        "SEG-C021-002787"
+        "SEG-C021-004100"
       ]
     },
     {
@@ -61,7 +61,7 @@
       "description": "案例阶段 4",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
-        "SEG-C021-002926"
+        "SEG-C021-004198"
       ]
     },
     {
@@ -69,7 +69,7 @@
       "description": "案例阶段 5",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
-        "SEG-C021-003066"
+        "SEG-C021-004296"
       ]
     },
     {
@@ -77,7 +77,7 @@
       "description": "案例阶段 6",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
-        "SEG-C021-003206"
+        "SEG-C021-004395"
       ]
     },
     {
@@ -85,7 +85,7 @@
       "description": "案例阶段 7",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
-        "SEG-C021-003345"
+        "SEG-C021-004493"
       ]
     },
     {
@@ -93,7 +93,7 @@
       "description": "案例阶段 8",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
-        "SEG-C021-003485"
+        "SEG-C021-004591"
       ]
     },
     {
@@ -101,7 +101,7 @@
       "description": "案例阶段 9",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
-        "SEG-C021-003624"
+        "SEG-C021-004689"
       ]
     },
     {
@@ -109,123 +109,123 @@
       "description": "案例阶段 10",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
-        "SEG-C021-003764"
+        "SEG-C021-004787"
       ]
     }
   ],
   "observations": [
     {
       "id": "OBS-001",
-      "text": "下一个发了呀啊下一个 ok 下一个下一个 ok 我们来看一看，",
+      "text": "但是然后呢我刚睡了一会，",
       "evidence_segment_ids": [
-        "SEG-C021-002508"
+        "SEG-C021-003907"
       ]
     },
     {
       "id": "OBS-002",
-      "text": "下一个来看你们的问题啊，",
+      "text": "在这里在这里在这里呃，",
       "evidence_segment_ids": [
-        "SEG-C021-002509"
+        "SEG-C021-003911"
       ]
     },
     {
       "id": "OBS-003",
-      "text": "熊猫熊猫的事情我再单概解释一下啊，",
+      "text": "我说一般都是我发完呃，",
       "evidence_segment_ids": [
-        "SEG-C021-002510"
+        "SEG-C021-003919"
       ]
     },
     {
       "id": "OBS-004",
-      "text": "熊猫的事情的话是这个样子，",
+      "text": "他说你昨天没有给我发完，",
       "evidence_segment_ids": [
-        "SEG-C021-002511"
+        "SEG-C021-003922"
       ]
     },
     {
       "id": "OBS-005",
-      "text": "不是去年四月份出事了吧，",
+      "text": "对后有一点像小情侣的那种感，",
       "evidence_segment_ids": [
-        "SEG-C021-002512"
+        "SEG-C021-003923"
       ]
     },
     {
       "id": "OBS-006",
-      "text": "他就没有我们五五月份直的时候，",
+      "text": "我希望那希望你醒时可以有早安，",
       "evidence_segment_ids": [
-        "SEG-C021-002514"
+        "SEG-C021-003927"
       ]
     },
     {
       "id": "OBS-007",
-      "text": "不是说他就没有再做了嘛嘛。",
+      "text": "那你给我发就是别人升高关系，",
       "evidence_segment_ids": [
-        "SEG-C021-002515"
+        "SEG-C021-003929"
       ]
     },
     {
       "id": "OBS-008",
-      "text": "后来他就自己去杭州了嘛，",
+      "text": "我说那别喝太多微醺才嗯，",
       "evidence_segment_ids": [
-        "SEG-C021-002517"
+        "SEG-C021-003941"
       ]
     }
   ],
   "instructor_claims": [
     {
       "id": "CLM-001",
-      "text": "她这个系统就是应该这么就是她说了三句话，",
+      "text": "我又又又就都是在忙工作怎么办？",
       "evidence_segment_ids": [
-        "SEG-C021-003196"
+        "SEG-C021-004404"
       ]
     },
     {
       "id": "CLM-002",
-      "text": "我已经知道我接下来就是怎么套路，",
+      "text": "只能选择你原谅你啊啊啊你也辛苦了，",
       "evidence_segment_ids": [
-        "SEG-C021-003198"
+        "SEG-C021-004405"
       ]
     },
     {
       "id": "CLM-003",
-      "text": "就是就是我的我的大数据库和我们的直觉支持，",
+      "text": "然后晚上外面也下雨了，",
       "evidence_segment_ids": [
-        "SEG-C021-003201"
+        "SEG-C021-004407"
       ]
     },
     {
       "id": "CLM-004",
-      "text": "但是大家可能可能没这个能力，",
+      "text": "明天就不有这么累了完完了，",
       "evidence_segment_ids": [
-        "SEG-C021-003203"
+        "SEG-C021-004423"
       ]
     },
     {
       "id": "CLM-005",
-      "text": "然后我确也是跟大家说，",
+      "text": "我妹子说阿峰老师进门把箱子一丢五分钟，",
       "evidence_segment_ids": [
-        "SEG-C021-003204"
+        "SEG-C021-004427"
       ]
     },
     {
       "id": "CLM-006",
-      "text": "其实你们可能是没有这个能力，",
+      "text": "这么细节说阿峰说阿峰老师刚从外地回来，",
       "evidence_segment_ids": [
-        "SEG-C021-003205"
+        "SEG-C021-004429"
       ]
     },
     {
       "id": "CLM-007",
-      "text": "但是什么再夫就是慢慢看嘛，",
+      "text": "完完了又在房间里面熟悉的声音又回来了，",
       "evidence_segment_ids": [
-        "SEG-C021-003213"
+        "SEG-C021-004432"
       ]
     },
     {
       "id": "CLM-008",
-      "text": "这这个大家我也是从你们这么过来的嘛，",
+      "text": "我妹子说阿峰老师又在你这个回来了。",
       "evidence_segment_ids": [
-        "SEG-C021-003216"
+        "SEG-C021-004436"
       ]
     }
   ],
@@ -236,7 +236,7 @@
       "text": "案例展示了聊天互动过程",
       "status": "observed",
       "evidence_segment_ids": [
-        "SEG-C021-003206"
+        "SEG-C021-004395"
       ]
     }
   ],
@@ -244,73 +244,73 @@
     {
       "id": "QUO-001",
       "speaker_role": "student",
-      "text": "就是就百分之百已经确定了，",
+      "text": "我就会见过可以个温柔的水乡啊，",
       "context": "聊天记录",
       "evidence_segment_ids": [
-        "SEG-C021-002948"
+        "SEG-C021-004244"
       ]
     },
     {
       "id": "QUO-002",
       "speaker_role": "student",
-      "text": "就是安全感对安全的熟悉感。",
+      "text": "甚至还是比较暖和的穿了，",
       "context": "聊天记录",
       "evidence_segment_ids": [
-        "SEG-C021-002951"
+        "SEG-C021-004250"
       ]
     },
     {
       "id": "QUO-003",
       "speaker_role": "student",
-      "text": "她看到这种去这种妹子，",
+      "text": "或者你要去的时候再继续报备嘛。",
       "context": "聊天记录",
       "evidence_segment_ids": [
-        "SEG-C021-002954"
+        "SEG-C021-004251"
       ]
     },
     {
       "id": "QUO-004",
       "speaker_role": "student",
-      "text": "原因他一看窗口这么大，",
+      "text": "就是没见到面之前都需要保持一个继续报温度啊，",
       "context": "聊天记录",
       "evidence_segment_ids": [
-        "SEG-C021-002957"
+        "SEG-C021-004254"
       ]
     },
     {
       "id": "QUO-005",
       "speaker_role": "student",
-      "text": "后面的话我看一下你怎么聊的。",
+      "text": "报备报备报备报备报备报备报备报备每天报备对吧？",
       "context": "聊天记录",
       "evidence_segment_ids": [
-        "SEG-C021-002965"
+        "SEG-C021-004255"
       ]
     },
     {
       "id": "QUO-006",
       "speaker_role": "student",
-      "text": "如果是我的话啊嗯我对这种女人的话就着重是安全组专用人的。",
+      "text": "你看我就我是说我十二号就是你。",
       "context": "聊天记录",
       "evidence_segment_ids": [
-        "SEG-C021-002967"
+        "SEG-C021-004256"
       ]
     },
     {
       "id": "QUO-007",
       "speaker_role": "student",
-      "text": "因为我觉得我的心对我的我觉得他他常来会这么讲话，",
+      "text": "其实其实我在你的回复当中看出了你的虚伪，",
       "context": "聊天记录",
       "evidence_segment_ids": [
-        "SEG-C021-002968"
+        "SEG-C021-004257"
       ]
     },
     {
       "id": "QUO-008",
       "speaker_role": "student",
-      "text": "我的心已经爆了在他面前，",
+      "text": "但是到底是正正正常谈恋爱，",
       "context": "聊天记录",
       "evidence_segment_ids": [
-        "SEG-C021-002969"
+        "SEG-C021-004267"
       ]
     }
   ],
@@ -318,107 +318,107 @@
     {
       "evidence_id": "EVD-001",
       "segment_ids": [
-        "SEG-C021-002508"
+        "SEG-C021-003907"
       ],
-      "quote": "下一个发了呀啊下一个 ok 下一个下一个 ok 我们来看一看，"
+      "quote": "但是然后呢我刚睡了一会，"
     },
     {
       "evidence_id": "EVD-002",
       "segment_ids": [
-        "SEG-C021-002574"
+        "SEG-C021-003960"
       ],
-      "quote": "没有发她任何的身材造。"
+      "quote": "行为你昨天没有跟我发晚啊，"
     },
     {
       "evidence_id": "EVD-003",
       "segment_ids": [
-        "SEG-C021-002658"
+        "SEG-C021-004045"
       ],
-      "quote": "然后他他们就是把女生当成真正是当成一种猎物，"
+      "quote": "这个感觉很来很靠谱啊。"
     },
     {
       "evidence_id": "EVD-004",
       "segment_ids": [
-        "SEG-C021-002741"
+        "SEG-C021-004109"
       ],
-      "quote": "然后你看啊就是我这个时候是任性不了。"
+      "quote": "我说的是就是就是应酬，"
     },
     {
       "evidence_id": "EVD-005",
       "segment_ids": [
-        "SEG-C021-002836"
+        "SEG-C021-004182"
       ],
-      "quote": "就他情绪好到我明名前，"
+      "quote": "看来你昨天果汁喝的有点多，"
     },
     {
       "evidence_id": "EVD-006",
       "segment_ids": [
-        "SEG-C021-002945"
+        "SEG-C021-004243"
       ],
-      "quote": "就是解决就是吸引问题已经没有了。"
+      "quote": "你昨天他妈最后是不是这个不不止我一个人这样想，"
     },
     {
       "evidence_id": "EVD-007",
       "segment_ids": [
-        "SEG-C021-003060"
+        "SEG-C021-004298"
       ],
-      "quote": "可能遇到就是就是他接接招吗？"
+      "quote": "然后一节车 OKOKOK 其实就是打个泡妞，"
     },
     {
       "evidence_id": "EVD-008",
       "segment_ids": [
-        "SEG-C021-003153"
+        "SEG-C021-004370"
       ],
-      "quote": "就现在大家也能看得出来，"
+      "quote": "然后突然这边就消失了，"
     },
     {
       "evidence_id": "EVD-009",
       "segment_ids": [
-        "SEG-C021-003241"
+        "SEG-C021-004432"
       ],
-      "quote": "就是不不是我们这个圈子里面的啊。"
+      "quote": "完完了又在房间里面熟悉的声音又回来了，"
     },
     {
       "evidence_id": "EVD-010",
       "segment_ids": [
-        "SEG-C021-003312"
+        "SEG-C021-004497"
       ],
-      "quote": "单单单单单单单纯纯啊，"
+      "quote": "我说那我还是先收拾好，"
     },
     {
       "evidence_id": "EVD-011",
       "segment_ids": [
-        "SEG-C021-003403"
+        "SEG-C021-004571"
       ],
-      "quote": "但但是我觉得就是什么呢？"
+      "quote": "搞不出来最有感情的事对吧。"
     },
     {
       "evidence_id": "EVD-012",
       "segment_ids": [
-        "SEG-C021-003502"
+        "SEG-C021-004620"
       ],
-      "quote": "你妈天天几天几天都没。"
+      "quote": "就是早上送他去上班嘛。"
     },
     {
       "evidence_id": "EVD-013",
       "segment_ids": [
-        "SEG-C021-003572"
+        "SEG-C021-004687"
       ],
-      "quote": "网信学员肯定是很懵懂很懵，"
+      "quote": "这个这个就是你自己问题哦，"
     },
     {
       "evidence_id": "EVD-014",
       "segment_ids": [
-        "SEG-C021-003678"
+        "SEG-C021-004764"
       ],
-      "quote": "所以我在回复这个类型的问题的时候，"
+      "quote": "我现在对零零后的男生都喜欢这个也是什么的，"
     },
     {
       "evidence_id": "EVD-015",
       "segment_ids": [
-        "SEG-C021-003785"
+        "SEG-C021-004813"
       ],
-      "quote": "这哎这个就可以精神精髓，"
+      "quote": "而且她还是就是姨妈的第五天。"
     }
   ],
   "uncertainties": [

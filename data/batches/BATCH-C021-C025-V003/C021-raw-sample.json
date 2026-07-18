@@ -2,7 +2,14 @@
   "schema_version": "1.0",
   "course_id": "C021",
   "total_items": 4801,
-  "sample_count": 25,
+  "sample_count": 30,
+  "board_sample_positions": [
+    15,
+    1031,
+    2072,
+    2989,
+    3914
+  ],
   "samples": [
     {
       "index": 0,
@@ -11,7 +18,7 @@
       "speaker": "Speaker 0",
       "asr_text": "怪不得刚才我就点了,",
       "board_text": "",
-      "has_board": true
+      "has_board": false
     },
     {
       "index": 1,
@@ -20,7 +27,7 @@
       "speaker": "Speaker 0",
       "asr_text": "我就说我不是没不是没有呀,",
       "board_text": "",
-      "has_board": true
+      "has_board": false
     },
     {
       "index": 2,
@@ -29,7 +36,7 @@
       "speaker": "Speaker 0",
       "asr_text": "你再刷新一下,",
       "board_text": "",
-      "has_board": true
+      "has_board": false
     },
     {
       "index": 3,
@@ -38,7 +45,7 @@
       "speaker": "Speaker 0",
       "asr_text": "刷了两没理啊,",
       "board_text": "",
-      "has_board": true
+      "has_board": false
     },
     {
       "index": 4,
@@ -48,6 +55,24 @@
       "asr_text": "嗯不应该吧?",
       "board_text": "",
       "has_board": false
+    },
+    {
+      "index": 15,
+      "start_ms": 23560,
+      "end_ms": 28540,
+      "speaker": "Speaker 0",
+      "asr_text": "好 helhello 兄弟们 lo lo,",
+      "board_text": "1月30日凌晨02:44 我通过了你的朋友验证请求 现在我们可以开始聊天了",
+      "has_board": true
+    },
+    {
+      "index": 1031,
+      "start_ms": 1428470,
+      "end_ms": 1430270,
+      "speaker": "Speaker 0",
+      "asr_text": "就是我这个女人我就想你有问题,",
+      "board_text": "（商业互捧吗哈哈哈） 彼此这么欣赏得来 那不甜甜待一起都对不起这份",
+      "has_board": true
     },
     {
       "index": 1198,
@@ -95,6 +120,15 @@
       "has_board": false
     },
     {
+      "index": 2072,
+      "start_ms": 2965200,
+      "end_ms": 2965865,
+      "speaker": "Speaker 0",
+      "asr_text": "那我举个例子,",
+      "board_text": "你在就可以一起看 哇唔 2月4日凌量04:41",
+      "has_board": true
+    },
+    {
       "index": 2398,
       "start_ms": 3431490,
       "end_ms": 3432410,
@@ -140,6 +174,15 @@
       "has_board": true
     },
     {
+      "index": 2989,
+      "start_ms": 4337880,
+      "end_ms": 4338220,
+      "speaker": "Speaker 0",
+      "asr_text": "对吧?",
+      "board_text": "微信：面urmuse",
+      "has_board": true
+    },
+    {
       "index": 3598,
       "start_ms": 5258850,
       "end_ms": 5262025,
@@ -182,6 +225,15 @@
       "speaker": "Speaker 0",
       "asr_text": "什么建议呢?",
       "board_text": "合 微信：urmuse",
+      "has_board": true
+    },
+    {
+      "index": 3914,
+      "start_ms": 5707710,
+      "end_ms": 5708215,
+      "speaker": "Speaker 0",
+      "asr_text": "对吧?",
+      "board_text": "微信：Lurmuse",
       "has_board": true
     },
     {

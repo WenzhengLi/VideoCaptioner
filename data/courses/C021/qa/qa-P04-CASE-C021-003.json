@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "course_id": "C021",
-  "case_id": "CASE-C021-002",
+  "case_id": "CASE-C021-003",
   "stage": "P04",
   "status": "pass",
   "checks": {
@@ -25,8 +25,8 @@
     "confidence_contract": true
   },
   "metrics": {
-    "case_segment_count": 1396,
-    "unique_evidence_segment_count": 48,
+    "case_segment_count": 982,
+    "unique_evidence_segment_count": 47,
     "evidence_span_count": 15,
     "timeline_count": 10,
     "observations_count": 8,

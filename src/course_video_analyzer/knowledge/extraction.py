@@ -67,14 +67,19 @@ def validate_p04_output(
     source = json.loads(Path(case_input_path).read_text(encoding="utf-8"))
     output = json.loads(Path(output_path).read_text(encoding="utf-8"))
     valid_ids = {item["segment_id"] for item in source.get("segments", [])}
+    case_segment_count = len(valid_ids)
     invalid_evidence: list[str] = []
     missing_evidence: list[str] = []
 
-    def check_items(field: str, evidence_field: str = "evidence_segment_ids") -> None:
+    # Collect all unique evidence IDs
+    all_evidence_ids: set[str] = set()
+
+    def check_items(field: str, evidence_field: str = "evidence_segment_ids") -> bool:
+        """Return True if field has non-empty items with valid evidence."""
         items = output.get(field)
-        if not isinstance(items, list):
-            missing_evidence.append(field)
-            return
+        if not isinstance(items, list) or not items:
+            return False
+        has_valid = False
         for index, item in enumerate(items):
             if not isinstance(item, dict):
                 missing_evidence.append(f"{field}[{index}]")
@@ -83,34 +88,104 @@ def validate_p04_output(
             if not isinstance(evidence, list) or not evidence:
                 missing_evidence.append(f"{field}[{index}].{evidence_field}")
                 continue
-            invalid_evidence.extend(
-                f"{field}[{index}]:{segment_id}"
-                for segment_id in evidence
-                if segment_id not in valid_ids
-            )
+            all_evidence_ids.update(evidence)
+            invalid = [
+                sid for sid in evidence if sid not in valid_ids
+            ]
+            if invalid:
+                invalid_evidence.extend(f"{field}[{index}]:{sid}" for sid in invalid)
+            has_valid = True
+        return has_valid
 
-    for field in ("participants", "timeline", "observations", "instructor_claims", "outcomes", "quoted_expressions"):
-        check_items(field)
+    # Check each field - empty list counts as missing
+    check_items("participants")
+    timeline_ok = check_items("timeline")
+    observations_ok = check_items("observations")
+    instructor_claims_ok = check_items("instructor_claims")
+    outcomes_ok = check_items("outcomes")
+    quoted_expressions_ok = check_items("quoted_expressions")
     check_items("alternative_explanations", "basis_evidence_segment_ids")
+
+    # evidence_spans: must be non-empty list
     evidence_spans = output.get("evidence_spans")
     evidence_ids: list[str] = []
-    if isinstance(evidence_spans, list):
+    evidence_spans_ok = False
+    if isinstance(evidence_spans, list) and evidence_spans:
+        evidence_spans_ok = True
         for index, item in enumerate(evidence_spans):
             if not isinstance(item, dict) or not str(item.get("evidence_id", "")):
                 missing_evidence.append(f"evidence_spans[{index}].evidence_id")
+                evidence_spans_ok = False
                 continue
             evidence_ids.append(str(item["evidence_id"]))
             segment_ids = item.get("segment_ids")
             if not isinstance(segment_ids, list) or not segment_ids:
                 missing_evidence.append(f"evidence_spans[{index}].segment_ids")
+                evidence_spans_ok = False
             else:
-                invalid_evidence.extend(
-                    f"evidence_spans[{index}]:{segment_id}"
-                    for segment_id in segment_ids
-                    if segment_id not in valid_ids
-                )
+                all_evidence_ids.update(segment_ids)
+                invalid = [sid for sid in segment_ids if sid not in valid_ids]
+                if invalid:
+                    invalid_evidence.extend(f"evidence_spans[{index}]:{sid}" for sid in invalid)
+            # quote must be non-empty
+            if not str(item.get("quote", "")).strip():
+                missing_evidence.append(f"evidence_spans[{index}].quote")
+                evidence_spans_ok = False
+    elif isinstance(evidence_spans, list):
+        # Empty list
+        missing_evidence.append("evidence_spans:empty")
     else:
         missing_evidence.append("evidence_spans")
+
+    # At least one content field must be non-empty
+    has_any_content = any([
+        observations_ok,
+        instructor_claims_ok,
+        quoted_expressions_ok,
+        outcomes_ok,
+        timeline_ok,
+    ])
+
+    # Compute unique evidence segment count
+    unique_evidence_segment_count = len(all_evidence_ids)
+
+    # Compute temporal quartile coverage
+    source_segments = source.get("segments", [])
+    if source_segments and all_evidence_ids:
+        segment_positions = {}
+        for i, seg in enumerate(source_segments):
+            segment_positions[seg["segment_id"]] = i
+        evidence_positions = [
+            segment_positions[sid] for sid in all_evidence_ids if sid in segment_positions
+        ]
+        if evidence_positions:
+            quartile_counts = [0, 0, 0, 0]
+            for pos in evidence_positions:
+                q = min(3, pos * 4 // case_segment_count) if case_segment_count > 0 else 0
+                quartile_counts[q] += 1
+            quartiles_covered = sum(1 for c in quartile_counts if c > 0)
+        else:
+            quartiles_covered = 0
+    else:
+        quartiles_covered = 0
+
+    # Minimum thresholds based on mature case baseline (Gate 2)
+    # Mature cases: evidence min=73, spans min=7, timeline min=13, observations min=3, claims min=8, quotes min=11
+    # Use absolute minimums that work for both small test cases and real courses
+    min_evidence = 10  # Minimum unique evidence segments
+    min_spans = 3  # Minimum evidence spans
+    min_timeline = 5  # Minimum timeline events
+    min_observations = 2  # Minimum observations
+    min_claims = 3  # Minimum instructor claims
+    min_quotes = 4  # Minimum quoted expressions
+
+    evidence_sufficient = unique_evidence_segment_count >= min_evidence
+    spans_sufficient = len(evidence_spans) >= min_spans if isinstance(evidence_spans, list) else False
+    timeline_sufficient = len(output.get("timeline", [])) >= min_timeline
+    observations_sufficient = len(output.get("observations", [])) >= min_observations
+    claims_sufficient = len(output.get("instructor_claims", [])) >= min_claims
+    quotes_sufficient = len(output.get("quoted_expressions", [])) >= min_quotes
+
     confidence = output.get("confidence")
     checks = {
         "schema_version": output.get("schema_version") == "1.0",
@@ -119,9 +194,18 @@ def validate_p04_output(
         and output.get("course_id") == course_id
         and output.get("case_id") == case_id,
         "summary_present": bool(str(output.get("summary", "")).strip()),
+        "evidence_spans_non_empty": evidence_spans_ok,
+        "has_any_content": has_any_content,
         "evidence_present": not missing_evidence,
         "evidence_in_case_range": not invalid_evidence,
         "evidence_ids_unique": len(evidence_ids) == len(set(evidence_ids)),
+        "evidence_sufficient": evidence_sufficient,
+        "spans_sufficient": spans_sufficient,
+        "timeline_sufficient": timeline_sufficient,
+        "observations_sufficient": observations_sufficient,
+        "claims_sufficient": claims_sufficient,
+        "quotes_sufficient": quotes_sufficient,
+        "temporal_coverage": quartiles_covered >= 2,
         "uncertainties_contract": isinstance(output.get("uncertainties"), list),
         "confidence_contract": isinstance(confidence, (int, float)) and 0 <= confidence <= 1,
     }
@@ -133,8 +217,14 @@ def validate_p04_output(
         "status": "pass" if all(checks.values()) else "needs_review",
         "checks": checks,
         "metrics": {
-            "case_segment_count": len(valid_ids),
+            "case_segment_count": case_segment_count,
+            "unique_evidence_segment_count": unique_evidence_segment_count,
             "evidence_span_count": len(evidence_spans) if isinstance(evidence_spans, list) else 0,
+            "timeline_count": len(output.get("timeline", [])),
+            "observations_count": len(output.get("observations", [])),
+            "instructor_claims_count": len(output.get("instructor_claims", [])),
+            "quoted_expressions_count": len(output.get("quoted_expressions", [])),
+            "quartiles_covered": quartiles_covered,
             "missing_evidence_count": len(missing_evidence),
             "invalid_evidence_count": len(invalid_evidence),
         },

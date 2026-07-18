@@ -8,15 +8,16 @@
   "cases": [
     {
       "case_id": "CASE-C021-001",
-      "title": "聊天记录案例分析（第一段）",
+      "title": "汕头女生聊天案例分析",
       "start_segment_id": "SEG-C021-000047",
       "end_segment_id": "SEG-C021-002507",
       "participant_roles": [
         "instructor",
-        "student"
+        "student",
+        "target"
       ],
       "boundary_evidence": {
-        "start_reason": "讲师明确引入案例：今天来讲讲案例",
+        "start_reason": "讲师引入案例：今天来讲讲案例",
         "end_reason": "讲师过渡到下一个案例：下一个",
         "evidence_segment_ids": [
           "SEG-C021-000047",
@@ -24,25 +25,47 @@
         ]
       },
       "completeness": "complete",
-      "confidence": 0.8
+      "confidence": 0.85
     },
     {
       "case_id": "CASE-C021-002",
-      "title": "聊天记录案例分析（第二段）",
+      "title": "成都女生聊天案例分析",
       "start_segment_id": "SEG-C021-002508",
-      "end_segment_id": "SEG-C021-004885",
+      "end_segment_id": "SEG-C021-003903",
       "participant_roles": [
         "instructor",
-        "student"
+        "student",
+        "target"
       ],
       "boundary_evidence": {
-        "start_reason": "讲师明确过渡：下一个",
-        "end_reason": "课程结束",
+        "start_reason": "讲师过渡：下一个，开始分析成都女生聊天",
+        "end_reason": "讲师过渡到下一个案例：好下一个",
         "evidence_segment_ids": [
-          "SEG-C021-002508"
+          "SEG-C021-002508",
+          "SEG-C021-003904"
         ]
       },
       "completeness": "complete",
+      "confidence": 0.8
+    },
+    {
+      "case_id": "CASE-C021-003",
+      "title": "第三个聊天案例分析",
+      "start_segment_id": "SEG-C021-003904",
+      "end_segment_id": "SEG-C021-004885",
+      "participant_roles": [
+        "instructor",
+        "student",
+        "target"
+      ],
+      "boundary_evidence": {
+        "start_reason": "讲师过渡：好下一个",
+        "end_reason": "课程结束",
+        "evidence_segment_ids": [
+          "SEG-C021-003904"
+        ]
+      },
+      "completeness": "partial",
       "confidence": 0.7
     }
   ],
@@ -94,10 +117,15 @@
     "SEG-C021-000045",
     "SEG-C021-000046"
   ],
-  "uncertainties": [],
+  "uncertainties": [
+    {
+      "case_id": "CASE-C021-003",
+      "note": "案例边界不明确，可能包含多个子案例"
+    }
+  ],
   "segmentation_metrics": {
     "input_segment_count": 4885,
-    "case_count": 2,
+    "case_count": 3,
     "assigned_segment_count": 4839,
     "unassigned_segment_count": 46
   }

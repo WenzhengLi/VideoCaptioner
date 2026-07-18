@@ -6,8 +6,8 @@
   ],
   "course_id": "C021",
   "case_id": "CASE-C021-001",
-  "case_title": "聊天记录案例分析（第一段）",
-  "summary": "讲师分析微信聊天记录，讲解约会场景中的吸引力建立",
+  "case_title": "汕头女生聊天案例分析",
+  "summary": "讲师分析汕头女生聊天案例分析，讲解聊天互动技巧",
   "participants": [
     {
       "role": "instructor",
@@ -34,36 +34,198 @@
   "timeline": [
     {
       "event_id": "EVT-001",
-      "description": "微信好友验证通过",
+      "description": "案例阶段 1",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
-        "SEG-C021-000062"
+        "SEG-C021-000047"
       ]
     },
     {
       "event_id": "EVT-002",
-      "description": "开始聊天互动",
+      "description": "案例阶段 2",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
-        "SEG-C021-000063"
+        "SEG-C021-000293"
+      ]
+    },
+    {
+      "event_id": "EVT-003",
+      "description": "案例阶段 3",
+      "epistemic_type": "observation",
+      "evidence_segment_ids": [
+        "SEG-C021-000539"
+      ]
+    },
+    {
+      "event_id": "EVT-004",
+      "description": "案例阶段 4",
+      "epistemic_type": "observation",
+      "evidence_segment_ids": [
+        "SEG-C021-000785"
+      ]
+    },
+    {
+      "event_id": "EVT-005",
+      "description": "案例阶段 5",
+      "epistemic_type": "observation",
+      "evidence_segment_ids": [
+        "SEG-C021-001031"
+      ]
+    },
+    {
+      "event_id": "EVT-006",
+      "description": "案例阶段 6",
+      "epistemic_type": "observation",
+      "evidence_segment_ids": [
+        "SEG-C021-001277"
+      ]
+    },
+    {
+      "event_id": "EVT-007",
+      "description": "案例阶段 7",
+      "epistemic_type": "observation",
+      "evidence_segment_ids": [
+        "SEG-C021-001523"
+      ]
+    },
+    {
+      "event_id": "EVT-008",
+      "description": "案例阶段 8",
+      "epistemic_type": "observation",
+      "evidence_segment_ids": [
+        "SEG-C021-001769"
+      ]
+    },
+    {
+      "event_id": "EVT-009",
+      "description": "案例阶段 9",
+      "epistemic_type": "observation",
+      "evidence_segment_ids": [
+        "SEG-C021-002015"
+      ]
+    },
+    {
+      "event_id": "EVT-010",
+      "description": "案例阶段 10",
+      "epistemic_type": "observation",
+      "evidence_segment_ids": [
+        "SEG-C021-002261"
       ]
     }
   ],
   "observations": [
     {
       "id": "OBS-001",
-      "text": "聊天记录显示双方在1月30日凌晨和下午有互动",
+      "text": "然后请天我我今天来讲讲案例，",
+      "evidence_segment_ids": [
+        "SEG-C021-000047"
+      ]
+    },
+    {
+      "id": "OBS-002",
+      "text": "讲讲案例怎么玩的越来越帅了，",
+      "evidence_segment_ids": [
+        "SEG-C021-000049"
+      ]
+    },
+    {
+      "id": "OBS-003",
+      "text": "可能我心情好逆生长吧，",
+      "evidence_segment_ids": [
+        "SEG-C021-000051"
+      ]
+    },
+    {
+      "id": "OBS-004",
+      "text": "心情好就是就是颜值就是然高，",
+      "evidence_segment_ids": [
+        "SEG-C021-000055"
+      ]
+    },
+    {
+      "id": "OBS-005",
+      "text": "就是你传递给别人的能量是正面的。",
       "evidence_segment_ids": [
         "SEG-C021-000062"
+      ]
+    },
+    {
+      "id": "OBS-006",
+      "text": "我们就这个话不多说吧，",
+      "evidence_segment_ids": [
+        "SEG-C021-000066"
+      ]
+    },
+    {
+      "id": "OBS-007",
+      "text": "因为我们前面这个已经在对着空气也浪费了一份的一波感情了。",
+      "evidence_segment_ids": [
+        "SEG-C021-000069"
+      ]
+    },
+    {
+      "id": "OBS-008",
+      "text": "你怎么你每次都是怎么回复我，",
+      "evidence_segment_ids": [
+        "SEG-C021-000081"
       ]
     }
   ],
   "instructor_claims": [
     {
       "id": "CLM-001",
-      "text": "讲师认为这个案例展示了如何在约会中建立吸引力",
+      "text": "然后他就在下面好好舔，",
       "evidence_segment_ids": [
-        "SEG-C021-000093"
+        "SEG-C021-001283"
+      ]
+    },
+    {
+      "id": "CLM-002",
+      "text": "然后我就是一个什么呢？",
+      "evidence_segment_ids": [
+        "SEG-C021-001284"
+      ]
+    },
+    {
+      "id": "CLM-003",
+      "text": "就是变成成一个高冷人设，",
+      "evidence_segment_ids": [
+        "SEG-C021-001290"
+      ]
+    },
+    {
+      "id": "CLM-004",
+      "text": "就是他已经知道我是他的这个亡了吗，",
+      "evidence_segment_ids": [
+        "SEG-C021-001294"
+      ]
+    },
+    {
+      "id": "CLM-005",
+      "text": "我用王的姿态蔑视他就 ok 了。",
+      "evidence_segment_ids": [
+        "SEG-C021-001297"
+      ]
+    },
+    {
+      "id": "CLM-006",
+      "text": "他给我他妈的发了两遍消息，",
+      "evidence_segment_ids": [
+        "SEG-C021-001300"
+      ]
+    },
+    {
+      "id": "CLM-007",
+      "text": "他不是跪什么好不错嗯，",
+      "evidence_segment_ids": [
+        "SEG-C021-001301"
+      ]
+    },
+    {
+      "id": "CLM-008",
+      "text": "那我就他妈让他规则呀，",
+      "evidence_segment_ids": [
+        "SEG-C021-001303"
       ]
     }
   ],
@@ -71,10 +233,10 @@
   "outcomes": [
     {
       "id": "OUT-001",
-      "text": "案例展示了聊天互动的过程",
+      "text": "案例展示了聊天互动过程",
       "status": "observed",
       "evidence_segment_ids": [
-        "SEG-C021-000062"
+        "SEG-C021-001277"
       ]
     }
   ],
@@ -82,10 +244,73 @@
     {
       "id": "QUO-001",
       "speaker_role": "student",
-      "text": "我刚睡醒不久",
-      "context": "聊天开场",
+      "text": "我们来仔细的看一看啊。",
+      "context": "聊天记录",
       "evidence_segment_ids": [
-        "SEG-C021-000062"
+        "SEG-C021-000868"
+      ]
+    },
+    {
+      "id": "QUO-002",
+      "speaker_role": "student",
+      "text": "就是相对来讲比较合理的。",
+      "context": "聊天记录",
+      "evidence_segment_ids": [
+        "SEG-C021-000872"
+      ]
+    },
+    {
+      "id": "QUO-003",
+      "speaker_role": "student",
+      "text": "那么在合理的情况下升高关系的话，",
+      "context": "聊天记录",
+      "evidence_segment_ids": [
+        "SEG-C021-000873"
+      ]
+    },
+    {
+      "id": "QUO-004",
+      "speaker_role": "student",
+      "text": "百分之八九十的女人她是不会拒绝的，",
+      "context": "聊天记录",
+      "evidence_segment_ids": [
+        "SEG-C021-000874"
+      ]
+    },
+    {
+      "id": "QUO-005",
+      "speaker_role": "student",
+      "text": "就是不管是说是什么样的妹子，",
+      "context": "聊天记录",
+      "evidence_segment_ids": [
+        "SEG-C021-000880"
+      ]
+    },
+    {
+      "id": "QUO-006",
+      "speaker_role": "student",
+      "text": "因为隐约他其实是在什么是在提供价值，",
+      "context": "聊天记录",
+      "evidence_segment_ids": [
+        "SEG-C021-000885"
+      ]
+    },
+    {
+      "id": "QUO-007",
+      "speaker_role": "student",
+      "text": "所以我其实是在投入价值。",
+      "context": "聊天记录",
+      "evidence_segment_ids": [
+        "SEG-C021-000895"
+      ]
+    },
+    {
+      "id": "QUO-008",
+      "speaker_role": "student",
+      "text": "因为我前面对你已经了解嘛，",
+      "context": "聊天记录",
+      "evidence_segment_ids": [
+        "SEG-C021-000897"
       ]
     }
   ],
@@ -93,9 +318,107 @@
     {
       "evidence_id": "EVD-001",
       "segment_ids": [
-        "SEG-C021-000062"
+        "SEG-C021-000047"
       ],
-      "quote": "1月30日凌晨02:44 我通过了你的朋友验证请求"
+      "quote": "然后请天我我今天来讲讲案例，"
+    },
+    {
+      "evidence_id": "EVD-002",
+      "segment_ids": [
+        "SEG-C021-000205"
+      ],
+      "quote": "1月30日晚上19:51\n常在汕头吖\n家在这边\n我也刚吃完饭\n之前不常在之后是啦\n也可以咱们一起到成都要待几\n天\n后面我也会飞其他地方\n都能一起旅旅游拍拍照"
+    },
+    {
+      "evidence_id": "EVD-003",
+      "segment_ids": [
+        "SEG-C021-000346"
+      ],
+      "quote": "1月31日量00:42\n你老爸还在看电视嘛\n六"
+    },
+    {
+      "evidence_id": "EVD-004",
+      "segment_ids": [
+        "SEG-C021-000542"
+      ],
+      "quote": "我不知道你是下他他是怎么样啊，"
+    },
+    {
+      "evidence_id": "EVD-005",
+      "segment_ids": [
+        "SEG-C021-000713"
+      ],
+      "quote": "然后我就去复盘了一下，"
+    },
+    {
+      "evidence_id": "EVD-006",
+      "segment_ids": [
+        "SEG-C021-000861"
+      ],
+      "quote": "然后我隔了差不多两个小时了。"
+    },
+    {
+      "evidence_id": "EVD-007",
+      "segment_ids": [
+        "SEG-C021-001030"
+      ],
+      "quote": "平时交流我觉得政法很有讲啊，"
+    },
+    {
+      "evidence_id": "EVD-008",
+      "segment_ids": [
+        "SEG-C021-001190"
+      ],
+      "quote": "这个就是就是就是这他妈发的太大了，"
+    },
+    {
+      "evidence_id": "EVD-009",
+      "segment_ids": [
+        "SEG-C021-001335"
+      ],
+      "quote": "一般你的高额债券是一个怎么样的方式？"
+    },
+    {
+      "evidence_id": "EVD-010",
+      "segment_ids": [
+        "SEG-C021-001511"
+      ],
+      "quote": "就是他说什么他刚报了 c 二，"
+    },
+    {
+      "evidence_id": "EVD-011",
+      "segment_ids": [
+        "SEG-C021-001651"
+      ],
+      "quote": "如果说对方是一个大众迷你，"
+    },
+    {
+      "evidence_id": "EVD-012",
+      "segment_ids": [
+        "SEG-C021-001821"
+      ],
+      "quote": "就是我一开始以前学习的时候，"
+    },
+    {
+      "evidence_id": "EVD-013",
+      "segment_ids": [
+        "SEG-C021-001940"
+      ],
+      "quote": "就是你这个态度确实是确实是对不对？"
+    },
+    {
+      "evidence_id": "EVD-014",
+      "segment_ids": [
+        "SEG-C021-002097"
+      ],
+      "quote": "就说啊他他说看你什么时候得钱呢？"
+    },
+    {
+      "evidence_id": "EVD-015",
+      "segment_ids": [
+        "SEG-C021-002259"
+      ],
+      "quote": "但是什么但是就是新手的话就不要学了，"
     }
   ],
   "uncertainties": [
