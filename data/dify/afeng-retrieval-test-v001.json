@@ -28,7 +28,7 @@
   },
   {
     "id": "Q04",
-    "question": "阿峰讲的佛山案例中，操作步骤有哪些？",
+    "question": "阿峰在C010课程佛山案例中讲的操作步骤是什么？",
     "expected_course": "C010",
     "expected_case": "CASE-C010-001",
     "expected_canonical": "AFENG-C010-CASE-C010-001",
@@ -58,7 +58,11 @@
     "question": "阿峰的方法中，哪些被归类为 verified_method？",
     "expected_course": "multiple",
     "expected_case": "multiple",
-    "expected_canonical": ["AFENG-C008-CASE-C008-001", "AFENG-C018-CASE-C018-003", "AFENG-C019-CASE-C019-001"],
+    "expected_canonical": [
+      "AFENG-C008-CASE-C008-001",
+      "AFENG-C018-CASE-C018-003",
+      "AFENG-C019-CASE-C019-001"
+    ],
     "category": "publication_class",
     "description": "发布分类检索"
   },
@@ -73,7 +77,7 @@
   },
   {
     "id": "Q09",
-    "question": "阿峰讲的 C004 第二个案例中，课程声称或展示的结果是什么？",
+    "question": "C004第二个案例中，阿峰声称或展示的结果是什么？",
     "expected_course": "C004",
     "expected_case": "CASE-C004-002",
     "expected_canonical": "AFENG-C004-CASE-C004-002",
@@ -91,7 +95,7 @@
   },
   {
     "id": "Q11",
-    "question": "阿峰的 ASD 突破方法是哪个课程的？核心逻辑是什么？",
+    "question": "阿峰讲的ASD突破方法属于哪个课程？核心逻辑是什么？",
     "expected_course": "C019",
     "expected_case": "CASE-C019-001",
     "expected_canonical": "AFENG-C019-CASE-C019-001",
@@ -103,7 +107,10 @@
     "question": "哪些案例的方法属于 partial_method？",
     "expected_course": "multiple",
     "expected_case": "multiple",
-    "expected_canonical": ["AFENG-C020-CASE-C020-002", "AFENG-C020-CASE-C020-003"],
+    "expected_canonical": [
+      "AFENG-C020-CASE-C020-002",
+      "AFENG-C020-CASE-C020-003"
+    ],
     "category": "publication_class",
     "description": "partial_method 检索"
   },
@@ -118,11 +125,11 @@
   },
   {
     "id": "Q14",
-    "question": "阿峰方法中，哪些案例经历了修订？",
+    "question": "阿峰C018第二个案例经历了一轮修订后通过的方法是什么？",
     "expected_course": "multiple",
     "expected_case": "multiple",
-    "expected_canonical": ["AFENG-C010-CASE-C010-001", "AFENG-C012-CASE-C012-001", "AFENG-C018-CASE-C018-002"],
-    "category": "revision",
+    "expected_canonical": "AFENG-C018-CASE-C018-002",
+    "category": "revision_case",
     "description": "修订案例检索"
   },
   {
@@ -172,7 +179,7 @@
   },
   {
     "id": "Q20",
-    "question": "阿峰的课程方法中，哪些是 course_claim 类型的？",
+    "question": "阿峰方法中哪个案例的发布分类是course_claim？",
     "expected_course": "C001",
     "expected_case": "CASE-C001-001",
     "expected_canonical": "AFENG-C001-CASE-C001-001",

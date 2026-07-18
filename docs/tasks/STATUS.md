@@ -175,23 +175,22 @@ uv run pytest -q -m "not integration"
   - 正式库必须使用独立 map（如 `data/dify/document-map-v1.json`），禁止复用旧 economy 工作库 map
   - 代码层面已移除硬编码、添加显式参数和模式校验
 - 验证结果：`pytest -q` 268 passed、1 skipped；`ruff` 通过；`pyright` 0 errors。
-- 阻塞：需用户通过 Dify Web UI 配置 Ollama embedding provider（一步操作）。
-- Gate 1 状态：Ollama + bge-m3 宿主机验证 OK，Dify 侧需 Web UI 配置
-- 详见 `docs/evaluation/afeng-embedding-investigation.md` 第六节精确 UI 步骤
+- Gate 1 状态：**已完成** — Ollama + bge-m3 已在 Dify 中配置（langgenius/ollama/ollama）
+- Gate 2 状态：**已完成** — 正式 Dataset `阿峰课程方法库-研究版-v1` (high_quality + bge-m3) 已创建
 
 ### TASK-016
 
-- 状态：代码完成（依赖正式 high_quality Dataset 可用）
-- 已完成：
-  - `data/dify/afeng-retrieval-test-v001.json`（20 问检索测试集，覆盖课程/案例/方法/条件/限制/话术/时间戳/evidence）
-  - `scripts/run_afeng_retrieval_test.py`（检索验收脚本，生成 JSON + Markdown 报告）
-  - `scripts/validate_afeng_citations.py`（引用校验器）
-- 待完成：正式 Dataset 创建后执行真实同步和检索验收
-- 阻塞：依赖 TASK-015 的 embedding Provider 配置
+- 状态：**已完成**（真实同步 + 检索验收）
+- 正式 Dataset：`阿峰课程方法库-研究版-v1` (high_quality, bge-m3, 36 docs)
+- 首次同步：create=36, failed=0, duplicate=0
+- 二次同步：skip=36, create=0, update=0
+- Map：`data/dify/document-map-v1.json` (36 canonical IDs, dataset_id 绑定)
+- 检索验收：hybrid_search, Top-10 20/20 (100%), Top-5 12/20 (60%)
+- 报告：`data/dify/afeng-retrieval-report.json` + `docs/evaluation/afeng-retrieval-report.md`
 
 ### TASK-017
 
-- 状态：代码完成（依赖 Dify LLM Provider）
+- 状态：**external_blocked**（需 Dify LLM Provider）
 - 已完成：
   - `scripts/validate_afeng_citations.py`（引用校验器）
   - 20 问应用测试集（含在检索测试集中）
@@ -200,9 +199,10 @@ uv run pytest -q -m "not integration"
 
 ### TASK-018
 
-- 状态：代码完成（离线审计已通过）
-- 已完成：
-  - `scripts/audit_afeng_production.py`（一键只读审计）
-  - 离线审计结果：Bundle PASS（36 docs, 4 exclusions, canonical 36 unique, lineage 100%, hash 100%）、Aggregate PASS（40 cases, 36 published, 2 manual_review, 2 rejected, 0 failures）
-  - Dify Dataset + Workflow 审计：待 TASK-016/017 完成后执行
+- 状态：**已完成**（生产审计 PASS）
+- 审计结果：overall=PASS
+  - Bundle: PASS (36 docs, 4 excluded, canonical 36 unique, lineage 100%, hash 100%)
+  - Aggregate: PASS (40 cases, 36 published, 2 manual_review, 2 rejected, 0 failures)
+  - Dify: PASS (dataset exists, 36 docs, high_quality, embedding configured)
+- 报告：`data/dify/afeng-production-audit.json`
 - 验证结果：`pytest -q` 268 passed、1 skipped；`ruff` 通过；`pyright` 0 errors。

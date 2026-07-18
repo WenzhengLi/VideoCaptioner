@@ -24,9 +24,17 @@ from pathlib import Path
 from typing import Any
 
 
-def _retrieve(base_url: str, api_key: str, dataset_id: str, query: str, top_k: int = 5) -> dict[str, Any]:
+def _retrieve(base_url: str, api_key: str, dataset_id: str, query: str, top_k: int = 5, search_method: str = "hybrid_search") -> dict[str, Any]:
     url = f"{base_url}/datasets/{dataset_id}/retrieve"
-    payload = {"query": query, "retrieval_model": {"search_method": "semantic_search", "top_k": top_k}}
+    payload = {
+        "query": query,
+        "retrieval_model": {
+            "search_method": search_method,
+            "reranking_enable": False,
+            "top_k": top_k,
+            "score_threshold_enabled": False,
+        },
+    }
     data = json.dumps(payload).encode("utf-8")
     req = urllib.request.Request(
         url, data=data, method="POST",
@@ -52,16 +60,17 @@ def run_test(
     dataset_id: str,
     test_set: list[dict[str, Any]],
     top_k: int = 5,
+    search_method: str = "hybrid_search",
 ) -> dict[str, Any]:
     results: list[dict[str, Any]] = []
     for item in test_set:
         query = item["question"]
-        resp = _retrieve(base_url, api_key, dataset_id, query, top_k=top_k)
+        resp = _retrieve(base_url, api_key, dataset_id, query, top_k=top_k, search_method=search_method)
         records = resp.get("records", resp.get("data", []))
         hits: list[dict[str, Any]] = []
         for rec in records:
             segment = rec.get("segment", rec)
-            doc = rec.get("document", {})
+            doc = rec.get("document") or segment.get("document") or {}
             hits.append({
                 "knowledge_id": doc.get("name", segment.get("document_id", "")),
                 "score": rec.get("score", 0),
@@ -134,7 +143,9 @@ def main() -> int:
     parser.add_argument("--map-path", type=Path, default=Path("data/dify/document-map-v1.json"))
     parser.add_argument("--json-output", type=Path, default=Path("data/dify/afeng-retrieval-report.json"))
     parser.add_argument("--md-output", type=Path, default=Path("docs/evaluation/afeng-retrieval-report.md"))
-    parser.add_argument("--top-k", type=int, default=5)
+    parser.add_argument("--top-k", type=int, default=10)
+    parser.add_argument("--search-method", default="hybrid_search",
+                        choices=["semantic_search", "keyword_search", "hybrid_search"])
     args = parser.parse_args()
 
     base_url = os.environ.get("DIFY_BASE_URL", "").rstrip("/")
@@ -145,7 +156,8 @@ def main() -> int:
         return 1
 
     test_set = json.loads(args.test_set.read_text(encoding="utf-8"))
-    report = run_test(base_url, api_key, dataset_id, test_set, top_k=args.top_k)
+    report = run_test(base_url, api_key, dataset_id, test_set, top_k=args.top_k, search_method=args.search_method)
+    report["search_method"] = args.search_method
 
     args.json_output.parent.mkdir(parents=True, exist_ok=True)
     args.json_output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

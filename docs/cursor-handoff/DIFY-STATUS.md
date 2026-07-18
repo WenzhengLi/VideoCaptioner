@@ -99,17 +99,43 @@ mapped=36（已清除历史 KNOW-SMOKE-001 污染条目；远端无 SMOKE）
 - semantic / embedding 检索：未完成（缺 embedding 供应商）
 - Chatflow 20 问端到端：未开始（缺 LLM）
 
-## 当前外部阻塞（Gate 1）
+## 正式 Dataset 状态（Gate 2 完成）
 
-**Ollama + bge-m3 已在宿主机验证可用**（1024 维，L2=1.0），但 Dify 1.15.0 的 Provider 安装只能通过 Web UI 完成。
+| 项 | 值 |
+|---|---|
+| 名称 | 阿峰课程方法库-研究版-v1 |
+| 模式 | high_quality |
+| Embedding | bge-m3 (langgenius/ollama/ollama, 1024 维) |
+| 文档数 | 36 |
+| 索引状态 | 36/36 completed |
+| Map | data/dify/document-map-v1.json (36 canonical IDs) |
 
-需在浏览器中完成：
-1. http://127.0.0.1:3080 → 设置 → 模型供应商 → 安装 Ollama 插件
-2. 配置 Base URL: `http://host.docker.internal:11434`
-3. 添加 embedding 模型: `bge-m3` (text-embedding, 1024 维)
-4. 创建正式 Dataset `阿峰课程方法库-研究版-v1` (high_quality + bge-m3)
-5. 创建 API Key 并记录 Dataset ID
+## 同步验收（Gate 3 完成）
 
-详细步骤见 `docs/evaluation/afeng-embedding-investigation.md` 第六节。
+| 指标 | 结果 |
+|---|---|
+| 首次同步 | create=36, failed=0, duplicate=0 |
+| 二次同步 | skip=36, create=0, update=0 |
+| Map canonical ID | 36/36 (100%) |
+| Map dataset_id | 匹配正式 Dataset |
 
-完成后 Gate 2～5 可自动执行。
+## 检索验收
+
+| 指标 | 结果 |
+|---|---|
+| 搜索模式 | hybrid_search |
+| Top-10 命中率 | 20/20 (100%) |
+| Top-5 命中率 | 12/20 (60%) |
+| 手册/rejected 泄漏 | 0 |
+
+> Top-5 命中率 60% 未达 90% 目标。bge-m3 对相似主题文档区分度有限。
+> 应用层可通过增大 top_k 或结合 metadata 过滤改善。
+
+## 生产审计
+
+```
+audit_overall: PASS
+bundle: PASS (36 docs, 4 excluded, canonical unique, lineage 100%)
+aggregate: PASS (40 cases, 36 published, 2 manual_review, 2 rejected)
+dify: PASS (dataset exists, 36 docs, high_quality, embedding configured)
+```
