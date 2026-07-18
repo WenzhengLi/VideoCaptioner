@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "course_id": "C021",
+  "case_id": "CASE-C021-001",
+  "stage": "P04",
+  "status": "pass",
+  "checks": {
+    "schema_version": true,
+    "prompt_version": true,
+    "identity": true,
+    "summary_present": true,
+    "evidence_present": true,
+    "evidence_in_case_range": true,
+    "evidence_ids_unique": true,
+    "uncertainties_contract": true,
+    "confidence_contract": true
+  },
+  "metrics": {
+    "case_segment_count": 2461,
+    "evidence_span_count": 1,
+    "missing_evidence_count": 0,
+    "invalid_evidence_count": 0
+  },
+  "samples": {
+    "missing_evidence": [],
+    "invalid_evidence": []
+  }
+}

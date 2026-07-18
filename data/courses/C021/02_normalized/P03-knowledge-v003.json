@@ -1,0 +1,104 @@
+{
+  "schema_version": "1.0",
+  "prompt_version": "knowledge-v003-p03",
+  "source_ids": [
+    "C021"
+  ],
+  "course_id": "C021",
+  "cases": [
+    {
+      "case_id": "CASE-C021-001",
+      "title": "聊天记录案例分析（第一段）",
+      "start_segment_id": "SEG-C021-000047",
+      "end_segment_id": "SEG-C021-002507",
+      "participant_roles": [
+        "instructor",
+        "student"
+      ],
+      "boundary_evidence": {
+        "start_reason": "讲师明确引入案例：今天来讲讲案例",
+        "end_reason": "讲师过渡到下一个案例：下一个",
+        "evidence_segment_ids": [
+          "SEG-C021-000047",
+          "SEG-C021-002508"
+        ]
+      },
+      "completeness": "complete",
+      "confidence": 0.8
+    },
+    {
+      "case_id": "CASE-C021-002",
+      "title": "聊天记录案例分析（第二段）",
+      "start_segment_id": "SEG-C021-002508",
+      "end_segment_id": "SEG-C021-004885",
+      "participant_roles": [
+        "instructor",
+        "student"
+      ],
+      "boundary_evidence": {
+        "start_reason": "讲师明确过渡：下一个",
+        "end_reason": "课程结束",
+        "evidence_segment_ids": [
+          "SEG-C021-002508"
+        ]
+      },
+      "completeness": "complete",
+      "confidence": 0.7
+    }
+  ],
+  "unassigned_segment_ids": [
+    "SEG-C021-000001",
+    "SEG-C021-000002",
+    "SEG-C021-000003",
+    "SEG-C021-000004",
+    "SEG-C021-000005",
+    "SEG-C021-000006",
+    "SEG-C021-000007",
+    "SEG-C021-000008",
+    "SEG-C021-000009",
+    "SEG-C021-000010",
+    "SEG-C021-000011",
+    "SEG-C021-000012",
+    "SEG-C021-000013",
+    "SEG-C021-000014",
+    "SEG-C021-000015",
+    "SEG-C021-000016",
+    "SEG-C021-000017",
+    "SEG-C021-000018",
+    "SEG-C021-000019",
+    "SEG-C021-000020",
+    "SEG-C021-000021",
+    "SEG-C021-000022",
+    "SEG-C021-000023",
+    "SEG-C021-000024",
+    "SEG-C021-000025",
+    "SEG-C021-000026",
+    "SEG-C021-000027",
+    "SEG-C021-000028",
+    "SEG-C021-000029",
+    "SEG-C021-000030",
+    "SEG-C021-000031",
+    "SEG-C021-000032",
+    "SEG-C021-000033",
+    "SEG-C021-000034",
+    "SEG-C021-000035",
+    "SEG-C021-000036",
+    "SEG-C021-000037",
+    "SEG-C021-000038",
+    "SEG-C021-000039",
+    "SEG-C021-000040",
+    "SEG-C021-000041",
+    "SEG-C021-000042",
+    "SEG-C021-000043",
+    "SEG-C021-000044",
+    "SEG-C021-000045",
+    "SEG-C021-000046"
+  ],
+  "uncertainties": [],
+  "segmentation_metrics": {
+    "input_segment_count": 4885,
+    "case_count": 2,
+    "assigned_segment_count": 4839,
+    "unassigned_segment_count": 46
+  }
+}

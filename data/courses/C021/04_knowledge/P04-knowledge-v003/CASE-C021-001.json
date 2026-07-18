@@ -1,0 +1,109 @@
+{
+  "schema_version": "1.0",
+  "prompt_version": "knowledge-v003-p04",
+  "source_ids": [
+    "C021"
+  ],
+  "course_id": "C021",
+  "case_id": "CASE-C021-001",
+  "case_title": "聊天记录案例分析（第一段）",
+  "summary": "讲师分析微信聊天记录，讲解约会场景中的吸引力建立",
+  "participants": [
+    {
+      "role": "instructor",
+      "description": "课程讲师",
+      "evidence_segment_ids": [
+        "SEG-C021-000047"
+      ]
+    },
+    {
+      "role": "student",
+      "description": "聊天记录中的男性",
+      "evidence_segment_ids": [
+        "SEG-C021-000062"
+      ]
+    },
+    {
+      "role": "target",
+      "description": "聊天记录中的女性",
+      "evidence_segment_ids": [
+        "SEG-C021-000062"
+      ]
+    }
+  ],
+  "timeline": [
+    {
+      "event_id": "EVT-001",
+      "description": "微信好友验证通过",
+      "epistemic_type": "observation",
+      "evidence_segment_ids": [
+        "SEG-C021-000062"
+      ]
+    },
+    {
+      "event_id": "EVT-002",
+      "description": "开始聊天互动",
+      "epistemic_type": "observation",
+      "evidence_segment_ids": [
+        "SEG-C021-000063"
+      ]
+    }
+  ],
+  "observations": [
+    {
+      "id": "OBS-001",
+      "text": "聊天记录显示双方在1月30日凌晨和下午有互动",
+      "evidence_segment_ids": [
+        "SEG-C021-000062"
+      ]
+    }
+  ],
+  "instructor_claims": [
+    {
+      "id": "CLM-001",
+      "text": "讲师认为这个案例展示了如何在约会中建立吸引力",
+      "evidence_segment_ids": [
+        "SEG-C021-000093"
+      ]
+    }
+  ],
+  "alternative_explanations": [],
+  "outcomes": [
+    {
+      "id": "OUT-001",
+      "text": "案例展示了聊天互动的过程",
+      "status": "observed",
+      "evidence_segment_ids": [
+        "SEG-C021-000062"
+      ]
+    }
+  ],
+  "quoted_expressions": [
+    {
+      "id": "QUO-001",
+      "speaker_role": "student",
+      "text": "我刚睡醒不久",
+      "context": "聊天开场",
+      "evidence_segment_ids": [
+        "SEG-C021-000062"
+      ]
+    }
+  ],
+  "evidence_spans": [
+    {
+      "evidence_id": "EVD-001",
+      "segment_ids": [
+        "SEG-C021-000062"
+      ],
+      "quote": "1月30日凌晨02:44 我通过了你的朋友验证请求"
+    }
+  ],
+  "uncertainties": [
+    {
+      "field": "outcome",
+      "note": "案例结果不明确",
+      "evidence_segment_ids": []
+    }
+  ],
+  "confidence": 0.7
+}

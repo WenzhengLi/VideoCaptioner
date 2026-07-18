@@ -1,0 +1,233 @@
+{
+  "schema_version": "1.0",
+  "course_id": "C021",
+  "total_items": 4801,
+  "sample_count": 25,
+  "samples": [
+    {
+      "index": 0,
+      "start_ms": 2900,
+      "end_ms": 4240,
+      "speaker": "Speaker 0",
+      "asr_text": "怪不得刚才我就点了,",
+      "board_text": "",
+      "has_board": true
+    },
+    {
+      "index": 1,
+      "start_ms": 4360,
+      "end_ms": 5900,
+      "speaker": "Speaker 0",
+      "asr_text": "我就说我不是没不是没有呀,",
+      "board_text": "",
+      "has_board": true
+    },
+    {
+      "index": 2,
+      "start_ms": 5900,
+      "end_ms": 7305,
+      "speaker": "Speaker 0",
+      "asr_text": "你再刷新一下,",
+      "board_text": "",
+      "has_board": true
+    },
+    {
+      "index": 3,
+      "start_ms": 9060,
+      "end_ms": 10660,
+      "speaker": "Speaker 0",
+      "asr_text": "刷了两没理啊,",
+      "board_text": "",
+      "has_board": true
+    },
+    {
+      "index": 4,
+      "start_ms": 11280,
+      "end_ms": 13900,
+      "speaker": "Speaker 0",
+      "asr_text": "嗯不应该吧?",
+      "board_text": "",
+      "has_board": false
+    },
+    {
+      "index": 1198,
+      "start_ms": 1660390,
+      "end_ms": 1661110,
+      "speaker": "Speaker 0",
+      "asr_text": "他妈小嘛,",
+      "board_text": "",
+      "has_board": false
+    },
+    {
+      "index": 1199,
+      "start_ms": 1661110,
+      "end_ms": 1661710,
+      "speaker": "Speaker 0",
+      "asr_text": "对不对?",
+      "board_text": "",
+      "has_board": false
+    },
+    {
+      "index": 1200,
+      "start_ms": 1661710,
+      "end_ms": 1664270,
+      "speaker": "Speaker 0",
+      "asr_text": "就是妈逼的前面那个窗口很小嘛,",
+      "board_text": "下午回来补觉 我也在汕头 1月30日晚上18:04",
+      "has_board": true
+    },
+    {
+      "index": 1201,
+      "start_ms": 1664270,
+      "end_ms": 1665770,
+      "speaker": "Speaker 0",
+      "asr_text": "然后你看嘛在哪儿啊?",
+      "board_text": "",
+      "has_board": false
+    },
+    {
+      "index": 1202,
+      "start_ms": 1665770,
+      "end_ms": 1668830,
+      "speaker": "Speaker 0",
+      "asr_text": "然后这个她前面其实前面窗口很小嘛,",
+      "board_text": "",
+      "has_board": false
+    },
+    {
+      "index": 2398,
+      "start_ms": 3431490,
+      "end_ms": 3432410,
+      "speaker": "Speaker 0",
+      "asr_text": "我懂了哦,",
+      "board_text": "微信：Lurmuse",
+      "has_board": true
+    },
+    {
+      "index": 2399,
+      "start_ms": 3433450,
+      "end_ms": 3433990,
+      "speaker": "Speaker 0",
+      "asr_text": "我懂了,",
+      "board_text": "微信：Lurmuse",
+      "has_board": true
+    },
+    {
+      "index": 2400,
+      "start_ms": 3434030,
+      "end_ms": 3436570,
+      "speaker": "Speaker 0",
+      "asr_text": "你知道每次都是三点钟,",
+      "board_text": "微信：Lurmuse",
+      "has_board": true
+    },
+    {
+      "index": 2401,
+      "start_ms": 3436630,
+      "end_ms": 3438630,
+      "speaker": "Speaker 0",
+      "asr_text": "刚睡醒啊,",
+      "board_text": "微信：Lurmuse",
+      "has_board": true
+    },
+    {
+      "index": 2402,
+      "start_ms": 3438630,
+      "end_ms": 3439150,
+      "speaker": "Speaker 0",
+      "asr_text": "我醒了,",
+      "board_text": "微信：Lurmuse",
+      "has_board": true
+    },
+    {
+      "index": 3598,
+      "start_ms": 5258850,
+      "end_ms": 5262025,
+      "speaker": "Speaker 0",
+      "asr_text": "所以我在回复这个类型的问题的时候,",
+      "board_text": "合 微信：urmuse",
+      "has_board": true
+    },
+    {
+      "index": 3599,
+      "start_ms": 5262230,
+      "end_ms": 5262390,
+      "speaker": "Speaker 0",
+      "asr_text": "嗯,",
+      "board_text": "合 微信：urmuse",
+      "has_board": true
+    },
+    {
+      "index": 3600,
+      "start_ms": 5262390,
+      "end_ms": 5264515,
+      "speaker": "Speaker 0",
+      "asr_text": "我给大家一个技术上的建议。",
+      "board_text": "合 微信：urmuse",
+      "has_board": true
+    },
+    {
+      "index": 3601,
+      "start_ms": 5265020,
+      "end_ms": 5265260,
+      "speaker": "Speaker 0",
+      "asr_text": "嗯,",
+      "board_text": "合 微信：urmuse",
+      "has_board": true
+    },
+    {
+      "index": 3602,
+      "start_ms": 5265340,
+      "end_ms": 5265920,
+      "speaker": "Speaker 0",
+      "asr_text": "什么建议呢?",
+      "board_text": "合 微信：urmuse",
+      "has_board": true
+    },
+    {
+      "index": 4796,
+      "start_ms": 6884570,
+      "end_ms": 6884750,
+      "speaker": "Speaker 0",
+      "asr_text": "哎呀,",
+      "board_text": "",
+      "has_board": false
+    },
+    {
+      "index": 4797,
+      "start_ms": 6884750,
+      "end_ms": 6886045,
+      "speaker": "Speaker 0",
+      "asr_text": "我操好的消息又没回了。",
+      "board_text": "",
+      "has_board": false
+    },
+    {
+      "index": 4798,
+      "start_ms": 6888500,
+      "end_ms": 6888860,
+      "speaker": "Speaker 0",
+      "asr_text": "好吧,",
+      "board_text": "",
+      "has_board": false
+    },
+    {
+      "index": 4799,
+      "start_ms": 6889100,
+      "end_ms": 6889925,
+      "speaker": "Speaker 0",
+      "asr_text": "我来我来嗯,",
+      "board_text": "",
+      "has_board": false
+    },
+    {
+      "index": 4800,
+      "start_ms": 6890050,
+      "end_ms": 6890315,
+      "speaker": "Speaker 0",
+      "asr_text": "拜拜。",
+      "board_text": "",
+      "has_board": false
+    }
+  ]
+}

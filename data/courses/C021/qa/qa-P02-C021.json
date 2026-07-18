@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "course_id": "C021",
+  "stage": "P02",
+  "status": "pass",
+  "checks": {
+    "schema_version": true,
+    "prompt_version": true,
+    "source_id": true,
+    "segment_count": true,
+    "p01_fields_preserved": true,
+    "source_role_contract": true,
+    "epistemic_type_contract": true,
+    "relevance_contract": true,
+    "classification_confidence_contract": true,
+    "classification_reasons_present": true
+  },
+  "metrics": {
+    "input_segment_count": 4885,
+    "output_segment_count": 4885,
+    "preservation_mismatch_count": 0,
+    "invalid_source_role_count": 0,
+    "invalid_epistemic_type_count": 0,
+    "invalid_relevance_count": 0,
+    "invalid_classification_confidence_count": 0,
+    "missing_classification_reasons_count": 0
+  },
+  "samples": {
+    "preservation_mismatch_indexes": [],
+    "invalid_source_role_indexes": [],
+    "invalid_epistemic_type_indexes": [],
+    "invalid_relevance_indexes": [],
+    "invalid_classification_confidence_indexes": [],
+    "missing_classification_reasons_indexes": []
+  }
+}

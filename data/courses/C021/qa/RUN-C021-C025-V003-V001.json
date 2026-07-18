@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "status": "pass",
+  "checks": {
+    "non_empty": true,
+    "has_timestamps": true,
+    "starts_near_video_start": true,
+    "ends_near_video_end": true
+  },
+  "metrics": {
+    "path": "D:\\Dev\\VideoCaptioner\\data\\courses\\C021\\01_raw\\RUN-C021-C025-V003-V001\\transcript.txt",
+    "sha256": "2eabf7a33a5f184c5455637318e46ecc23038d857af8ed3df24bfb12d38d9770",
+    "size_bytes": 344812,
+    "line_count": 14901,
+    "non_whitespace_chars": 219302,
+    "timestamp_count": 4885,
+    "first_timestamp_ms": 2900,
+    "last_timestamp_ms": 6890315
+  },
+  "video_duration_ms": 6890846,
+  "end_gap_ms": 531,
+  "note": "结构检查不能代替内容完整度与语义准确性人工审查。"
+}

@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0",
+  "course_id": "C021",
+  "stage": "P01",
+  "status": "pass",
+  "checks": {
+    "schema_version": true,
+    "prompt_version": true,
+    "source_id": true,
+    "segment_count": true,
+    "unique_segment_ids": true,
+    "raw_text_preserved": true,
+    "timestamps_preserved": true,
+    "speaker_contract": true,
+    "raw_speaker_clusters_preserved": true,
+    "content_type_contract": true,
+    "normalized_text_non_empty": true,
+    "effective_normalization": true,
+    "quality_metrics_consistent": true
+  },
+  "metrics": {
+    "input_segment_count": 4885,
+    "output_segment_count": 4885,
+    "uncertainty_count": 46,
+    "uncertainty_rate": 0.009416581371545548,
+    "raw_mismatch_count": 0,
+    "timestamp_mismatch_count": 0,
+    "invalid_speaker_count": 0,
+    "speaker_mapping_mismatch_count": 0,
+    "invalid_content_type_count": 0,
+    "empty_normalized_count": 0,
+    "changed_segment_count": 4161,
+    "reported_changed_segment_count": 4161
+  },
+  "samples": {
+    "raw_mismatch_indexes": [],
+    "timestamp_mismatch_indexes": [],
+    "invalid_speaker_indexes": [],
+    "speaker_mapping_mismatch_indexes": [],
+    "invalid_content_type_indexes": [],
+    "empty_normalized_indexes": []
+  },
+  "note": "该报告验证结构和完整保留，不替代错字修复质量与说话人语义抽检。"
+}

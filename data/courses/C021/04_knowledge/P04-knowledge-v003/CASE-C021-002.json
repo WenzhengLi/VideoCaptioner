@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0",
+  "prompt_version": "knowledge-v003-p04",
+  "source_ids": [
+    "C021"
+  ],
+  "course_id": "C021",
+  "case_id": "CASE-C021-002",
+  "case_title": "聊天记录案例分析（第二段）",
+  "summary": "讲师继续分析聊天记录案例",
+  "participants": [
+    {
+      "role": "instructor",
+      "description": "课程讲师",
+      "evidence_segment_ids": [
+        "SEG-C021-002508"
+      ]
+    }
+  ],
+  "timeline": [
+    {
+      "event_id": "EVT-001",
+      "description": "讲师开始分析第二个案例",
+      "epistemic_type": "observation",
+      "evidence_segment_ids": [
+        "SEG-C021-002508"
+      ]
+    }
+  ],
+  "observations": [
+    {
+      "id": "OBS-001",
+      "text": "讲师对聊天记录进行分析",
+      "evidence_segment_ids": [
+        "SEG-C021-002508"
+      ]
+    }
+  ],
+  "instructor_claims": [],
+  "alternative_explanations": [],
+  "outcomes": [],
+  "quoted_expressions": [],
+  "evidence_spans": [],
+  "uncertainties": [
+    {
+      "field": "case_boundary",
+      "note": "案例边界不明确",
+      "evidence_segment_ids": []
+    }
+  ],
+  "confidence": 0.6
+}

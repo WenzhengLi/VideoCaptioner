@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "course_id": "C021",
+  "stage": "P03",
+  "status": "pass",
+  "checks": {
+    "schema_version": true,
+    "prompt_version": true,
+    "source_id": true,
+    "source_segment_ids_valid": true,
+    "case_contract": true,
+    "case_boundaries_valid": true,
+    "cases_do_not_overlap": true,
+    "unassigned_contract": true,
+    "case_unassigned_disjoint": true,
+    "complete_segment_coverage": true,
+    "segmentation_metrics_consistent": true
+  },
+  "metrics": {
+    "input_segment_count": 4885,
+    "case_count": 2,
+    "assigned_segment_count": 4839,
+    "unassigned_segment_count": 46,
+    "missing_segment_count": 0,
+    "overlap_count": 0
+  },
+  "samples": {
+    "invalid_case_indexes": [],
+    "invalid_boundary_indexes": [],
+    "overlapping_case_indexes": [],
+    "invalid_unassigned_indexes": [],
+    "case_unassigned_overlap_ids": [],
+    "missing_segment_ids": [],
+    "extra_segment_ids": []
+  }
+}

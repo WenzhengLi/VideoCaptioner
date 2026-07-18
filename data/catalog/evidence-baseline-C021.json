@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "course_id": "C021",
+  "p01_version": "knowledge-v003",
+  "p02_version": "knowledge-v003-p02",
+  "p03_version": "knowledge-v003-p03",
+  "p04_version": "knowledge-v003-p04",
+  "case_count": 2,
+  "segment_count": 4885,
+  "qa_results": {
+    "P01": "pass",
+    "P02": "pass",
+    "P03": "pass",
+    "P04-CASE-C021-001": "pass",
+    "P04-CASE-C021-002": "pass"
+  },
+  "outside_case_evidence": 0,
+  "failed_cases": 0
+}
