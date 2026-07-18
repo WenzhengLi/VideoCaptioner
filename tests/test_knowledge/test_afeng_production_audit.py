@@ -193,34 +193,8 @@ def test_check_reports_no_files(tmp_path: Path, monkeypatch: pytest.MonkeyPatch)
 
 def _make_reports(tmp_path: Path, *, retrieval_acc: float = 90.0, app_passed: int = 20, app_total: int = 20) -> None:
     """Helper to create both reports."""
-    (tmp_path / "data" / "dify").mkdir(parents=True)
-    # Retrieval
-    results = [{"expected_found_in_top_k": i < int(app_total * retrieval_acc / 100)} for i in range(20)]
-    retrieval = {
-        "schema_version": "1.0",
-        "test_type": "afeng-retrieval-validation",
-        "accuracy": retrieval_acc,
-        "total_questions": 20,
-        "correct_in_top_k": int(20 * retrieval_acc / 100),
-        "results": results,
-        "search_method": "hybrid_search",
-    }
-    (tmp_path / "data" / "dify" / "afeng-retrieval-report.json").write_text(
-        json.dumps(retrieval, ensure_ascii=False, indent=2), encoding="utf-8"
-    )
-    # App acceptance
-    app_results = [{"passed": i < app_passed} for i in range(app_total)]
-    app_report = {
-        "schema_version": "1.0",
-        "test_type": "afeng-app-acceptance",
-        "total": app_total,
-        "passed": app_passed,
-        "pass_rate": round(app_passed / app_total * 100, 1) if app_total else 0,
-        "results": app_results,
-    }
-    (tmp_path / "data" / "dify" / "afeng-app-acceptance.json").write_text(
-        json.dumps(app_report, ensure_ascii=False, indent=2), encoding="utf-8"
-    )
+    _make_retrieval_report(tmp_path, correct=int(20 * retrieval_acc / 100))
+    _make_app_report(tmp_path, passed=app_passed, total=app_total)
 
 
 def test_check_reports_pass(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -269,3 +243,77 @@ def test_canonical_re() -> None:
     assert not CANONICAL_RE.match("KNOW-C001-001")
     assert not CANONICAL_RE.match("afeng-method-C016-001")
     assert not CANONICAL_RE.match("AFENG-C001-CASE-C001-001-extra")
+
+
+def test_check_reports_retrieval_schema_mismatch(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Wrong schema/test_type must FAIL."""
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / "data" / "dify").mkdir(parents=True)
+    retrieval = {
+        "schema_version": "2.0",
+        "test_type": "wrong",
+        "accuracy": 90.0,
+        "total_questions": 20,
+        "correct_in_top_k": 18,
+        "results": [{"expected_found_in_top_k": True}] * 18 + [{"expected_found_in_top_k": False}] * 2,
+    }
+    (tmp_path / "data" / "dify" / "afeng-retrieval-report.json").write_text(
+        json.dumps(retrieval), encoding="utf-8"
+    )
+    _make_app_report(tmp_path, passed=20, total=20)
+    result = _check_reports()
+    assert result["status"] == "FAIL"
+    assert result["checks"]["retrieval_schema"] is False
+
+
+def test_check_reports_app_citation_invalid(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """citation_validation.valid=false must FAIL."""
+    monkeypatch.chdir(tmp_path)
+    _make_retrieval_report(tmp_path, correct=18)
+    results = [{"passed": True, "citation_validation": {"valid": True}}] * 19
+    results.append({"passed": True, "citation_validation": {"valid": False}})
+    app_report = {
+        "schema_version": "1.0",
+        "test_type": "afeng-app-acceptance",
+        "total": 20, "passed": 20, "pass_rate": 100.0,
+        "results": results,
+    }
+    (tmp_path / "data" / "dify" / "afeng-app-acceptance.json").write_text(
+        json.dumps(app_report), encoding="utf-8"
+    )
+    result = _check_reports()
+    assert result["status"] == "FAIL"
+    assert result["checks"]["app_citations_valid"] is False
+
+
+def _make_retrieval_report(tmp_path: Path, correct: int = 18) -> None:
+    (tmp_path / "data" / "dify").mkdir(parents=True, exist_ok=True)
+    results = [{"expected_found_in_top_k": i < correct} for i in range(20)]
+    retrieval = {
+        "schema_version": "1.0",
+        "test_type": "afeng-retrieval-validation",
+        "accuracy": round(correct / 20 * 100, 1),
+        "total_questions": 20,
+        "correct_in_top_k": correct,
+        "results": results,
+        "search_method": "hybrid_search",
+    }
+    (tmp_path / "data" / "dify" / "afeng-retrieval-report.json").write_text(
+        json.dumps(retrieval, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+
+
+def _make_app_report(tmp_path: Path, passed: int = 20, total: int = 20) -> None:
+    (tmp_path / "data" / "dify").mkdir(parents=True, exist_ok=True)
+    results = [{"passed": i < passed, "citation_validation": {"valid": True}} for i in range(total)]
+    app_report = {
+        "schema_version": "1.0",
+        "test_type": "afeng-app-acceptance",
+        "total": total,
+        "passed": passed,
+        "pass_rate": round(passed / total * 100, 1) if total else 0,
+        "results": results,
+    }
+    (tmp_path / "data" / "dify" / "afeng-app-acceptance.json").write_text(
+        json.dumps(app_report, ensure_ascii=False, indent=2), encoding="utf-8"
+    )

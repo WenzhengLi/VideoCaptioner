@@ -212,13 +212,41 @@ uv run pytest -q -m "not integration"
 
 ### TASK-018
 
-- 状态：**待执行**（TASK-017 已完成；无 Provider 阻塞）
+- 状态：**已完成初版，待 TASK-019 加固后封版**
 - 已完成：
-  - `scripts/audit_afeng_production.py`（生产审计脚本）
-  - 离线审计：Bundle PASS + Aggregate PASS
-  - 正式 v1 Dataset 基础审计：PASS（high_quality + Ollama/bge-m3）
-- 待完成：增强只读在线审计、备份清单、恢复 dry-run、无上下文运维手册、全量质量门禁、最终提交与推送
-- 阻塞：无；不再创建或迁移外部 embedding/v2 Dataset
+  - 只读在线审计：aggregate/bundle/map/remote/app/reports 均返回 PASS
+  - 正式 v1 Dataset：36 docs、36/36 indexing completed、exclusion leakage=0
+  - 备份 manifest：90 artifacts
+  - 在线恢复 dry-run：create=0、update=0、skip=36
+  - 运维手册与 Dify 状态报告已更新
+  - `ruff` 通过、`pyright` 0 errors、`pytest` 280 passed / 1 skipped
+  - 提交 `40b86f0` 已推送，分支与远端同步
+- 复核遗留：应用验收报告只检查 Markdown 存在、恢复 update 仍为硬编码、备份 manifest 漏收实际应用报告和运维文档、运维手册部分命令参数与脚本不一致
+- 下一步：执行 TASK-019，消除审计假阳性后再开始新增课程
+- 阻塞：无
+
+### TASK-019
+
+- 状态：**已完成**
+- 目标：修复 TASK-018 复核发现的假阳性和可恢复性缺口，形成可信的第一期基线
+- 已修复：
+  - 审计检索报告：新增 schema/test_type/total=20/correct>=18/results=20 校验
+  - 审计应用报告：新增 schema/test_type/逐题 citation_validation.valid 校验
+  - 恢复 dry-run：update>0 视为失败；create+update+skip=36 校验
+  - 备份清单：修复文件名，新增 16 个 REQUIRED_ARTIFACTS
+  - 运维手册：修正 CLI 命令，同步源改为 v002.7
+  - 测试：新增 schema/test_type/citation/update>0 等 17 个测试
+- 验证：在线审计 PASS、恢复 dry-run PASSED、备份 96 artifacts/16 required/0 missing
+- 质量门禁：ruff PASS、pyright 0 errors、pytest 285 passed / 1 skipped
+- 提交：`c69053c` (已推送) + follow-up (待推送)
+
+### TASK-020A
+
+- 状态：**待执行**（C021–C025 源锁定与视频分析）
+- 已盘点：5 个原视频全部存在，登记大小与实际一致，总计 3.14 GiB；SHA-256 尚未冻结
+- 当前产物：每课只有 `source.json`，无 ASR/OCR、P01–P04、方法层产物；批次状态均为 pending
+- 目标：完成源 hash/媒体探针、新独立批次、C021–C025 视频分析与 raw QA；本阶段禁止提前进入 Dify
+- 计划：见 `docs/claude-handoff/CLAUDE-NEXT-TASK-019-CLOSE-TASK-020A.md`
 
 ### 模型运行决策（2026-07-18）
 

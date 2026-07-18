@@ -106,12 +106,17 @@ def main() -> int:
         errors.append("Cannot compute sync plan: map missing")
     else:
         create, update, skip = _compute_sync_plan(source_dir, map_path)
+        total = create + update + skip
         print("\nSync plan (source: v002.7, map: v1):")
         print(f"  create={create}")
         print(f"  update={update}")
         print(f"  skip={skip}")
         if create > 0:
             errors.append(f"Sync plan: {create} would be created (expected 0)")
+        if update > 0:
+            errors.append(f"Sync plan: {update} would be updated (expected 0 for stable baseline)")
+        if total != 36:
+            errors.append(f"Sync plan: total={total} (expected 36)")
         if update > 0:
             print(f"  NOTE: {update} documents have different content hash")
 

@@ -310,17 +310,19 @@ def _check_reports() -> dict[str, Any]:
     """Gate A.12-13: Retrieval and app acceptance reports traceable."""
     checks: dict[str, Any] = {}
 
-    # Retrieval report — must be real JSON with accuracy >= 90
+    # Retrieval report — must be real JSON with schema, accuracy >= 90, consistent
     retrieval_path = Path("data/dify/afeng-retrieval-report.json")
     if retrieval_path.exists():
         report = json.loads(retrieval_path.read_text(encoding="utf-8"))
-        accuracy = report.get("accuracy", 0)
         total = report.get("total_questions", 0)
         correct = report.get("correct_in_top_k", 0)
         results = report.get("results", [])
         checks["retrieval_report_exists"] = True
-        checks["retrieval_accuracy"] = accuracy
-        checks["retrieval_18_of_20"] = accuracy >= 90
+        checks["retrieval_schema"] = report.get("schema_version") == "1.0"
+        checks["retrieval_test_type"] = report.get("test_type") == "afeng-retrieval-validation"
+        checks["retrieval_total_20"] = total == 20
+        checks["retrieval_correct_18_plus"] = correct >= 18
+        checks["retrieval_results_20"] = len(results) == 20
         checks["retrieval_consistent"] = (
             len(results) == total and correct == sum(1 for r in results if r.get("expected_found_in_top_k"))
         )
@@ -336,12 +338,22 @@ def _check_reports() -> dict[str, Any]:
         pass_rate = report.get("pass_rate", 0)
         results = report.get("results", [])
         all_results_passed = all(r.get("passed") for r in results) if results else False
+        # Check citation_validation.valid for each result
+        all_citations_valid = True
+        for r in results:
+            cv = r.get("citation_validation", {})
+            if not cv.get("valid", False):
+                all_citations_valid = False
+                break
         checks["app_report_exists"] = True
+        checks["app_schema"] = report.get("schema_version") == "1.0"
+        checks["app_test_type"] = report.get("test_type") == "afeng-app-acceptance"
         checks["app_total_20"] = total == 20
         checks["app_passed_20"] = passed == 20
         checks["app_pass_rate_100"] = pass_rate == 100
         checks["app_results_count"] = len(results) == 20
         checks["app_all_passed"] = all_results_passed
+        checks["app_citations_valid"] = all_citations_valid
     else:
         checks["app_report_exists"] = False
 
