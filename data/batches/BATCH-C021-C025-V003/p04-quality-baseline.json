@@ -5,442 +5,522 @@
     {
       "course_id": "C001",
       "case_id": "CASE-C001-001",
-      "segment_count": 0,
+      "p04_version": "knowledge-v002",
+      "segment_count": 169,
       "unique_evidence_count": 75,
       "evidence_spans": 14,
       "timeline": 13,
       "observations": 6,
       "instructor_claims": 15,
-      "quoted_expressions": 14
+      "quoted_expressions": 14,
+      "quartiles_covered": 4
     },
     {
       "course_id": "C001",
       "case_id": "CASE-C001-002",
-      "segment_count": 0,
+      "p04_version": "knowledge-v002",
+      "segment_count": 2338,
       "unique_evidence_count": 160,
       "evidence_spans": 13,
       "timeline": 31,
       "observations": 22,
       "instructor_claims": 16,
-      "quoted_expressions": 44
+      "quoted_expressions": 44,
+      "quartiles_covered": 4
     },
     {
       "course_id": "C001",
       "case_id": "CASE-C001-003",
-      "segment_count": 0,
+      "p04_version": "knowledge-v002",
+      "segment_count": 746,
       "unique_evidence_count": 120,
       "evidence_spans": 11,
       "timeline": 23,
       "observations": 11,
       "instructor_claims": 11,
-      "quoted_expressions": 32
+      "quoted_expressions": 32,
+      "quartiles_covered": 4
     },
     {
       "course_id": "C002",
       "case_id": "CASE-C002-001",
-      "segment_count": 0,
+      "p04_version": "knowledge-v002",
+      "segment_count": 3059,
       "unique_evidence_count": 163,
       "evidence_spans": 14,
       "timeline": 22,
       "observations": 12,
       "instructor_claims": 16,
-      "quoted_expressions": 28
+      "quoted_expressions": 28,
+      "quartiles_covered": 4
     },
     {
       "course_id": "C002",
       "case_id": "CASE-C002-002",
-      "segment_count": 0,
+      "p04_version": "knowledge-v002",
+      "segment_count": 155,
       "unique_evidence_count": 74,
       "evidence_spans": 12,
       "timeline": 14,
       "observations": 3,
       "instructor_claims": 14,
-      "quoted_expressions": 15
+      "quoted_expressions": 15,
+      "quartiles_covered": 4
     },
     {
       "course_id": "C002",
       "case_id": "CASE-C002-003",
-      "segment_count": 0,
+      "p04_version": "knowledge-v002",
+      "segment_count": 215,
       "unique_evidence_count": 82,
       "evidence_spans": 12,
       "timeline": 16,
       "observations": 4,
       "instructor_claims": 12,
-      "quoted_expressions": 12
+      "quoted_expressions": 12,
+      "quartiles_covered": 4
     },
     {
       "course_id": "C003",
       "case_id": "CASE-C003-001",
-      "segment_count": 0,
+      "p04_version": "knowledge-v003",
+      "segment_count": 861,
       "unique_evidence_count": 132,
       "evidence_spans": 20,
       "timeline": 22,
       "observations": 8,
       "instructor_claims": 12,
-      "quoted_expressions": 12
+      "quoted_expressions": 12,
+      "quartiles_covered": 4
     },
     {
       "course_id": "C003",
       "case_id": "CASE-C003-002",
-      "segment_count": 0,
+      "p04_version": "knowledge-v003",
+      "segment_count": 2069,
       "unique_evidence_count": 133,
       "evidence_spans": 20,
       "timeline": 28,
       "observations": 16,
       "instructor_claims": 18,
-      "quoted_expressions": 20
+      "quoted_expressions": 20,
+      "quartiles_covered": 4
     },
     {
       "course_id": "C003",
       "case_id": "CASE-C003-003",
-      "segment_count": 0,
+      "p04_version": "knowledge-v003",
+      "segment_count": 772,
       "unique_evidence_count": 117,
       "evidence_spans": 13,
       "timeline": 21,
       "observations": 19,
       "instructor_claims": 13,
-      "quoted_expressions": 17
+      "quoted_expressions": 17,
+      "quartiles_covered": 4
     },
     {
       "course_id": "C004",
       "case_id": "CASE-C004-001",
-      "segment_count": 0,
+      "p04_version": "knowledge-v002",
+      "segment_count": 1725,
       "unique_evidence_count": 121,
       "evidence_spans": 15,
       "timeline": 26,
       "observations": 11,
       "instructor_claims": 14,
-      "quoted_expressions": 17
+      "quoted_expressions": 17,
+      "quartiles_covered": 4
     },
     {
       "course_id": "C004",
       "case_id": "CASE-C004-002",
-      "segment_count": 0,
+      "p04_version": "knowledge-v002",
+      "segment_count": 2794,
       "unique_evidence_count": 106,
       "evidence_spans": 12,
       "timeline": 29,
       "observations": 9,
       "instructor_claims": 11,
-      "quoted_expressions": 15
+      "quoted_expressions": 15,
+      "quartiles_covered": 4
     },
     {
       "course_id": "C005",
       "case_id": "CASE-C005-001",
-      "segment_count": 0,
+      "p04_version": "knowledge-v002",
+      "segment_count": 1954,
       "unique_evidence_count": 176,
       "evidence_spans": 20,
       "timeline": 34,
       "observations": 18,
       "instructor_claims": 24,
-      "quoted_expressions": 36
+      "quoted_expressions": 36,
+      "quartiles_covered": 4
     },
     {
       "course_id": "C005",
       "case_id": "CASE-C005-002",
-      "segment_count": 0,
+      "p04_version": "knowledge-v002",
+      "segment_count": 1497,
       "unique_evidence_count": 138,
       "evidence_spans": 20,
       "timeline": 27,
       "observations": 15,
       "instructor_claims": 19,
-      "quoted_expressions": 40
+      "quoted_expressions": 40,
+      "quartiles_covered": 4
     },
     {
       "course_id": "C006",
       "case_id": "CASE-C006-001",
-      "segment_count": 0,
+      "p04_version": "knowledge-v002",
+      "segment_count": 2412,
       "unique_evidence_count": 125,
       "evidence_spans": 18,
       "timeline": 29,
       "observations": 15,
       "instructor_claims": 19,
-      "quoted_expressions": 32
+      "quoted_expressions": 32,
+      "quartiles_covered": 4
     },
     {
       "course_id": "C006",
       "case_id": "CASE-C006-002",
-      "segment_count": 0,
+      "p04_version": "knowledge-v002",
+      "segment_count": 2947,
       "unique_evidence_count": 177,
       "evidence_spans": 16,
       "timeline": 37,
       "observations": 16,
       "instructor_claims": 18,
-      "quoted_expressions": 44
+      "quoted_expressions": 44,
+      "quartiles_covered": 4
     },
     {
       "course_id": "C007",
       "case_id": "CASE-C007-001",
-      "segment_count": 0,
+      "p04_version": "knowledge-v002",
+      "segment_count": 3213,
       "unique_evidence_count": 82,
       "evidence_spans": 15,
       "timeline": 25,
       "observations": 14,
       "instructor_claims": 10,
-      "quoted_expressions": 25
+      "quoted_expressions": 25,
+      "quartiles_covered": 4
     },
     {
       "course_id": "C008",
       "case_id": "CASE-C008-001",
-      "segment_count": 0,
+      "p04_version": "knowledge-v002",
+      "segment_count": 2050,
       "unique_evidence_count": 95,
       "evidence_spans": 18,
       "timeline": 35,
       "observations": 15,
       "instructor_claims": 10,
-      "quoted_expressions": 29
+      "quoted_expressions": 29,
+      "quartiles_covered": 4
     },
     {
       "course_id": "C008",
       "case_id": "CASE-C008-002",
-      "segment_count": 0,
+      "p04_version": "knowledge-v002",
+      "segment_count": 778,
       "unique_evidence_count": 138,
       "evidence_spans": 16,
       "timeline": 34,
       "observations": 12,
       "instructor_claims": 10,
-      "quoted_expressions": 40
+      "quoted_expressions": 40,
+      "quartiles_covered": 4
     },
     {
       "course_id": "C009",
       "case_id": "CASE-C009-001",
-      "segment_count": 0,
+      "p04_version": "knowledge-v002",
+      "segment_count": 4746,
       "unique_evidence_count": 119,
       "evidence_spans": 18,
       "timeline": 30,
       "observations": 15,
       "instructor_claims": 11,
-      "quoted_expressions": 29
+      "quoted_expressions": 29,
+      "quartiles_covered": 4
     },
     {
       "course_id": "C010",
       "case_id": "CASE-C010-001",
-      "segment_count": 0,
+      "p04_version": "knowledge-v002",
+      "segment_count": 2984,
       "unique_evidence_count": 120,
       "evidence_spans": 18,
       "timeline": 23,
       "observations": 15,
       "instructor_claims": 12,
-      "quoted_expressions": 32
+      "quoted_expressions": 32,
+      "quartiles_covered": 4
     },
     {
       "course_id": "C011",
       "case_id": "CASE-C011-001",
-      "segment_count": 0,
+      "p04_version": "knowledge-v002",
+      "segment_count": 1706,
       "unique_evidence_count": 101,
       "evidence_spans": 17,
       "timeline": 23,
       "observations": 14,
       "instructor_claims": 11,
-      "quoted_expressions": 37
+      "quoted_expressions": 37,
+      "quartiles_covered": 4
     },
     {
       "course_id": "C011",
       "case_id": "CASE-C011-002",
-      "segment_count": 0,
+      "p04_version": "knowledge-v002",
+      "segment_count": 957,
       "unique_evidence_count": 143,
       "evidence_spans": 11,
       "timeline": 19,
       "observations": 13,
       "instructor_claims": 11,
-      "quoted_expressions": 30
+      "quoted_expressions": 30,
+      "quartiles_covered": 4
     },
     {
       "course_id": "C011",
       "case_id": "CASE-C011-003",
-      "segment_count": 0,
+      "p04_version": "knowledge-v002",
+      "segment_count": 249,
       "unique_evidence_count": 109,
       "evidence_spans": 11,
       "timeline": 14,
       "observations": 8,
       "instructor_claims": 11,
-      "quoted_expressions": 20
+      "quoted_expressions": 20,
+      "quartiles_covered": 4
     },
     {
       "course_id": "C012",
       "case_id": "CASE-C012-001",
-      "segment_count": 0,
+      "p04_version": "knowledge-v002",
+      "segment_count": 1357,
       "unique_evidence_count": 143,
       "evidence_spans": 18,
       "timeline": 22,
       "observations": 14,
       "instructor_claims": 12,
-      "quoted_expressions": 42
+      "quoted_expressions": 42,
+      "quartiles_covered": 4
     },
     {
       "course_id": "C013",
       "case_id": "CASE-C013-001",
-      "segment_count": 0,
+      "p04_version": "knowledge-v002",
+      "segment_count": 3178,
       "unique_evidence_count": 210,
       "evidence_spans": 18,
       "timeline": 20,
       "observations": 12,
       "instructor_claims": 14,
-      "quoted_expressions": 85
+      "quoted_expressions": 85,
+      "quartiles_covered": 4
     },
     {
       "course_id": "C013",
       "case_id": "CASE-C013-002",
-      "segment_count": 0,
+      "p04_version": "knowledge-v002",
+      "segment_count": 598,
       "unique_evidence_count": 127,
       "evidence_spans": 18,
       "timeline": 21,
       "observations": 13,
       "instructor_claims": 12,
-      "quoted_expressions": 60
+      "quoted_expressions": 60,
+      "quartiles_covered": 4
     },
     {
       "course_id": "C014",
       "case_id": "CASE-C014-001",
-      "segment_count": 0,
+      "p04_version": "knowledge-v002",
+      "segment_count": 113,
       "unique_evidence_count": 73,
       "evidence_spans": 14,
       "timeline": 18,
       "observations": 9,
       "instructor_claims": 10,
-      "quoted_expressions": 11
+      "quoted_expressions": 11,
+      "quartiles_covered": 4
     },
     {
       "course_id": "C014",
       "case_id": "CASE-C014-002",
-      "segment_count": 0,
+      "p04_version": "knowledge-v002",
+      "segment_count": 4398,
       "unique_evidence_count": 126,
       "evidence_spans": 7,
       "timeline": 22,
       "observations": 10,
       "instructor_claims": 18,
-      "quoted_expressions": 18
+      "quoted_expressions": 18,
+      "quartiles_covered": 4
     },
     {
       "course_id": "C015",
       "case_id": "CASE-C015-001",
-      "segment_count": 0,
+      "p04_version": "knowledge-v002",
+      "segment_count": 1108,
       "unique_evidence_count": 151,
       "evidence_spans": 12,
       "timeline": 27,
       "observations": 11,
       "instructor_claims": 17,
-      "quoted_expressions": 12
+      "quoted_expressions": 12,
+      "quartiles_covered": 4
     },
     {
       "course_id": "C015",
       "case_id": "CASE-C015-002",
-      "segment_count": 0,
+      "p04_version": "knowledge-v003",
+      "segment_count": 2768,
       "unique_evidence_count": 176,
       "evidence_spans": 20,
       "timeline": 27,
       "observations": 14,
       "instructor_claims": 16,
-      "quoted_expressions": 17
+      "quoted_expressions": 17,
+      "quartiles_covered": 4
     },
     {
       "course_id": "C016",
       "case_id": "CASE-C016-001",
-      "segment_count": 0,
+      "p04_version": "knowledge-v003",
+      "segment_count": 4413,
       "unique_evidence_count": 126,
       "evidence_spans": 15,
       "timeline": 30,
       "observations": 12,
       "instructor_claims": 12,
-      "quoted_expressions": 19
+      "quoted_expressions": 19,
+      "quartiles_covered": 4
     },
     {
       "course_id": "C017",
       "case_id": "CASE-C017-001",
-      "segment_count": 0,
+      "p04_version": "knowledge-v003",
+      "segment_count": 3155,
       "unique_evidence_count": 102,
       "evidence_spans": 22,
       "timeline": 28,
       "observations": 8,
       "instructor_claims": 8,
-      "quoted_expressions": 17
+      "quoted_expressions": 17,
+      "quartiles_covered": 4
     },
     {
       "course_id": "C018",
       "case_id": "CASE-C018-001",
-      "segment_count": 0,
+      "p04_version": "knowledge-v003",
+      "segment_count": 413,
       "unique_evidence_count": 99,
       "evidence_spans": 20,
       "timeline": 28,
       "observations": 6,
       "instructor_claims": 11,
-      "quoted_expressions": 11
+      "quoted_expressions": 11,
+      "quartiles_covered": 4
     },
     {
       "course_id": "C018",
       "case_id": "CASE-C018-002",
-      "segment_count": 0,
+      "p04_version": "knowledge-v003",
+      "segment_count": 128,
       "unique_evidence_count": 94,
       "evidence_spans": 18,
       "timeline": 25,
       "observations": 4,
       "instructor_claims": 12,
-      "quoted_expressions": 15
+      "quoted_expressions": 15,
+      "quartiles_covered": 4
     },
     {
       "course_id": "C018",
       "case_id": "CASE-C018-003",
-      "segment_count": 0,
+      "p04_version": "knowledge-v003",
+      "segment_count": 726,
       "unique_evidence_count": 136,
       "evidence_spans": 19,
       "timeline": 26,
       "observations": 4,
       "instructor_claims": 12,
-      "quoted_expressions": 16
+      "quoted_expressions": 16,
+      "quartiles_covered": 4
     },
     {
       "course_id": "C019",
       "case_id": "CASE-C019-001",
-      "segment_count": 0,
+      "p04_version": "knowledge-v003",
+      "segment_count": 2078,
       "unique_evidence_count": 124,
       "evidence_spans": 16,
       "timeline": 28,
       "observations": 7,
       "instructor_claims": 11,
-      "quoted_expressions": 19
+      "quoted_expressions": 19,
+      "quartiles_covered": 4
     },
     {
       "course_id": "C019",
       "case_id": "CASE-C019-002",
-      "segment_count": 0,
+      "p04_version": "knowledge-v003",
+      "segment_count": 1618,
       "unique_evidence_count": 136,
       "evidence_spans": 8,
       "timeline": 24,
       "observations": 8,
       "instructor_claims": 12,
-      "quoted_expressions": 21
+      "quoted_expressions": 21,
+      "quartiles_covered": 4
     },
     {
       "course_id": "C020",
       "case_id": "CASE-C020-001",
-      "segment_count": 0,
+      "p04_version": "knowledge-v003",
+      "segment_count": 1260,
       "unique_evidence_count": 106,
       "evidence_spans": 12,
       "timeline": 28,
       "observations": 11,
       "instructor_claims": 16,
-      "quoted_expressions": 27
+      "quoted_expressions": 27,
+      "quartiles_covered": 4
     },
     {
       "course_id": "C020",
       "case_id": "CASE-C020-002",
-      "segment_count": 0,
+      "p04_version": "knowledge-v003",
+      "segment_count": 1003,
       "unique_evidence_count": 99,
       "evidence_spans": 12,
       "timeline": 28,
       "observations": 9,
       "instructor_claims": 16,
-      "quoted_expressions": 28
+      "quoted_expressions": 28,
+      "quartiles_covered": 4
     },
     {
       "course_id": "C020",
       "case_id": "CASE-C020-003",
-      "segment_count": 0,
+      "p04_version": "knowledge-v003",
+      "segment_count": 843,
       "unique_evidence_count": 139,
       "evidence_spans": 12,
       "timeline": 30,
       "observations": 4,
       "instructor_claims": 20,
-      "quoted_expressions": 24
+      "quoted_expressions": 24,
+      "quartiles_covered": 4
     }
   ]
 }

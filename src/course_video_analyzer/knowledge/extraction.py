@@ -169,15 +169,21 @@ def validate_p04_output(
     else:
         quartiles_covered = 0
 
-    # Minimum thresholds based on mature case baseline (Gate 2)
-    # Mature cases: evidence min=73, spans min=7, timeline min=13, observations min=3, claims min=8, quotes min=11
-    # Use absolute minimums that work for both small test cases and real courses
-    min_evidence = 10  # Minimum unique evidence segments
-    min_spans = 3  # Minimum evidence spans
-    min_timeline = 5  # Minimum timeline events
-    min_observations = 2  # Minimum observations
-    min_claims = 3  # Minimum instructor claims
-    min_quotes = 4  # Minimum quoted expressions
+    # Minimum thresholds based on mature case baseline (40 cases, C001-C020)
+    # Baseline distribution (min values): evidence=73, spans=7, timeline=13, obs=3, claims=8, quotes=11
+    # Use 50% of baseline minimums as absolute floor
+    # For small cases (segment_count < 200), scale down proportionally but not below floor
+    _scale = min(1.0, case_segment_count / 200) if case_segment_count > 0 else 0.1
+
+    def _floor(absolute: int) -> int:
+        return max(2, int(absolute * max(0.3, _scale)))
+
+    min_evidence = _floor(36)   # 73 * 0.5 = 36
+    min_spans = _floor(4)       # 7 * 0.5 rounded up
+    min_timeline = _floor(7)    # 13 * 0.5 rounded up
+    min_observations = _floor(2)  # 3 * 0.5 rounded up
+    min_claims = _floor(4)      # 8 * 0.5
+    min_quotes = _floor(6)      # 11 * 0.5 rounded up
 
     evidence_sufficient = unique_evidence_segment_count >= min_evidence
     spans_sufficient = len(evidence_spans) >= min_spans if isinstance(evidence_spans, list) else False

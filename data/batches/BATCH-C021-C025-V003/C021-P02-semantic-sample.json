@@ -1,0 +1,453 @@
+{
+  "schema_version": "1.0",
+  "course_id": "C021",
+  "stage": "P02",
+  "total_segments": 4885,
+  "role_distribution": {
+    "instructor_explanation": 4562,
+    "board": 84,
+    "actual_chat": 231,
+    "unknown": 2,
+    "marketing": 6
+  },
+  "instructor_explanation_ratio": 0.9339,
+  "sample_count": 62,
+  "errors": 0,
+  "error_rate": 0.0,
+  "samples": [
+    {
+      "segment_id": "SEG-C021-000977",
+      "source_role": "instructor_explanation",
+      "text": "奏对大家一定要看清楚，",
+      "expected_role": "instructor_explanation",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-000222",
+      "source_role": "instructor_explanation",
+      "text": "没错，",
+      "expected_role": "instructor_explanation",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-002426",
+      "source_role": "instructor_explanation",
+      "text": "ok 然后两点两两两点半到家了哦，",
+      "expected_role": "instructor_explanation",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-002160",
+      "source_role": "instructor_explanation",
+      "text": "他更加确定我是利论。",
+      "expected_role": "instructor_explanation",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-001953",
+      "source_role": "instructor_explanation",
+      "text": "然后呢，",
+      "expected_role": "instructor_explanation",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-001217",
+      "source_role": "instructor_explanation",
+      "text": "咋回事？",
+      "expected_role": "instructor_explanation",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-000903",
+      "source_role": "instructor_explanation",
+      "text": "你应该更开心才对。",
+      "expected_role": "instructor_explanation",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-004784",
+      "source_role": "instructor_explanation",
+      "text": "我操不会了。",
+      "expected_role": "instructor_explanation",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-000769",
+      "source_role": "instructor_explanation",
+      "text": "跟命令别人没有什么区别。",
+      "expected_role": "instructor_explanation",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-003710",
+      "source_role": "instructor_explanation",
+      "text": "然后什么的，",
+      "expected_role": "instructor_explanation",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-000290",
+      "source_role": "instructor_explanation",
+      "text": "我继续看。",
+      "expected_role": "instructor_explanation",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-000270",
+      "source_role": "instructor_explanation",
+      "text": "是更爱玩的呢？",
+      "expected_role": "instructor_explanation",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-000825",
+      "source_role": "instructor_explanation",
+      "text": "你知道吧？",
+      "expected_role": "instructor_explanation",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-001915",
+      "source_role": "instructor_explanation",
+      "text": "然后就什么，",
+      "expected_role": "instructor_explanation",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-002049",
+      "source_role": "instructor_explanation",
+      "text": "又是三点，",
+      "expected_role": "instructor_explanation",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-002985",
+      "source_role": "actual_chat",
+      "text": "他说就是很简单啊，",
+      "expected_role": "actual_chat",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-003364",
+      "source_role": "actual_chat",
+      "text": "我说说实话啊，",
+      "expected_role": "actual_chat",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-000207",
+      "source_role": "actual_chat",
+      "text": "我说也可以，",
+      "expected_role": "actual_chat",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-003094",
+      "source_role": "actual_chat",
+      "text": "他说挣也是王道，",
+      "expected_role": "actual_chat",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-001502",
+      "source_role": "actual_chat",
+      "text": "那我们就以这个事情来展开一个话题来回复就行了。",
+      "expected_role": "actual_chat",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-003888",
+      "source_role": "actual_chat",
+      "text": "他说等我放假吧。",
+      "expected_role": "actual_chat",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-003678",
+      "source_role": "actual_chat",
+      "text": "所以我在回复这个类型的问题的时候，",
+      "expected_role": "actual_chat",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-003881",
+      "source_role": "actual_chat",
+      "text": "他说然后每次吃都会疼，",
+      "expected_role": "actual_chat",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-003076",
+      "source_role": "actual_chat",
+      "text": "他说那你上一个谈了，",
+      "expected_role": "actual_chat",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-002695",
+      "source_role": "actual_chat",
+      "text": "关键是没有回复到位是吧？",
+      "expected_role": "actual_chat",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-001551",
+      "source_role": "actual_chat",
+      "text": "我说我不会带节奏，",
+      "expected_role": "actual_chat",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-002783",
+      "source_role": "actual_chat",
+      "text": "我说人不舒服，",
+      "expected_role": "actual_chat",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-003308",
+      "source_role": "actual_chat",
+      "text": "这很不不是我说的这很多学员说的啊，",
+      "expected_role": "actual_chat",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-001799",
+      "source_role": "actual_chat",
+      "text": "然后他说我说这两天陪老人家对吧啊，",
+      "expected_role": "actual_chat",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-004476",
+      "source_role": "actual_chat",
+      "text": "他说拍一张，",
+      "expected_role": "actual_chat",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-000016",
+      "source_role": "board",
+      "text": "1月30日凌晨02:44\n我通过了你的朋友验证请求\n现在我们可以开始聊天了\n1月30日下午17:15\nhi\n哈喽\n月30",
+      "expected_role": "board",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-000494",
+      "source_role": "board",
+      "text": "房间网络一般\n晨00:42\n电视嘛\n还在啊",
+      "expected_role": "board",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-002007",
+      "source_role": "board",
+      "text": "刚回到家里",
+      "expected_role": "board",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-001526",
+      "source_role": "board",
+      "text": "06”\n那个驾校还挺大的。\n40\n你是本地人吗？听着没有什么\n口音的样子\n1月31日晚上18:25\n我是潮州人加在这边\n",
+      "expected_role": "board",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-001263",
+      "source_role": "board",
+      "text": "1月31日03:1470075683\n平时你都什么时候休息\n1月31日上午11:48\n昨晚那会就睡着了\n1月31日下午1",
+      "expected_role": "board",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-000490",
+      "source_role": "board",
+      "text": "1月31日凌晨00:42",
+      "expected_role": "board",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-000799",
+      "source_role": "board",
+      "text": "更多一手课程联系\n你也很帅70075683",
+      "expected_role": "board",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-004566",
+      "source_role": "board",
+      "text": "微信",
+      "expected_role": "board",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-000272",
+      "source_role": "board",
+      "text": "我也是朋发强烈\n1月30日晚上20:04众筹课程联\n700756\n那会第一集的时候是的硬拽\n12了\n1月30日晚上21:",
+      "expected_role": "board",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-000249",
+      "source_role": "board",
+      "text": "介筹课程联系",
+      "expected_role": "board",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-001792",
+      "source_role": "board",
+      "text": "14\n机，我刚洗漱完躺床。\n3（\n外面晚上刮着风，都挺冷的。\n2月1日上午10:53\n小3”\n最近晚上都还是挺冷的。\n嗯",
+      "expected_role": "board",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-000255",
+      "source_role": "board",
+      "text": "最近这剧停火\n挺\n是呀\n朋友圈抖音都在刷\n众靠课程联系\n最近闲2E0\n我也是朋友强烈\n拽着我看\n种草了\nhh你们待一起看",
+      "expected_role": "board",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-001549",
+      "source_role": "board",
+      "text": "4\n可能之前在外面，然后身边没\n什么传染人，就是话也讲，普\n通话也讲比较多，对。\n2月1日凌量03:57\n146\n我晚上",
+      "expected_role": "board",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-001535",
+      "source_role": "board",
+      "text": "46",
+      "expected_role": "board",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-001246",
+      "source_role": "board",
+      "text": "喂赚还不知道你名字\n陈桂煌\n深名字眼人一样好听\n谢拉\n（商业互捧吗哈昭勇多一手课程联系\n那不甜甜待一起都双不#份",
+      "expected_role": "board",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-001425",
+      "source_role": "unknown",
+      "text": "嗯嗯，",
+      "expected_role": "unknown",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-004437",
+      "source_role": "unknown",
+      "text": "哎哎哎，",
+      "expected_role": "unknown",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-004393",
+      "source_role": "instructor_explanation",
+      "text": "你知道吗？",
+      "expected_role": "instructor_explanation",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-001023",
+      "source_role": "instructor_explanation",
+      "text": "对，",
+      "expected_role": "instructor_explanation",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-003101",
+      "source_role": "instructor_explanation",
+      "text": "所以感觉很好，",
+      "expected_role": "instructor_explanation",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-000646",
+      "source_role": "instructor_explanation",
+      "text": "但是有一些兄弟有尤尤其是有一些新手的兄弟，",
+      "expected_role": "instructor_explanation",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-004523",
+      "source_role": "instructor_explanation",
+      "text": "嗯，",
+      "expected_role": "instructor_explanation",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-002402",
+      "source_role": "instructor_explanation",
+      "text": "好像很好像很重要。",
+      "expected_role": "instructor_explanation",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-002963",
+      "source_role": "instructor_explanation",
+      "text": "嗯，",
+      "expected_role": "instructor_explanation",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-004730",
+      "source_role": "instructor_explanation",
+      "text": "特点就是身高高。",
+      "expected_role": "instructor_explanation",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-001576",
+      "source_role": "instructor_explanation",
+      "text": "无所谓嘛，",
+      "expected_role": "instructor_explanation",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-000570",
+      "source_role": "instructor_explanation",
+      "text": "我还在看，",
+      "expected_role": "instructor_explanation",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-000376",
+      "source_role": "instructor_explanation",
+      "text": "比方说你看嘛，",
+      "expected_role": "instructor_explanation",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-001867",
+      "source_role": "instructor_explanation",
+      "text": "我跟你讲啊，",
+      "expected_role": "instructor_explanation",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-002371",
+      "source_role": "instructor_explanation",
+      "text": "下楼下面对吧。",
+      "expected_role": "instructor_explanation",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-000654",
+      "source_role": "instructor_explanation",
+      "text": "应该是没戏了，",
+      "expected_role": "instructor_explanation",
+      "correct": true
+    },
+    {
+      "segment_id": "SEG-C021-001908",
+      "source_role": "instructor_explanation",
+      "text": "或者说是什么的，",
+      "expected_role": "instructor_explanation",
+      "correct": true
+    }
+  ]
+}

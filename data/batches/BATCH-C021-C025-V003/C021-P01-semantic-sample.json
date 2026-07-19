@@ -1,0 +1,314 @@
+{
+  "schema_version": "1.0",
+  "course_id": "C021",
+  "stage": "P01",
+  "total_segments": 4885,
+  "changed_segments": 4161,
+  "sample_count": 50,
+  "improved": 50,
+  "neutral": 0,
+  "degraded": 0,
+  "degraded_rate": 0.0,
+  "samples": [
+    {
+      "segment_id": "SEG-C021-001091",
+      "raw_text": "对吧?",
+      "normalized_text": "对吧？",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-000266",
+      "raw_text": "哈哈,",
+      "normalized_text": "哈哈，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-002670",
+      "raw_text": "他就他就记不住,",
+      "normalized_text": "他就他就记不住，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-002373",
+      "raw_text": "嗯,",
+      "normalized_text": "嗯，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-002166",
+      "raw_text": "很多男人拿到邀约一之后的话,",
+      "normalized_text": "很多男人拿到邀约一之后的话，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-001341",
+      "raw_text": "对,",
+      "normalized_text": "对，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-001015",
+      "raw_text": "可能我讲的有点快,",
+      "normalized_text": "可能我讲的有点快，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-000870",
+      "raw_text": "那么前面已经讲完了,",
+      "normalized_text": "那么前面已经讲完了，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-004064",
+      "raw_text": "你会很很很迷人,",
+      "normalized_text": "你会很迷人，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-000338",
+      "raw_text": "你看就是阿峰采取的是什么情况呢?",
+      "normalized_text": "你看就是阿峰采取的是什么情况呢？",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-000320",
+      "raw_text": "正常对,",
+      "normalized_text": "正常对，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-000934",
+      "raw_text": "还晚上还能睡不得着吗?",
+      "normalized_text": "还晚上还能睡不得着吗？",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-002121",
+      "raw_text": "给一些高端的学员能听得懂的学员听,",
+      "normalized_text": "给一些高端的学员能听得懂的学员听，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-002252",
+      "raw_text": "我可能会他妈继续玩的人设,",
+      "normalized_text": "我可能会他妈继续玩的人设，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-004855",
+      "raw_text": "对,",
+      "normalized_text": "对，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-000283",
+      "raw_text": "等一下同步啊,",
+      "normalized_text": "等一下同步啊，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-001910",
+      "raw_text": "就是会付出很多,",
+      "normalized_text": "就是会付出很多，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-004042",
+      "raw_text": "对吧?",
+      "normalized_text": "对吧？",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-002137",
+      "raw_text": "嗯,",
+      "normalized_text": "嗯，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-004313",
+      "raw_text": "嗯,",
+      "normalized_text": "嗯，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-002699",
+      "raw_text": "那那的我的妈讲在这就讲半天,",
+      "normalized_text": "那那的我的妈讲在这就讲半天，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-000070",
+      "raw_text": "你知道啊,",
+      "normalized_text": "你知道啊，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-001529",
+      "raw_text": "他说他是潮州人啊,",
+      "normalized_text": "他说他是潮州人啊，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-004070",
+      "raw_text": "对吧?",
+      "normalized_text": "对吧？",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-003292",
+      "raw_text": "就是我就因为我把明轻妹子比较多嘛,",
+      "normalized_text": "就是我就因为我把明轻妹子比较多嘛，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-002697",
+      "raw_text": "只要我前面的很多细节都忽略掉,",
+      "normalized_text": "只要我前面的很多细节都忽略掉，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-001488",
+      "raw_text": "就断的还是很正确,",
+      "normalized_text": "就断的还是很正确，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-002083",
+      "raw_text": "我当然是明星了,",
+      "normalized_text": "我当然是明星了，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-003258",
+      "raw_text": "六六年六六六六七七年嗯,",
+      "normalized_text": "六六年六六六六七七年嗯，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-001013",
+      "raw_text": "他们他们在网上看的话,",
+      "normalized_text": "他们他们在网上看的话，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-000925",
+      "raw_text": "是什么意思?",
+      "normalized_text": "是什么意思？",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-003665",
+      "raw_text": "因为女人是天天找男人,",
+      "normalized_text": "因为女人是天天找男人，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-000959",
+      "raw_text": "他说我没睡着的话,",
+      "normalized_text": "他说我没睡着的话，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-003468",
+      "raw_text": "就如果说什么就是有一些女生在你提及,",
+      "normalized_text": "就如果说什么就是有一些女生在你提及，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-003331",
+      "raw_text": "就是我觉得这种女孩儿吧,",
+      "normalized_text": "就是我觉得这种女孩儿吧，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-002560",
+      "raw_text": "对对,",
+      "normalized_text": "对对，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-000446",
+      "raw_text": "对不对?",
+      "normalized_text": "对不对？",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-004415",
+      "raw_text": "只刚出床,",
+      "normalized_text": "只刚出床，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-001211",
+      "raw_text": "我们高富帅晚上都很多安排,",
+      "normalized_text": "我们高富帅晚上都很多安排，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-003653",
+      "raw_text": "当时擦他的照片都记得,",
+      "normalized_text": "当时擦他的照片都记得，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-000789",
+      "raw_text": "要不然我们就出来见见呢,",
+      "normalized_text": "要不然我们就出来见见呢，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-002842",
+      "raw_text": "我的猜艳,",
+      "normalized_text": "我的猜艳，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-003492",
+      "raw_text": "我想让你想起来,",
+      "normalized_text": "我想让你想起来，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-001845",
+      "raw_text": "而且你越是这样,",
+      "normalized_text": "而且你越是这样，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-000699",
+      "raw_text": "就还还是有戏,",
+      "normalized_text": "就还还是有戏，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-000472",
+      "raw_text": "对吧?",
+      "normalized_text": "对吧？",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-002209",
+      "raw_text": "嗯,",
+      "normalized_text": "嗯，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-002808",
+      "raw_text": "那我就说嘛我就说嘛,",
+      "normalized_text": "那我就说嘛我就说嘛，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-000797",
+      "raw_text": "对吧?",
+      "normalized_text": "对吧？",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C021-002255",
+      "raw_text": "懂吧吧在这里就拒绝,",
+      "normalized_text": "懂吧吧在这里就拒绝，",
+      "category": "improved"
+    }
+  ]
+}

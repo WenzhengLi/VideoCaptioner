@@ -50,7 +50,7 @@
     },
     {
       "case_id": "CASE-C021-003",
-      "title": "第三个聊天案例分析",
+      "title": "课程总结与案例回顾",
       "start_segment_id": "SEG-C021-003904",
       "end_segment_id": "SEG-C021-004885",
       "participant_roles": [
@@ -65,8 +65,14 @@
           "SEG-C021-003904"
         ]
       },
-      "completeness": "partial",
-      "confidence": 0.7
+      "completeness": "complete",
+      "confidence": 0.75,
+      "uncertainties": [
+        {
+          "case_id": "CASE-C021-003",
+          "note": "包含课程总结和案例回顾，非独立新案例"
+        }
+      ]
     }
   ],
   "unassigned_segment_ids": [
