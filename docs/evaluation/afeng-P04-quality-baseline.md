@@ -1,12 +1,8 @@
 # P04 质量基线分析
 
-生成时间：2026-07-18（TASK-020B1R4 对齐版）
+## 历史基线
 
-## 数据来源
-
-`data/catalog/evidence-baseline-C001-C020.json` 中 40 个成熟案例，读取正式 P04 input/output 文件。
-
-## 分布（40 案例）
+C001–C020 共 40 个正式案例，读取 catalog 指定版本的 P04 input/output。
 
 | 字段 | 最小值 | Q1 | 中位数 | Q3 | 最大值 |
 |---|---|---|---|---|---|
@@ -19,33 +15,24 @@
 | quoted_expressions | 11 | 17 | 22 | 32 | 85 |
 | quartiles_covered | 4 | 4 | 4 | 4 | 4 |
 
-## 门槛规则
+## 自适应门槛
 
-| 字段 | 基线最小值 | 50% 下限 | 缩放规则 |
-|---|---|---|---|
-| unique_evidence_count | 73 | 36 | max(2, int(36 * max(0.3, segs/200))) |
-| evidence_spans | 7 | 4 | 同上 |
-| timeline | 13 | 7 | 同上 |
-| observations | 3 | 2 | 同上 |
-| instructor_claims | 8 | 4 | 同上 |
-| quoted_expressions | 11 | 6 | 同上 |
-| quartiles_covered | 4 | 2 | 同上 |
+| 字段 | 长案例基础门槛 | 短案例缩放 |
+|---|---|---|
+| unique evidence | 36 | `max(2, int(36 * max(0.3, segments/200)))` |
+| evidence spans | 4 | 同一缩放规则 |
+| timeline | 7 | 同一缩放规则 |
+| observations | 2 | 同一缩放规则 |
+| instructor claims | 4 | 同一缩放规则 |
+| quoted expressions | 6 | 同一缩放规则 |
+| quartiles covered | 2 | 不缩放 |
 
-## C021 实际值（QA 最新输出）
+## C021 应用结果
 
-| 字段 | C021-001 | C021-002 | C021-003 | 应用阈值 |
-|---|---|---|---|---|
-| unique_evidence_count | 44 | 44 | 41 | 36 |
-| evidence_spans | 15 | 15 | 15 | 4 |
-| timeline | 7 | 7 | 7 | 7 |
-| observations | 8 | 8 | 8 | 2 |
-| instructor_claims | 8 | 8 | 8 | 4 |
-| quoted_expressions | 8 | 8 | 8 | 6 |
-| quartiles_covered | **4** | **4** | **4** | 2 |
+| Case | Evidence | Required | Spans | Timeline | Quartiles |
+|---|---|---|---|---|---|
+| CASE-C021-001 | 50 | 36 | 15 | 7 | 4 |
+| CASE-C021-002 | 54 | 36 | 15 | 7 | 4 |
+| CASE-C021-003 | 45 | 36 | 15 | 7 | 4 |
 
-## 内容质量检查
-
-- timeline 占位描述（"案例阶段 N"）：已拒绝
-- summary 机械复述 case title：已拒绝
-- timeline 描述与 evidence 原文逐条对齐：已验证
-- applied thresholds 输出到 metrics：已实现
+门槛由 `validate_p04_output()` 计算并写入 QA metrics；报告不维护第二套手写值。

@@ -6,8 +6,8 @@
   ],
   "course_id": "C021",
   "case_id": "CASE-C021-003",
-  "case_title": "女生报备与依恋行为聊天案例",
-  "summary": "讲师通过分析女生报备与依恋行为聊天案例，展示聊天互动中的吸引力建立技巧和沟通模式",
+  "case_title": "女生持续报备与聊天回复案例",
+  "summary": "讲师分析一段涉及醉酒聊天、约会场景描绘、持续报备和回复方式的案例。",
   "participants": [
     {
       "role": "instructor",
@@ -34,56 +34,62 @@
   "timeline": [
     {
       "event_id": "EVT-001",
-      "description": "讲师过渡到新案例：好下一个",
+      "description": "讲师以“好，下一个”过渡到新案例",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
-        "SEG-C021-003904",
-        "SEG-C021-003907"
+        "SEG-C021-003904"
       ]
     },
     {
       "event_id": "EVT-002",
-      "description": "展示聊天内容：喝醉小龙乱撞",
+      "description": "讲师引用对女生喝醉后可爱状态的描述",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
-        "SEG-C021-003941"
+        "SEG-C021-004045",
+        "SEG-C021-004046",
+        "SEG-C021-004047"
       ]
     },
     {
       "event_id": "EVT-003",
-      "description": "分析约会场景：开心浪漫微醺",
+      "description": "讲师解释预先描绘开心约会场景",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
-        "SEG-C021-003941"
+        "SEG-C021-004051",
+        "SEG-C021-004052",
+        "SEG-C021-004053"
       ]
     },
     {
       "event_id": "EVT-004",
-      "description": "讲师解读报备行为",
+      "description": "课程集中讨论女生持续报备行为",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
-        "SEG-C021-004559"
+        "SEG-C021-004149",
+        "SEG-C021-004150",
+        "SEG-C021-004180"
       ]
     },
     {
       "event_id": "EVT-005",
-      "description": "关键分析：依恋模式",
+      "description": "聊天记录中有人质疑回复显得虚伪",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
-        "SEG-C021-004559"
+        "SEG-C021-004257"
       ]
     },
     {
       "event_id": "EVT-006",
-      "description": "方法应用建议",
+      "description": "讲师示范让对方打车到家门口的回复",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
-        "SEG-C021-004722"
+        "SEG-C021-004581",
+        "SEG-C021-004582"
       ]
     },
     {
       "event_id": "EVT-007",
-      "description": "课程收尾：拜拜",
+      "description": "课程以“拜拜”结束",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
         "SEG-C021-004884",

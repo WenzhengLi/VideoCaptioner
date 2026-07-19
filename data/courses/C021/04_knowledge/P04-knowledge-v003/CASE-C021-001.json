@@ -34,7 +34,7 @@
   "timeline": [
     {
       "event_id": "EVT-001",
-      "description": "讲师引入案例：今天来讲讲案例",
+      "description": "讲师引入课程案例",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
         "SEG-C021-000047"
@@ -42,23 +42,25 @@
     },
     {
       "event_id": "EVT-002",
-      "description": "展示微信聊天开场：一月三十号打招呼",
+      "description": "聊天记录时间定位到一月三十号",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
-        "SEG-C021-000457"
+        "SEG-C021-000088",
+        "SEG-C021-000089"
       ]
     },
     {
       "event_id": "EVT-003",
-      "description": "分析聊天节奏：打字不花钱、断节奏",
+      "description": "讲师指出聊天节奏有些中断",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
-        "SEG-C021-000867"
+        "SEG-C021-000867",
+        "SEG-C021-000868"
       ]
     },
     {
       "event_id": "EVT-004",
-      "description": "讲师解读互动模式：默认可以",
+      "description": "讲师判断女生会主动追求",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
         "SEG-C021-001275"
@@ -66,25 +68,29 @@
     },
     {
       "event_id": "EVT-005",
-      "description": "关键转折：这是你的幸福",
+      "description": "讲师把当前互动称为一种幸福体验",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
-        "SEG-C021-001687"
+        "SEG-C021-001687",
+        "SEG-C021-001688"
       ]
     },
     {
       "event_id": "EVT-006",
-      "description": "方法应用：约出来见面",
+      "description": "讲师示范询问对方什么时候见面",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
-        "SEG-C021-002097"
+        "SEG-C021-002098",
+        "SEG-C021-002099",
+        "SEG-C021-002100"
       ]
     },
     {
       "event_id": "EVT-007",
-      "description": "案例收尾：好吗？",
+      "description": "讲师以“好吗、OK 好了”结束本案例",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
+        "SEG-C021-002506",
         "SEG-C021-002507"
       ]
     }

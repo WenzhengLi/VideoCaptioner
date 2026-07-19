@@ -242,7 +242,7 @@ uv run pytest -q -m "not integration"
 
 ### TASK-020A
 
-- 状态：**已完成**（C021–C025 源锁定与视频分析）
+- 状态：**完成并已推送**（C021–C025 源锁定与视频分析）
 - 源锁定：5/5 文件存在、大小匹配、SHA-256 唯一、媒体探针通过
 - 批次：`BATCH-C021-C025-V003`，5/5 succeeded，0 failed
 - QA：5/5 pass
@@ -251,6 +251,26 @@ uv run pytest -q -m "not integration"
 - 清单：`docs/evaluation/afeng-C021-C025-source-inventory.md`
 - 质量门禁：ruff PASS、pyright 0 errors、pytest 285 passed / 1 skipped
 - 未进入：P01–P04、方法生成、Dify 同步
+- 提交：`e09a69e`（已推送）
+
+### TASK-020B1
+
+- 状态：**完成并通过最终独立验收**
+- 范围：仅 C021；P01、P02、P03、P04 和 evidence baseline；禁止方法生成和 Dify
+- 最终案例：汕头女生聊天案例、成都女生聊天案例、女生持续报备与聊天回复案例
+- 内容验收：21/21 timeline 使用保守描述和直接原文证据；非 timeline 字段抽检 40 条、0 问题；alignment 与最终 P04 21/21 一致
+- C021 三案最终 evidence：50 / 54 / 45；四分位均为 4；正式 P03/P04 QA 全部 pass
+- 历史兼容：C001–C020 catalog 指定的 40 个正式案例 40/40 pass
+- 代码门禁：ruff PASS、pyright 0 errors、pytest 296 passed / 1 skipped
+- 提交链：`daca964`、`6e6ca24`、`0b5f471`、`53880a8`、`809c47b`，以及最终 Codex 收口提交
+- 经验：生产者不得自行批准 `all_passed`；下课采用首案例先行和独立验收
+
+### TASK-020B2A
+
+- 状态：**待执行**（C022 P01–P03 + 首个完整案例 P04）
+- 策略：先做一个案例的完整语义验收，不在同一轮批量生成整课全部 P04
+- 任务：`docs/tasks/TASK-020B2A-C022-first-case.md`
+- Claude 交接：`docs/claude-handoff/CLAUDE-NEXT-TASK-020B2A-C022-FIRST-CASE.md`
 
 ### 模型运行决策（2026-07-18）
 

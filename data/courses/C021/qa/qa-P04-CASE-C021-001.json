@@ -28,7 +28,7 @@
   },
   "metrics": {
     "case_segment_count": 2461,
-    "unique_evidence_segment_count": 44,
+    "unique_evidence_segment_count": 50,
     "evidence_span_count": 15,
     "timeline_count": 7,
     "observations_count": 8,

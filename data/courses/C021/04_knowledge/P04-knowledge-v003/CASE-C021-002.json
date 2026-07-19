@@ -42,50 +42,59 @@
     },
     {
       "event_id": "EVT-002",
-      "description": "展示聊天记录：成都女生、一七八身高",
+      "description": "讲师确认案例女生来自成都且身高一七八",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
-        "SEG-C021-002558"
+        "SEG-C021-002558",
+        "SEG-C021-002559"
       ]
     },
     {
       "event_id": "EVT-003",
-      "description": "分析吸引力：crush、喜欢你",
+      "description": "讲师解释流行表达 crush",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
-        "SEG-C021-002743"
+        "SEG-C021-002743",
+        "SEG-C021-002744",
+        "SEG-C021-002745"
       ]
     },
     {
       "event_id": "EVT-004",
-      "description": "讲师解读难度：系数难度一星半",
+      "description": "讲师判断该案例难度约为一星半",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
-        "SEG-C021-003206"
+        "SEG-C021-002894"
       ]
     },
     {
       "event_id": "EVT-005",
-      "description": "关键分析：七零后爱情长跑",
+      "description": "讲师提到自己有三段关系都持续约九百天",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
-        "SEG-C021-003438"
+        "SEG-C021-003439",
+        "SEG-C021-003440",
+        "SEG-C021-003441"
       ]
     },
     {
       "event_id": "EVT-006",
-      "description": "方法总结：在乎你的女生想了解过往",
+      "description": "讲师认为在乎你的女生会了解你的恋爱过往",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
-        "SEG-C021-003671"
+        "SEG-C021-003506",
+        "SEG-C021-003507",
+        "SEG-C021-003508"
       ]
     },
     {
       "event_id": "EVT-007",
-      "description": "案例收尾",
+      "description": "讲师转入高铁和拍摄安排，本案例结束",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
-        "SEG-C021-003903"
+        "SEG-C021-003900",
+        "SEG-C021-003901",
+        "SEG-C021-003902"
       ]
     }
   ],

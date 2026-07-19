@@ -18,36 +18,39 @@
   "case_stats": [
     {
       "case_id": "CASE-C021-001",
-      "unique_evidence": 44,
-      "spans": 15,
+      "title": "汕头女生聊天案例分析",
+      "unique_evidence_count": 50,
+      "evidence_spans": 15,
       "timeline": 7,
       "observations": 8,
-      "claims": 8,
-      "quotes": 8,
+      "instructor_claims": 8,
+      "quoted_expressions": 8,
       "quartiles": 4,
-      "min_evidence": 36
+      "required_min_evidence": 36
     },
     {
       "case_id": "CASE-C021-002",
-      "unique_evidence": 44,
-      "spans": 15,
+      "title": "成都女生聊天案例分析",
+      "unique_evidence_count": 54,
+      "evidence_spans": 15,
       "timeline": 7,
       "observations": 8,
-      "claims": 8,
-      "quotes": 8,
+      "instructor_claims": 8,
+      "quoted_expressions": 8,
       "quartiles": 4,
-      "min_evidence": 36
+      "required_min_evidence": 36
     },
     {
       "case_id": "CASE-C021-003",
-      "unique_evidence": 41,
-      "spans": 15,
+      "title": "女生持续报备与聊天回复案例",
+      "unique_evidence_count": 45,
+      "evidence_spans": 15,
       "timeline": 7,
       "observations": 8,
-      "claims": 8,
-      "quotes": 8,
+      "instructor_claims": 8,
+      "quoted_expressions": 8,
       "quartiles": 4,
-      "min_evidence": 36
+      "required_min_evidence": 36
     }
   ],
   "outside_case_evidence": 0,

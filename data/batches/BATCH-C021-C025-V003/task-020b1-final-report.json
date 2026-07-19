@@ -1,0 +1,72 @@
+{
+  "schema_version": "1.0",
+  "report_type": "afeng-task-020b1-final",
+  "course_id": "C021",
+  "timeline_review": {
+    "total": 21,
+    "repaired": 20,
+    "after_matches_final_p04": true
+  },
+  "non_timeline_samples": {
+    "total": 40,
+    "failed": 0
+  },
+  "p04_metrics": {
+    "CASE-C021-001": {
+      "case_segment_count": 2461,
+      "unique_evidence_segment_count": 50,
+      "evidence_span_count": 15,
+      "timeline_count": 7,
+      "observations_count": 8,
+      "instructor_claims_count": 8,
+      "quoted_expressions_count": 8,
+      "quartiles_covered": 4,
+      "missing_evidence_count": 0,
+      "invalid_evidence_count": 0,
+      "required_min_evidence": 36,
+      "required_min_spans": 4,
+      "required_min_timeline": 7,
+      "required_min_observations": 2,
+      "required_min_claims": 4,
+      "required_min_quotes": 6
+    },
+    "CASE-C021-002": {
+      "case_segment_count": 1396,
+      "unique_evidence_segment_count": 54,
+      "evidence_span_count": 15,
+      "timeline_count": 7,
+      "observations_count": 8,
+      "instructor_claims_count": 8,
+      "quoted_expressions_count": 8,
+      "quartiles_covered": 4,
+      "missing_evidence_count": 0,
+      "invalid_evidence_count": 0,
+      "required_min_evidence": 36,
+      "required_min_spans": 4,
+      "required_min_timeline": 7,
+      "required_min_observations": 2,
+      "required_min_claims": 4,
+      "required_min_quotes": 6
+    },
+    "CASE-C021-003": {
+      "case_segment_count": 982,
+      "unique_evidence_segment_count": 45,
+      "evidence_span_count": 15,
+      "timeline_count": 7,
+      "observations_count": 8,
+      "instructor_claims_count": 8,
+      "quoted_expressions_count": 8,
+      "quartiles_covered": 4,
+      "missing_evidence_count": 0,
+      "invalid_evidence_count": 0,
+      "required_min_evidence": 36,
+      "required_min_spans": 4,
+      "required_min_timeline": 7,
+      "required_min_observations": 2,
+      "required_min_claims": 4,
+      "required_min_quotes": 6
+    }
+  },
+  "compatibility": "40/40",
+  "all_passed": true
+}

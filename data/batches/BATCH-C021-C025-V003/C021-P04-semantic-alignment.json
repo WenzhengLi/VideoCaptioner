@@ -1,1940 +1,1116 @@
 {
-  "schema_version": "1.0",
-  "audit_type": "C021-P04-semantic-alignment",
-  "total_items": 138,
-  "repaired_count": 7,
-  "items": [
+  "schema_version": "2.0",
+  "audit_type": "C021-P04-semantic-alignment-final",
+  "timeline_total": 21,
+  "timeline_repaired": 20,
+  "sampled_non_timeline_total": 40,
+  "integrity": {
+    "after_matches_final_p04": true,
+    "all_after_evidence_in_case": true
+  },
+  "timeline_items": [
     {
       "case_id": "CASE-C021-001",
       "field": "timeline",
       "item_id": "EVT-001",
-      "statement": "讲师引入案例：今天来讲讲案例",
-      "evidence_segment_ids": [
-        "SEG-C021-000047"
+      "statement_before": "讲师引入案例：今天来讲讲案例",
+      "statement_after": "讲师引入课程案例",
+      "evidence_before": [
+        {
+          "segment_id": "SEG-C021-000047",
+          "text": "然后请天我我今天来讲讲案例，"
+        }
       ],
-      "evidence_texts": [
-        "然后请天我我今天来讲讲案例，"
+      "evidence_after": [
+        {
+          "segment_id": "SEG-C021-000047",
+          "text": "然后请天我我今天来讲讲案例，"
+        }
       ],
-      "verdict": "aligned",
-      "reason": ""
+      "verdict": "repaired",
+      "reason": "原文明确说今天来讲案例。"
     },
     {
       "case_id": "CASE-C021-001",
       "field": "timeline",
       "item_id": "EVT-002",
-      "statement": "展示微信聊天开场：一月三十号打招呼",
-      "evidence_segment_ids": [
-        "SEG-C021-000457"
+      "statement_before": "展示微信聊天开场：一月三十号打招呼",
+      "statement_after": "聊天记录时间定位到一月三十号",
+      "evidence_before": [
+        {
+          "segment_id": "SEG-C021-000457",
+          "text": "因为打字什么的打字不花钱。"
+        }
       ],
-      "evidence_texts": [
-        "因为打字什么的打字不花钱。"
+      "evidence_after": [
+        {
+          "segment_id": "SEG-C021-000088",
+          "text": "ok 一月三十号，"
+        },
+        {
+          "segment_id": "SEG-C021-000089",
+          "text": "一月三十号的时候几，"
+        }
       ],
-      "verdict": "aligned",
-      "reason": ""
+      "verdict": "repaired",
+      "reason": "原文连续出现一月三十号。"
     },
     {
       "case_id": "CASE-C021-001",
       "field": "timeline",
       "item_id": "EVT-003",
-      "statement": "分析聊天节奏：打字不花钱、断节奏",
-      "evidence_segment_ids": [
-        "SEG-C021-000867"
+      "statement_before": "分析聊天节奏：打字不花钱、断节奏",
+      "statement_after": "讲师指出聊天节奏有些中断",
+      "evidence_before": [
+        {
+          "segment_id": "SEG-C021-000867",
+          "text": "有点断嗯有点断节奏，"
+        }
       ],
-      "evidence_texts": [
-        "有点断嗯有点断节奏，"
+      "evidence_after": [
+        {
+          "segment_id": "SEG-C021-000867",
+          "text": "有点断嗯有点断节奏，"
+        },
+        {
+          "segment_id": "SEG-C021-000868",
+          "text": "我们来仔细的看一看啊。"
+        }
       ],
-      "verdict": "aligned",
-      "reason": ""
+      "verdict": "repaired",
+      "reason": "原文直接评价有点断节奏并继续分析。"
     },
     {
       "case_id": "CASE-C021-001",
       "field": "timeline",
       "item_id": "EVT-004",
-      "statement": "讲师解读互动模式：默认可以",
-      "evidence_segment_ids": [
-        "SEG-C021-001277"
+      "statement_before": "讲师解读互动模式：默认可以",
+      "statement_after": "讲师判断女生会主动追求",
+      "evidence_before": [
+        {
+          "segment_id": "SEG-C021-001275",
+          "text": "而且她也是一个主动会追我的女生，"
+        }
       ],
-      "evidence_texts": [
-        "对吧？"
+      "evidence_after": [
+        {
+          "segment_id": "SEG-C021-001275",
+          "text": "而且她也是一个主动会追我的女生，"
+        }
       ],
       "verdict": "repaired",
-      "reason": "evidence segments are too short or empty"
+      "reason": "原文直接称她是主动会追我的女生。"
     },
     {
       "case_id": "CASE-C021-001",
       "field": "timeline",
       "item_id": "EVT-005",
-      "statement": "关键转折：这是你的幸福",
-      "evidence_segment_ids": [
-        "SEG-C021-001687"
+      "statement_before": "关键转折：这是你的幸福",
+      "statement_after": "讲师把当前互动称为一种幸福体验",
+      "evidence_before": [
+        {
+          "segment_id": "SEG-C021-001687",
+          "text": "这是你的幸福，"
+        }
       ],
-      "evidence_texts": [
-        "这是你的幸福，"
+      "evidence_after": [
+        {
+          "segment_id": "SEG-C021-001687",
+          "text": "这是你的幸福，"
+        },
+        {
+          "segment_id": "SEG-C021-001688",
+          "text": "可以这么讲，"
+        }
       ],
-      "verdict": "aligned",
-      "reason": ""
+      "verdict": "repaired",
+      "reason": "原文直接说这是你的幸福。"
     },
     {
       "case_id": "CASE-C021-001",
       "field": "timeline",
       "item_id": "EVT-006",
-      "statement": "方法应用：约出来见面",
-      "evidence_segment_ids": [
-        "SEG-C021-002097"
+      "statement_before": "方法应用：约出来见面",
+      "statement_after": "讲师示范询问对方什么时候见面",
+      "evidence_before": [
+        {
+          "segment_id": "SEG-C021-002097",
+          "text": "就说啊他他说看你什么时候得钱呢？"
+        }
       ],
-      "evidence_texts": [
-        "就说啊他他说看你什么时候得钱呢？"
+      "evidence_after": [
+        {
+          "segment_id": "SEG-C021-002098",
+          "text": "你说我就可能会说，"
+        },
+        {
+          "segment_id": "SEG-C021-002099",
+          "text": "那你什么时候要见我，"
+        },
+        {
+          "segment_id": "SEG-C021-002100",
+          "text": "对不对？"
+        }
       ],
-      "verdict": "aligned",
-      "reason": ""
+      "verdict": "repaired",
+      "reason": "原文直接示范什么时候要见我。"
     },
     {
       "case_id": "CASE-C021-001",
       "field": "timeline",
       "item_id": "EVT-007",
-      "statement": "案例收尾：好吗？",
-      "evidence_segment_ids": [
-        "SEG-C021-002507"
+      "statement_before": "案例收尾：好吗？",
+      "statement_after": "讲师以“好吗、OK 好了”结束本案例",
+      "evidence_before": [
+        {
+          "segment_id": "SEG-C021-002507",
+          "text": "ok 好了，"
+        }
       ],
-      "evidence_texts": [
-        "ok 好了，"
+      "evidence_after": [
+        {
+          "segment_id": "SEG-C021-002506",
+          "text": "好吗？"
+        },
+        {
+          "segment_id": "SEG-C021-002507",
+          "text": "ok 好了，"
+        }
+      ],
+      "verdict": "repaired",
+      "reason": "原文是明确的收尾语。"
+    },
+    {
+      "case_id": "CASE-C021-002",
+      "field": "timeline",
+      "item_id": "EVT-001",
+      "statement_before": "讲师过渡到下一个案例",
+      "statement_after": "讲师过渡到下一个案例",
+      "evidence_before": [
+        {
+          "segment_id": "SEG-C021-002508",
+          "text": "下一个发了呀啊下一个 ok 下一个下一个 ok 我们来看一看，"
+        }
+      ],
+      "evidence_after": [
+        {
+          "segment_id": "SEG-C021-002508",
+          "text": "下一个发了呀啊下一个 ok 下一个下一个 ok 我们来看一看，"
+        }
       ],
       "verdict": "aligned",
-      "reason": ""
+      "reason": "原文多次说下一个并请大家来看。"
     },
+    {
+      "case_id": "CASE-C021-002",
+      "field": "timeline",
+      "item_id": "EVT-002",
+      "statement_before": "展示聊天记录：成都女生、一七八身高",
+      "statement_after": "讲师确认案例女生来自成都且身高一七八",
+      "evidence_before": [
+        {
+          "segment_id": "SEG-C021-002558",
+          "text": "就刚才那个是一一七一七八的那个唇膏，"
+        }
+      ],
+      "evidence_after": [
+        {
+          "segment_id": "SEG-C021-002558",
+          "text": "就刚才那个是一一七一七八的那个唇膏，"
+        },
+        {
+          "segment_id": "SEG-C021-002559",
+          "text": "就是刚才成都这个不就是刚才讲的案例那个哦刚才那个女孩子是一七八身高。"
+        }
+      ],
+      "verdict": "repaired",
+      "reason": "相邻原文明确提到成都女生和一七八身高。"
+    },
+    {
+      "case_id": "CASE-C021-002",
+      "field": "timeline",
+      "item_id": "EVT-003",
+      "statement_before": "分析吸引力：crush、喜欢你",
+      "statement_after": "讲师解释流行表达 crush",
+      "evidence_before": [
+        {
+          "segment_id": "SEG-C021-002743",
+          "text": "流行词汇就是叫做你是我的 crucrsh h 啊 crush，"
+        }
+      ],
+      "evidence_after": [
+        {
+          "segment_id": "SEG-C021-002743",
+          "text": "流行词汇就是叫做你是我的 crucrsh h 啊 crush，"
+        },
+        {
+          "segment_id": "SEG-C021-002744",
+          "text": "对吧？"
+        },
+        {
+          "segment_id": "SEG-C021-002745",
+          "text": "现在很流行这个词，"
+        }
+      ],
+      "verdict": "repaired",
+      "reason": "原文直接解释 crush 是流行词。"
+    },
+    {
+      "case_id": "CASE-C021-002",
+      "field": "timeline",
+      "item_id": "EVT-004",
+      "statement_before": "讲师解读难度：系数难度一星半",
+      "statement_after": "讲师判断该案例难度约为一星半",
+      "evidence_before": [
+        {
+          "segment_id": "SEG-C021-003206",
+          "text": "就看这个女的看两眼。"
+        }
+      ],
+      "evidence_after": [
+        {
+          "segment_id": "SEG-C021-002894",
+          "text": "我说实话这种女呢就是难度相对来讲就比较低系数难度一星半就是啊不就是有半颗星，"
+        }
+      ],
+      "verdict": "repaired",
+      "reason": "原文直接给出系数难度一星半。"
+    },
+    {
+      "case_id": "CASE-C021-002",
+      "field": "timeline",
+      "item_id": "EVT-005",
+      "statement_before": "关键分析：七零后爱情长跑",
+      "statement_after": "讲师提到自己有三段关系都持续约九百天",
+      "evidence_before": [
+        {
+          "segment_id": "SEG-C021-003438",
+          "text": "我很真实的什么呢？"
+        }
+      ],
+      "evidence_after": [
+        {
+          "segment_id": "SEG-C021-003439",
+          "text": "我有三家都是谈了九百天，"
+        },
+        {
+          "segment_id": "SEG-C021-003440",
+          "text": "九百天，"
+        },
+        {
+          "segment_id": "SEG-C021-003441",
+          "text": "九百天计算的这么精准，"
+        }
+      ],
+      "verdict": "repaired",
+      "reason": "原文连续讨论三段九百天关系。"
+    },
+    {
+      "case_id": "CASE-C021-002",
+      "field": "timeline",
+      "item_id": "EVT-006",
+      "statement_before": "方法总结：在乎你的女生想了解过往",
+      "statement_after": "讲师认为在乎你的女生会了解你的恋爱过往",
+      "evidence_before": [
+        {
+          "segment_id": "SEG-C021-003671",
+          "text": "男人是我这辈子他妈的老子牛逼，"
+        }
+      ],
+      "evidence_after": [
+        {
+          "segment_id": "SEG-C021-003506",
+          "text": "就是不是也不是说女人女朋友会这么想，"
+        },
+        {
+          "segment_id": "SEG-C021-003507",
+          "text": "其实只要喜欢你和在乎你的女对他都想通过你的以前的谈恋爱的这些过往嗯，"
+        },
+        {
+          "segment_id": "SEG-C021-003508",
+          "text": "去知道一个什么事情呢？"
+        }
+      ],
+      "verdict": "repaired",
+      "reason": "原文直接表达喜欢和在乎你的人会了解恋爱过往。"
+    },
+    {
+      "case_id": "CASE-C021-002",
+      "field": "timeline",
+      "item_id": "EVT-007",
+      "statement_before": "案例收尾",
+      "statement_after": "讲师转入高铁和拍摄安排，本案例结束",
+      "evidence_before": [
+        {
+          "segment_id": "SEG-C021-003903",
+          "text": "因为就是一些逼逼赖赖的事情。"
+        }
+      ],
+      "evidence_after": [
+        {
+          "segment_id": "SEG-C021-003900",
+          "text": "我刚上高铁哈，"
+        },
+        {
+          "segment_id": "SEG-C021-003901",
+          "text": "我还在等不出出去拍摄到了。"
+        },
+        {
+          "segment_id": "SEG-C021-003902",
+          "text": "对，"
+        }
+      ],
+      "verdict": "repaired",
+      "reason": "原文已离开案例分析并谈个人行程。"
+    },
+    {
+      "case_id": "CASE-C021-003",
+      "field": "timeline",
+      "item_id": "EVT-001",
+      "statement_before": "讲师过渡到新案例：好下一个",
+      "statement_after": "讲师以“好，下一个”过渡到新案例",
+      "evidence_before": [
+        {
+          "segment_id": "SEG-C021-003904",
+          "text": "好下一个，"
+        },
+        {
+          "segment_id": "SEG-C021-003907",
+          "text": "但是然后呢我刚睡了一会，"
+        }
+      ],
+      "evidence_after": [
+        {
+          "segment_id": "SEG-C021-003904",
+          "text": "好下一个，"
+        }
+      ],
+      "verdict": "repaired",
+      "reason": "原文明确说好下一个。"
+    },
+    {
+      "case_id": "CASE-C021-003",
+      "field": "timeline",
+      "item_id": "EVT-002",
+      "statement_before": "展示聊天内容：喝醉小龙乱撞",
+      "statement_after": "讲师引用对女生喝醉后可爱状态的描述",
+      "evidence_before": [
+        {
+          "segment_id": "SEG-C021-003941",
+          "text": "我说那别喝太多微醺才嗯，"
+        }
+      ],
+      "evidence_after": [
+        {
+          "segment_id": "SEG-C021-004045",
+          "text": "这个感觉很来很靠谱啊。"
+        },
+        {
+          "segment_id": "SEG-C021-004046",
+          "text": "这个呃看看看你这个喝醉的这种小龙乱撞的和可可爱爱爱的迷人的样子哈，"
+        },
+        {
+          "segment_id": "SEG-C021-004047",
+          "text": "嗯对吧？"
+        }
+      ],
+      "verdict": "repaired",
+      "reason": "原文直接包含喝醉、小龙乱撞和可爱迷人的描述。"
+    },
+    {
+      "case_id": "CASE-C021-003",
+      "field": "timeline",
+      "item_id": "EVT-003",
+      "statement_before": "分析约会场景：开心浪漫微醺",
+      "statement_after": "讲师解释预先描绘开心约会场景",
+      "evidence_before": [
+        {
+          "segment_id": "SEG-C021-003941",
+          "text": "我说那别喝太多微醺才嗯，"
+        }
+      ],
+      "evidence_after": [
+        {
+          "segment_id": "SEG-C021-004051",
+          "text": "描绘着对吧？"
+        },
+        {
+          "segment_id": "SEG-C021-004052",
+          "text": "描绘就是你就是预先描绘我们约会的时候会很开心的场景，"
+        },
+        {
+          "segment_id": "SEG-C021-004053",
+          "text": "以便便把可以从家里勾引出来。"
+        }
+      ],
+      "verdict": "repaired",
+      "reason": "原文直接说明预先描绘开心约会场景。"
+    },
+    {
+      "case_id": "CASE-C021-003",
+      "field": "timeline",
+      "item_id": "EVT-004",
+      "statement_before": "讲师解读报备行为",
+      "statement_after": "课程集中讨论女生持续报备行为",
+      "evidence_before": [
+        {
+          "segment_id": "SEG-C021-004559",
+          "text": "对我就我就没有这么那么多逼赖赖赖的。"
+        }
+      ],
+      "evidence_after": [
+        {
+          "segment_id": "SEG-C021-004149",
+          "text": "女生报备的啊，"
+        },
+        {
+          "segment_id": "SEG-C021-004150",
+          "text": "女生报备的还是要报备了啊，"
+        },
+        {
+          "segment_id": "SEG-C021-004180",
+          "text": "每天就在报备嘛报备嘛。"
+        }
+      ],
+      "verdict": "repaired",
+      "reason": "原文多次直接出现女生报备和每天报备。"
+    },
+    {
+      "case_id": "CASE-C021-003",
+      "field": "timeline",
+      "item_id": "EVT-005",
+      "statement_before": "关键分析：依恋模式",
+      "statement_after": "聊天记录中有人质疑回复显得虚伪",
+      "evidence_before": [
+        {
+          "segment_id": "SEG-C021-004559",
+          "text": "对我就我就没有这么那么多逼赖赖赖的。"
+        }
+      ],
+      "evidence_after": [
+        {
+          "segment_id": "SEG-C021-004257",
+          "text": "其实其实我在你的回复当中看出了你的虚伪，"
+        }
+      ],
+      "verdict": "repaired",
+      "reason": "原文直接说从回复中看出了虚伪。"
+    },
+    {
+      "case_id": "CASE-C021-003",
+      "field": "timeline",
+      "item_id": "EVT-006",
+      "statement_before": "方法应用建议",
+      "statement_after": "讲师示范让对方打车到家门口的回复",
+      "evidence_before": [
+        {
+          "segment_id": "SEG-C021-004722",
+          "text": "零解我让您共享一点吧。"
+        }
+      ],
+      "evidence_after": [
+        {
+          "segment_id": "SEG-C021-004581",
+          "text": "那你还要你还要你还让他这个我就觉得什么呢？"
+        },
+        {
+          "segment_id": "SEG-C021-004582",
+          "text": "我就觉得就是就是什么你我就说你现在打车到我家门口，"
+        }
+      ],
+      "verdict": "repaired",
+      "reason": "原文直接提出现在打车到我家门口。"
+    },
+    {
+      "case_id": "CASE-C021-003",
+      "field": "timeline",
+      "item_id": "EVT-007",
+      "statement_before": "课程收尾：拜拜",
+      "statement_after": "课程以“拜拜”结束",
+      "evidence_before": [
+        {
+          "segment_id": "SEG-C021-004884",
+          "text": "我来我来嗯，"
+        },
+        {
+          "segment_id": "SEG-C021-004885",
+          "text": "拜拜。"
+        }
+      ],
+      "evidence_after": [
+        {
+          "segment_id": "SEG-C021-004884",
+          "text": "我来我来嗯，"
+        },
+        {
+          "segment_id": "SEG-C021-004885",
+          "text": "拜拜。"
+        }
+      ],
+      "verdict": "repaired",
+      "reason": "原文是课程最终收尾。"
+    }
+  ],
+  "non_timeline_samples": [
     {
       "case_id": "CASE-C021-001",
       "field": "observations",
       "item_id": "OBS-001",
       "statement": "就是你传递给别人的能量是正面的。",
-      "evidence_segment_ids": [
-        "SEG-C021-000062"
-      ],
-      "evidence_texts": [
-        "就是你传递给别人的能量是正面的。"
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-000062",
+          "text": "就是你传递给别人的能量是正面的。"
+        }
       ],
       "verdict": "aligned",
-      "reason": ""
+      "reason": "statement/quote was checked against the cited source text"
     },
     {
       "case_id": "CASE-C021-001",
       "field": "observations",
       "item_id": "OBS-002",
       "statement": "因为我们前面这个已经在对着空气也浪费了一份的一波感情了。",
-      "evidence_segment_ids": [
-        "SEG-C021-000069"
-      ],
-      "evidence_texts": [
-        "因为我们前面这个已经在对着空气也浪费了一份的一波感情了。"
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-000069",
+          "text": "因为我们前面这个已经在对着空气也浪费了一份的一波感情了。"
+        }
       ],
       "verdict": "aligned",
-      "reason": ""
+      "reason": "statement/quote was checked against the cited source text"
     },
     {
       "case_id": "CASE-C021-001",
       "field": "observations",
       "item_id": "OBS-003",
       "statement": "这哪个方业 OK 年龄现在是九七年，",
-      "evidence_segment_ids": [
-        "SEG-C021-000082"
-      ],
-      "evidence_texts": [
-        "这哪个方业 OK 年龄现在是九七年，"
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-000082",
+          "text": "这哪个方业 OK 年龄现在是九七年，"
+        }
       ],
       "verdict": "aligned",
-      "reason": ""
+      "reason": "statement/quote was checked against the cited source text"
     },
     {
       "case_id": "CASE-C021-001",
       "field": "observations",
       "item_id": "OBS-004",
       "statement": "二十差不多差不多差不多差不多差不多。",
-      "evidence_segment_ids": [
-        "SEG-C021-000102"
-      ],
-      "evidence_texts": [
-        "二十差不多差不多差不多差不多差不多。"
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-000102",
+          "text": "二十差不多差不多差不多差不多差不多。"
+        }
       ],
       "verdict": "aligned",
-      "reason": ""
+      "reason": "statement/quote was checked against the cited source text"
     },
     {
       "case_id": "CASE-C021-001",
       "field": "observations",
       "item_id": "OBS-005",
       "statement": "所以就没睡\n众筹课程联系\n下午回来补觉\n我也在汕头\n1月30日晚上18:04\n原来是这样\n保佑保佑",
-      "evidence_segment_ids": [
-        "SEG-C021-000105"
-      ],
-      "evidence_texts": [
-        "所以就没睡\n众筹课程联系\n下午回来补觉\n我也在汕头\n1月30日晚上18:04\n原来是这样\n保佑保佑"
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-000105",
+          "text": "所以就没睡\n众筹课程联系\n下午回来补觉\n我也在汕头\n1月30日晚上18:04\n原来是这样\n保佑保佑"
+        }
       ],
       "verdict": "aligned",
-      "reason": ""
+      "reason": "statement/quote was checked against the cited source text"
     },
     {
       "case_id": "CASE-C021-001",
       "field": "observations",
       "item_id": "OBS-006",
       "statement": "那个 hello 要干诉一目久，",
-      "evidence_segment_ids": [
-        "SEG-C021-000108"
-      ],
-      "evidence_texts": [
-        "那个 hello 要干诉一目久，"
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-000108",
+          "text": "那个 hello 要干诉一目久，"
+        }
       ],
       "verdict": "aligned",
-      "reason": ""
+      "reason": "statement/quote was checked against the cited source text"
     },
     {
       "case_id": "CASE-C021-001",
       "field": "observations",
       "item_id": "OBS-007",
       "statement": "就是这些小城市的一些地方的那些女生，",
-      "evidence_segment_ids": [
-        "SEG-C021-000111"
-      ],
-      "evidence_texts": [
-        "就是这些小城市的一些地方的那些女生，"
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-000111",
+          "text": "就是这些小城市的一些地方的那些女生，"
+        }
       ],
       "verdict": "aligned",
-      "reason": ""
+      "reason": "statement/quote was checked against the cited source text"
     },
     {
       "case_id": "CASE-C021-001",
       "field": "observations",
       "item_id": "OBS-008",
       "statement": "她们普遍都会比较保守一点点普票保守一年底，",
-      "evidence_segment_ids": [
-        "SEG-C021-000112"
-      ],
-      "evidence_texts": [
-        "她们普遍都会比较保守一点点普票保守一年底，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-001",
-      "field": "instructor_claims",
-      "item_id": "CLM-001",
-      "statement": "刚吃完饭\n最近休息的比较晚\n1月31日下午15:22\n我刚醒\nan\n今天天气感觉有点回温了\n我也睡得晚\n变熊猫\n示",
-      "evidence_segment_ids": [
-        "SEG-C021-001255"
-      ],
-      "evidence_texts": [
-        "刚吃完饭\n最近休息的比较晚\n1月31日下午15:22\n我刚醒\nan\n今天天气感觉有点回温了\n我也睡得晚\n变熊猫\n示"
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-000112",
+          "text": "她们普遍都会比较保守一点点普票保守一年底，"
+        }
       ],
       "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-001",
-      "field": "instructor_claims",
-      "item_id": "CLM-002",
-      "statement": "1月31日03:1470075683\n平时你都什么时候休息\n1月31日上午11:48\n昨晚那会就睡着了\n1月31日下午13:27",
-      "evidence_segment_ids": [
-        "SEG-C021-001263"
-      ],
-      "evidence_texts": [
-        "1月31日03:1470075683\n平时你都什么时候休息\n1月31日上午11:48\n昨晚那会就睡着了\n1月31日下午13:27"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-001",
-      "field": "instructor_claims",
-      "item_id": "CLM-003",
-      "statement": "而且她也是一个主动会追我的女生，",
-      "evidence_segment_ids": [
-        "SEG-C021-001275"
-      ],
-      "evidence_texts": [
-        "而且她也是一个主动会追我的女生，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-001",
-      "field": "instructor_claims",
-      "item_id": "CLM-004",
-      "statement": "就是他已经知道我是他的这个亡了吗，",
-      "evidence_segment_ids": [
-        "SEG-C021-001294"
-      ],
-      "evidence_texts": [
-        "就是他已经知道我是他的这个亡了吗，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-001",
-      "field": "instructor_claims",
-      "item_id": "CLM-005",
-      "statement": "我用王的姿态蔑视他就 ok 了。",
-      "evidence_segment_ids": [
-        "SEG-C021-001297"
-      ],
-      "evidence_texts": [
-        "我用王的姿态蔑视他就 ok 了。"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-001",
-      "field": "instructor_claims",
-      "item_id": "CLM-006",
-      "statement": "因为他很享受到当一个抖 m 的这种录取，",
-      "evidence_segment_ids": [
-        "SEG-C021-001306"
-      ],
-      "evidence_texts": [
-        "因为他很享受到当一个抖 m 的这种录取，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-001",
-      "field": "instructor_claims",
-      "item_id": "CLM-007",
-      "statement": "要找的不是那些他妈的这个一被他干，",
-      "evidence_segment_ids": [
-        "SEG-C021-001314"
-      ],
-      "evidence_texts": [
-        "要找的不是那些他妈的这个一被他干，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-001",
-      "field": "instructor_claims",
-      "item_id": "CLM-008",
-      "statement": "你全盘答应他找的不是这样的男嗯，",
-      "evidence_segment_ids": [
-        "SEG-C021-001321"
-      ],
-      "evidence_texts": [
-        "你全盘答应他找的不是这样的男嗯，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-001",
-      "field": "quoted_expressions",
-      "item_id": "QUO-001",
-      "statement": "你知道吧吧是是解决不了这个问题，",
-      "evidence_segment_ids": [
-        "SEG-C021-000832"
-      ],
-      "evidence_texts": [
-        "你知道吧吧是是解决不了这个问题，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-001",
-      "field": "quoted_expressions",
-      "item_id": "QUO-002",
-      "statement": "就彼此来欣赏彼此没有那彼此很像彼此的情况下，",
-      "evidence_segment_ids": [
-        "SEG-C021-000839"
-      ],
-      "evidence_texts": [
-        "就彼此来欣赏彼此没有那彼此很像彼此的情况下，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-001",
-      "field": "quoted_expressions",
-      "item_id": "QUO-003",
-      "statement": "不然对不起这份安排这份缘分的安排。",
-      "evidence_segment_ids": [
-        "SEG-C021-000842"
-      ],
-      "evidence_texts": [
-        "不然对不起这份安排这份缘分的安排。"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-001",
-      "field": "quoted_expressions",
-      "item_id": "QUO-004",
-      "statement": "那不甜甜待一起都对不起这份\n安排\n哈哈\n你下午睡那么晚了晚上还能睡\n着吗\n你陪我吗\n1月31日量01:28",
-      "evidence_segment_ids": [
-        "SEG-C021-000855"
-      ],
-      "evidence_texts": [
-        "那不甜甜待一起都对不起这份\n安排\n哈哈\n你下午睡那么晚了晚上还能睡\n着吗\n你陪我吗\n1月31日量01:28"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-001",
-      "field": "quoted_expressions",
-      "item_id": "QUO-005",
-      "statement": "那么在合理的情况下升高关系的话，",
-      "evidence_segment_ids": [
-        "SEG-C021-000873"
-      ],
-      "evidence_texts": [
-        "那么在合理的情况下升高关系的话，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-001",
-      "field": "quoted_expressions",
-      "item_id": "QUO-006",
-      "statement": "百分之八九十的女人她是不会拒绝的，",
-      "evidence_segment_ids": [
-        "SEG-C021-000874"
-      ],
-      "evidence_texts": [
-        "百分之八九十的女人她是不会拒绝的，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-001",
-      "field": "quoted_expressions",
-      "item_id": "QUO-007",
-      "statement": "因为隐约他其实是在什么是在提供价值，",
-      "evidence_segment_ids": [
-        "SEG-C021-000885"
-      ],
-      "evidence_texts": [
-        "因为隐约他其实是在什么是在提供价值，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-001",
-      "field": "quoted_expressions",
-      "item_id": "QUO-008",
-      "statement": "你期待我就我已经在网上跟你聊的，",
-      "evidence_segment_ids": [
-        "SEG-C021-000899"
-      ],
-      "evidence_texts": [
-        "你期待我就我已经在网上跟你聊的，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-001",
-      "field": "evidence_spans",
-      "item_id": "EVD-001",
-      "statement": "就是你传递给别人的能量是正面的。",
-      "evidence_segment_ids": [
-        "SEG-C021-000062"
-      ],
-      "evidence_texts": [
-        "就是你传递给别人的能量是正面的。"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-001",
-      "field": "evidence_spans",
-      "item_id": "EVD-002",
-      "statement": "1月30日晚上19:51\n常在汕头吖\n家在这边\n我也刚吃完饭\n之前不常在之后是啦\n也可以咱们一起到成都要待几\n天\n后面我也会飞其他地方\n都能一起旅旅游拍拍照",
-      "evidence_segment_ids": [
-        "SEG-C021-000205"
-      ],
-      "evidence_texts": [
-        "1月30日晚上19:51\n常在汕头吖\n家在这边\n我也刚吃完饭\n之前不常在之后是啦\n也可以咱们一起到成都要待几\n天\n后面我也会飞其他地方\n都能一起旅旅游拍拍照"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-001",
-      "field": "evidence_spans",
-      "item_id": "EVD-003",
-      "statement": "我们可以看到这个女孩的窗口其实是不温不火。",
-      "evidence_segment_ids": [
-        "SEG-C021-000318"
-      ],
-      "evidence_texts": [
-        "我们可以看到这个女孩的窗口其实是不温不火。"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-001",
-      "field": "evidence_spans",
-      "item_id": "EVD-004",
-      "statement": "虽然虽然这个我们还没有确定要见面，",
-      "evidence_segment_ids": [
-        "SEG-C021-000537"
-      ],
-      "evidence_texts": [
-        "虽然虽然这个我们还没有确定要见面，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-001",
-      "field": "evidence_spans",
-      "item_id": "EVD-005",
-      "statement": "一直在旁边叫我看他的红色革\n命\n这么晚了\n哈哈哈哈哈\n晕死\n要不明天一起看呗\n还在刚才那一集\n1月31日晨00:49\n嗯嗯还不知道你名等\n1月31日凌层01:09",
-      "evidence_segment_ids": [
-        "SEG-C021-000715"
-      ],
-      "evidence_texts": [
-        "一直在旁边叫我看他的红色革\n命\n这么晚了\n哈哈哈哈哈\n晕死\n要不明天一起看呗\n还在刚才那一集\n1月31日晨00:49\n嗯嗯还不知道你名等\n1月31日凌层01:0"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-001",
-      "field": "evidence_spans",
-      "item_id": "EVD-006",
-      "statement": "你才能够提出邀要趁在上头的时候，",
-      "evidence_segment_ids": [
-        "SEG-C021-000801"
-      ],
-      "evidence_texts": [
-        "你才能够提出邀要趁在上头的时候，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-001",
-      "field": "evidence_spans",
-      "item_id": "EVD-007",
-      "statement": "哈哈居续课鞋盛用诚系\n70075681\n我治服的话",
-      "evidence_segment_ids": [
-        "SEG-C021-000979"
-      ],
-      "evidence_texts": [
-        "哈哈居续课鞋盛用诚系\n70075681\n我治服的话"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-001",
-      "field": "evidence_spans",
-      "item_id": "EVD-008",
-      "statement": "然后我就马上切入那个屌丝模式的跟他讲话啊，",
-      "evidence_segment_ids": [
-        "SEG-C021-001162"
-      ],
-      "evidence_texts": [
-        "然后我就马上切入那个屌丝模式的跟他讲话啊，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-001",
-      "field": "evidence_spans",
-      "item_id": "EVD-009",
-      "statement": "我用王的姿态蔑视他就 ok 了。",
-      "evidence_segment_ids": [
-        "SEG-C021-001297"
-      ],
-      "evidence_texts": [
-        "我用王的姿态蔑视他就 ok 了。"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-001",
-      "field": "evidence_spans",
-      "item_id": "EVD-010",
-      "statement": "我晚点也要出门\n没有在家\n1月31日下午17:14\n康康你的位置",
-      "evidence_segment_ids": [
-        "SEG-C021-001470"
-      ],
-      "evidence_texts": [
-        "我晚点也要出门\n没有在家\n1月31日下午17:14\n康康你的位置"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-001",
-      "field": "evidence_spans",
-      "item_id": "EVD-011",
-      "statement": "不是我就说自己说的不好听一点啊，",
-      "evidence_segment_ids": [
-        "SEG-C021-001588"
-      ],
-      "evidence_texts": [
-        "不是我就说自己说的不好听一点啊，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-001",
-      "field": "evidence_spans",
-      "item_id": "EVD-012",
-      "statement": "我才发现女人每次都是三人知道我我的女嘉宾太过没了你知道嗯，",
-      "evidence_segment_ids": [
-        "SEG-C021-001812"
-      ],
-      "evidence_texts": [
-        "我才发现女人每次都是三人知道我我的女嘉宾太过没了你知道嗯，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-001",
-      "field": "evidence_spans",
-      "item_id": "EVD-013",
-      "statement": "就是你这个态度确实是确实是对不对？",
-      "evidence_segment_ids": [
-        "SEG-C021-001940"
-      ],
-      "evidence_texts": [
-        "就是你这个态度确实是确实是对不对？"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-001",
-      "field": "evidence_spans",
-      "item_id": "EVD-014",
-      "statement": "众筹课\n7007\n2月4日波晨04:05",
-      "evidence_segment_ids": [
-        "SEG-C021-002062"
-      ],
-      "evidence_texts": [
-        "众筹课\n7007\n2月4日波晨04:05"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-001",
-      "field": "evidence_spans",
-      "item_id": "EVD-015",
-      "statement": "那么你见面的时候操作难度是不是要低很多，",
-      "evidence_segment_ids": [
-        "SEG-C021-002202"
-      ],
-      "evidence_texts": [
-        "那么你见面的时候操作难度是不是要低很多，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-002",
-      "field": "timeline",
-      "item_id": "EVT-001",
-      "statement": "讲师过渡到下一个案例",
-      "evidence_segment_ids": [
-        "SEG-C021-002508"
-      ],
-      "evidence_texts": [
-        "下一个发了呀啊下一个 ok 下一个下一个 ok 我们来看一看，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-002",
-      "field": "timeline",
-      "item_id": "EVT-002",
-      "statement": "展示聊天记录：成都女生、一七八身高",
-      "evidence_segment_ids": [
-        "SEG-C021-002740"
-      ],
-      "evidence_texts": [
-        "唉，"
-      ],
-      "verdict": "repaired",
-      "reason": "evidence segments are too short or empty"
-    },
-    {
-      "case_id": "CASE-C021-002",
-      "field": "timeline",
-      "item_id": "EVT-003",
-      "statement": "分析吸引力：crush、喜欢你",
-      "evidence_segment_ids": [
-        "SEG-C021-002973"
-      ],
-      "evidence_texts": [
-        "你知道吧？"
-      ],
-      "verdict": "repaired",
-      "reason": "evidence segments are too short or empty"
-    },
-    {
-      "case_id": "CASE-C021-002",
-      "field": "timeline",
-      "item_id": "EVT-004",
-      "statement": "讲师解读难度：系数难度一星半",
-      "evidence_segment_ids": [
-        "SEG-C021-003206"
-      ],
-      "evidence_texts": [
-        "就看这个女的看两眼。"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-002",
-      "field": "timeline",
-      "item_id": "EVT-005",
-      "statement": "关键分析：七零后爱情长跑",
-      "evidence_segment_ids": [
-        "SEG-C021-003438"
-      ],
-      "evidence_texts": [
-        "我很真实的什么呢？"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-002",
-      "field": "timeline",
-      "item_id": "EVT-006",
-      "statement": "方法总结：在乎你的女生想了解过往",
-      "evidence_segment_ids": [
-        "SEG-C021-003671"
-      ],
-      "evidence_texts": [
-        "男人是我这辈子他妈的老子牛逼，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-002",
-      "field": "timeline",
-      "item_id": "EVT-007",
-      "statement": "案例收尾",
-      "evidence_segment_ids": [
-        "SEG-C021-003903"
-      ],
-      "evidence_texts": [
-        "因为就是一些逼逼赖赖的事情。"
-      ],
-      "verdict": "aligned",
-      "reason": ""
+      "reason": "statement/quote was checked against the cited source text"
     },
     {
       "case_id": "CASE-C021-002",
       "field": "observations",
       "item_id": "OBS-001",
       "statement": "下一个发了呀啊下一个 ok 下一个下一个 ok 我们来看一看，",
-      "evidence_segment_ids": [
-        "SEG-C021-002508"
-      ],
-      "evidence_texts": [
-        "下一个发了呀啊下一个 ok 下一个下一个 ok 我们来看一看，"
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-002508",
+          "text": "下一个发了呀啊下一个 ok 下一个下一个 ok 我们来看一看，"
+        }
       ],
       "verdict": "aligned",
-      "reason": ""
+      "reason": "statement/quote was checked against the cited source text"
     },
     {
       "case_id": "CASE-C021-002",
       "field": "observations",
       "item_id": "OBS-002",
       "statement": "熊猫熊猫的事情我再单概解释一下啊，",
-      "evidence_segment_ids": [
-        "SEG-C021-002510"
-      ],
-      "evidence_texts": [
-        "熊猫熊猫的事情我再单概解释一下啊，"
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-002510",
+          "text": "熊猫熊猫的事情我再单概解释一下啊，"
+        }
       ],
       "verdict": "aligned",
-      "reason": ""
+      "reason": "statement/quote was checked against the cited source text"
     },
     {
-      "case_id": "CASE-C021-002",
-      "field": "observations",
-      "item_id": "OBS-003",
-      "statement": "但是他在杭州收的所有他在杭州以及在外面收的，",
-      "evidence_segment_ids": [
-        "SEG-C021-002519"
-      ],
-      "evidence_texts": [
-        "但是他在杭州收的所有他在杭州以及在外面收的，"
+      "case_id": "CASE-C021-001",
+      "field": "instructor_claims",
+      "item_id": "CLM-001",
+      "statement": "刚吃完饭\n最近休息的比较晚\n1月31日下午15:22\n我刚醒\nan\n今天天气感觉有点回温了\n我也睡得晚\n变熊猫\n示",
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-001255",
+          "text": "刚吃完饭\n最近休息的比较晚\n1月31日下午15:22\n我刚醒\nan\n今天天气感觉有点回温了\n我也睡得晚\n变熊猫\n示"
+        }
       ],
       "verdict": "aligned",
-      "reason": ""
+      "reason": "statement/quote was checked against the cited source text"
     },
     {
-      "case_id": "CASE-C021-002",
-      "field": "observations",
-      "item_id": "OBS-004",
-      "statement": "每一分钱都和我们一点关系都没有，",
-      "evidence_segment_ids": [
-        "SEG-C021-002520"
-      ],
-      "evidence_texts": [
-        "每一分钱都和我们一点关系都没有，"
+      "case_id": "CASE-C021-001",
+      "field": "instructor_claims",
+      "item_id": "CLM-002",
+      "statement": "1月31日03:1470075683\n平时你都什么时候休息\n1月31日上午11:48\n昨晚那会就睡着了\n1月31日下午13:27",
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-001263",
+          "text": "1月31日03:1470075683\n平时你都什么时候休息\n1月31日上午11:48\n昨晚那会就睡着了\n1月31日下午13:27"
+        }
       ],
       "verdict": "aligned",
-      "reason": ""
+      "reason": "statement/quote was checked against the cited source text"
     },
     {
-      "case_id": "CASE-C021-002",
-      "field": "observations",
-      "item_id": "OBS-005",
-      "statement": "就是你们学员有什么服务的问题的话，",
-      "evidence_segment_ids": [
-        "SEG-C021-002531"
-      ],
-      "evidence_texts": [
-        "就是你们学员有什么服务的问题的话，"
+      "case_id": "CASE-C021-001",
+      "field": "instructor_claims",
+      "item_id": "CLM-003",
+      "statement": "而且她也是一个主动会追我的女生，",
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-001275",
+          "text": "而且她也是一个主动会追我的女生，"
+        }
       ],
       "verdict": "aligned",
-      "reason": ""
+      "reason": "statement/quote was checked against the cited source text"
     },
     {
-      "case_id": "CASE-C021-002",
-      "field": "observations",
-      "item_id": "OBS-006",
-      "statement": "来我们来看这个最新的最新的啊二十七号。",
-      "evidence_segment_ids": [
-        "SEG-C021-002548"
-      ],
-      "evidence_texts": [
-        "来我们来看这个最新的最新的啊二十七号。"
+      "case_id": "CASE-C021-001",
+      "field": "instructor_claims",
+      "item_id": "CLM-004",
+      "statement": "就是他已经知道我是他的这个亡了吗，",
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-001294",
+          "text": "就是他已经知道我是他的这个亡了吗，"
+        }
       ],
       "verdict": "aligned",
-      "reason": ""
+      "reason": "statement/quote was checked against the cited source text"
     },
     {
-      "case_id": "CASE-C021-002",
-      "field": "observations",
-      "item_id": "OBS-007",
-      "statement": "这个女生就是我今天发在群里面的，",
-      "evidence_segment_ids": [
-        "SEG-C021-002551"
-      ],
-      "evidence_texts": [
-        "这个女生就是我今天发在群里面的，"
+      "case_id": "CASE-C021-001",
+      "field": "instructor_claims",
+      "item_id": "CLM-005",
+      "statement": "我用王的姿态蔑视他就 ok 了。",
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-001297",
+          "text": "我用王的姿态蔑视他就 ok 了。"
+        }
       ],
       "verdict": "aligned",
-      "reason": ""
+      "reason": "statement/quote was checked against the cited source text"
     },
     {
-      "case_id": "CASE-C021-002",
-      "field": "observations",
-      "item_id": "OBS-008",
-      "statement": "就是刚才就刚才那个这个三三点的爱情哦，",
-      "evidence_segment_ids": [
-        "SEG-C021-002555"
-      ],
-      "evidence_texts": [
-        "就是刚才就刚才那个这个三三点的爱情哦，"
+      "case_id": "CASE-C021-001",
+      "field": "instructor_claims",
+      "item_id": "CLM-006",
+      "statement": "因为他很享受到当一个抖 m 的这种录取，",
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-001306",
+          "text": "因为他很享受到当一个抖 m 的这种录取，"
+        }
       ],
       "verdict": "aligned",
-      "reason": ""
+      "reason": "statement/quote was checked against the cited source text"
+    },
+    {
+      "case_id": "CASE-C021-001",
+      "field": "instructor_claims",
+      "item_id": "CLM-007",
+      "statement": "要找的不是那些他妈的这个一被他干，",
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-001314",
+          "text": "要找的不是那些他妈的这个一被他干，"
+        }
+      ],
+      "verdict": "aligned",
+      "reason": "statement/quote was checked against the cited source text"
+    },
+    {
+      "case_id": "CASE-C021-001",
+      "field": "instructor_claims",
+      "item_id": "CLM-008",
+      "statement": "你全盘答应他找的不是这样的男嗯，",
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-001321",
+          "text": "你全盘答应他找的不是这样的男嗯，"
+        }
+      ],
+      "verdict": "aligned",
+      "reason": "statement/quote was checked against the cited source text"
     },
     {
       "case_id": "CASE-C021-002",
       "field": "instructor_claims",
       "item_id": "CLM-001",
       "statement": "就是就是我的我的大数据库和我们的直觉支持，",
-      "evidence_segment_ids": [
-        "SEG-C021-003201"
-      ],
-      "evidence_texts": [
-        "就是就是我的我的大数据库和我们的直觉支持，"
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-003201",
+          "text": "就是就是我的我的大数据库和我们的直觉支持，"
+        }
       ],
       "verdict": "aligned",
-      "reason": ""
+      "reason": "statement/quote was checked against the cited source text"
     },
     {
       "case_id": "CASE-C021-002",
       "field": "instructor_claims",
       "item_id": "CLM-002",
       "statement": "这这个大家我也是从你们这么过来的嘛，",
-      "evidence_segment_ids": [
-        "SEG-C021-003216"
-      ],
-      "evidence_texts": [
-        "这这个大家我也是从你们这么过来的嘛，"
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-003216",
+          "text": "这这个大家我也是从你们这么过来的嘛，"
+        }
       ],
       "verdict": "aligned",
-      "reason": ""
+      "reason": "statement/quote was checked against the cited source text"
     },
     {
-      "case_id": "CASE-C021-002",
-      "field": "instructor_claims",
-      "item_id": "CLM-003",
-      "statement": "大家都是大家都大家都是大家都是大家都是都是都一样，",
-      "evidence_segment_ids": [
-        "SEG-C021-003217"
-      ],
-      "evidence_texts": [
-        "大家都是大家都大家都是大家都是大家都是都是都一样，"
+      "case_id": "CASE-C021-001",
+      "field": "quoted_expressions",
+      "item_id": "QUO-001",
+      "statement": "你知道吧吧是是解决不了这个问题，",
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-000832",
+          "text": "你知道吧吧是是解决不了这个问题，"
+        }
       ],
       "verdict": "aligned",
-      "reason": ""
+      "reason": "statement/quote was checked against the cited source text"
     },
     {
-      "case_id": "CASE-C021-002",
-      "field": "instructor_claims",
-      "item_id": "CLM-004",
-      "statement": "就是那个然后点你会跟女生说这个就是谈的有多多长，",
-      "evidence_segment_ids": [
-        "SEG-C021-003225"
-      ],
-      "evidence_texts": [
-        "就是那个然后点你会跟女生说这个就是谈的有多多长，"
+      "case_id": "CASE-C021-001",
+      "field": "quoted_expressions",
+      "item_id": "QUO-002",
+      "statement": "就彼此来欣赏彼此没有那彼此很像彼此的情况下，",
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-000839",
+          "text": "就彼此来欣赏彼此没有那彼此很像彼此的情况下，"
+        }
       ],
       "verdict": "aligned",
-      "reason": ""
+      "reason": "statement/quote was checked against the cited source text"
     },
     {
-      "case_id": "CASE-C021-002",
-      "field": "instructor_claims",
-      "item_id": "CLM-005",
-      "statement": "会说会说会说会说会说谈尝试谈多长啊，",
-      "evidence_segment_ids": [
-        "SEG-C021-003226"
-      ],
-      "evidence_texts": [
-        "会说会说会说会说会说谈尝试谈多长啊，"
+      "case_id": "CASE-C021-001",
+      "field": "quoted_expressions",
+      "item_id": "QUO-003",
+      "statement": "不然对不起这份安排这份缘分的安排。",
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-000842",
+          "text": "不然对不起这份安排这份缘分的安排。"
+        }
       ],
       "verdict": "aligned",
-      "reason": ""
+      "reason": "statement/quote was checked against the cited source text"
     },
     {
-      "case_id": "CASE-C021-002",
-      "field": "instructor_claims",
-      "item_id": "CLM-006",
-      "statement": "嗯那么在八零后的这个谈的长的有就是我身边谈的长的有谁的七年爱情长宝的，",
-      "evidence_segment_ids": [
-        "SEG-C021-003233"
-      ],
-      "evidence_texts": [
-        "嗯那么在八零后的这个谈的长的有就是我身边谈的长的有谁的七年爱情长宝的，"
+      "case_id": "CASE-C021-001",
+      "field": "quoted_expressions",
+      "item_id": "QUO-004",
+      "statement": "那不甜甜待一起都对不起这份\n安排\n哈哈\n你下午睡那么晚了晚上还能睡\n着吗\n你陪我吗\n1月31日量01:28",
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-000855",
+          "text": "那不甜甜待一起都对不起这份\n安排\n哈哈\n你下午睡那么晚了晚上还能睡\n着吗\n你陪我吗\n1月31日量01:28"
+        }
       ],
       "verdict": "aligned",
-      "reason": ""
+      "reason": "statement/quote was checked against the cited source text"
     },
     {
-      "case_id": "CASE-C021-002",
-      "field": "instructor_claims",
-      "item_id": "CLM-007",
-      "statement": "就是不不是我们这个圈子里面的啊。",
-      "evidence_segment_ids": [
-        "SEG-C021-003241"
-      ],
-      "evidence_texts": [
-        "就是不不是我们这个圈子里面的啊。"
+      "case_id": "CASE-C021-001",
+      "field": "quoted_expressions",
+      "item_id": "QUO-005",
+      "statement": "那么在合理的情况下升高关系的话，",
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-000873",
+          "text": "那么在合理的情况下升高关系的话，"
+        }
       ],
       "verdict": "aligned",
-      "reason": ""
+      "reason": "statement/quote was checked against the cited source text"
     },
     {
-      "case_id": "CASE-C021-002",
-      "field": "instructor_claims",
-      "item_id": "CLM-008",
-      "statement": "但是我觉得我如果说是我报个七年，",
-      "evidence_segment_ids": [
-        "SEG-C021-003253"
-      ],
-      "evidence_texts": [
-        "但是我觉得我如果说是我报个七年，"
+      "case_id": "CASE-C021-001",
+      "field": "quoted_expressions",
+      "item_id": "QUO-006",
+      "statement": "百分之八九十的女人她是不会拒绝的，",
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-000874",
+          "text": "百分之八九十的女人她是不会拒绝的，"
+        }
       ],
       "verdict": "aligned",
-      "reason": ""
+      "reason": "statement/quote was checked against the cited source text"
+    },
+    {
+      "case_id": "CASE-C021-001",
+      "field": "quoted_expressions",
+      "item_id": "QUO-007",
+      "statement": "因为隐约他其实是在什么是在提供价值，",
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-000885",
+          "text": "因为隐约他其实是在什么是在提供价值，"
+        }
+      ],
+      "verdict": "aligned",
+      "reason": "statement/quote was checked against the cited source text"
+    },
+    {
+      "case_id": "CASE-C021-001",
+      "field": "quoted_expressions",
+      "item_id": "QUO-008",
+      "statement": "你期待我就我已经在网上跟你聊的，",
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-000899",
+          "text": "你期待我就我已经在网上跟你聊的，"
+        }
+      ],
+      "verdict": "aligned",
+      "reason": "statement/quote was checked against the cited source text"
     },
     {
       "case_id": "CASE-C021-002",
       "field": "quoted_expressions",
       "item_id": "QUO-001",
       "statement": "所以说想多了解一下你嗯哎呀这个就是妈的就会高档，",
-      "evidence_segment_ids": [
-        "SEG-C021-002940"
-      ],
-      "evidence_texts": [
-        "所以说想多了解一下你嗯哎呀这个就是妈的就会高档，"
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-002940",
+          "text": "所以说想多了解一下你嗯哎呀这个就是妈的就会高档，"
+        }
       ],
       "verdict": "aligned",
-      "reason": ""
+      "reason": "statement/quote was checked against the cited source text"
     },
     {
       "case_id": "CASE-C021-002",
       "field": "quoted_expressions",
       "item_id": "QUO-002",
       "statement": "就是解决就是吸引问题已经没有了。",
-      "evidence_segment_ids": [
-        "SEG-C021-002945"
-      ],
-      "evidence_texts": [
-        "就是解决就是吸引问题已经没有了。"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-002",
-      "field": "quoted_expressions",
-      "item_id": "QUO-003",
-      "statement": "如果是我的话啊嗯我对这种女人的话就着重是安全组专用人的。",
-      "evidence_segment_ids": [
-        "SEG-C021-002967"
-      ],
-      "evidence_texts": [
-        "如果是我的话啊嗯我对这种女人的话就着重是安全组专用人的。"
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-002945",
+          "text": "就是解决就是吸引问题已经没有了。"
+        }
       ],
       "verdict": "aligned",
-      "reason": ""
+      "reason": "statement/quote was checked against the cited source text"
     },
     {
-      "case_id": "CASE-C021-002",
-      "field": "quoted_expressions",
-      "item_id": "QUO-004",
-      "statement": "因为我觉得我的心对我的我觉得他他常来会这么讲话，",
-      "evidence_segment_ids": [
-        "SEG-C021-002968"
-      ],
-      "evidence_texts": [
-        "因为我觉得我的心对我的我觉得他他常来会这么讲话，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-002",
-      "field": "quoted_expressions",
-      "item_id": "QUO-005",
-      "statement": "所以想知道我们是你为什么在女人面前抱请添加微信，",
-      "evidence_segment_ids": [
-        "SEG-C021-002972"
-      ],
-      "evidence_texts": [
-        "所以想知道我们是你为什么在女人面前抱请添加微信，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-002",
-      "field": "quoted_expressions",
-      "item_id": "QUO-006",
-      "statement": "要不然那样的你他妈自己聊都没有用。",
-      "evidence_segment_ids": [
-        "SEG-C021-002978"
-      ],
-      "evidence_texts": [
-        "要不然那样的你他妈自己聊都没有用。"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-002",
-      "field": "quoted_expressions",
-      "item_id": "QUO-007",
-      "statement": "就是接入也会在私教教你们一些什么哎，",
-      "evidence_segment_ids": [
-        "SEG-C021-002981"
-      ],
-      "evidence_texts": [
-        "就是接入也会在私教教你们一些什么哎，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-002",
-      "field": "quoted_expressions",
-      "item_id": "QUO-008",
-      "statement": "我说我身边朋友比较多是这种星座，",
-      "evidence_segment_ids": [
-        "SEG-C021-002991"
-      ],
-      "evidence_texts": [
-        "我说我身边朋友比较多是这种星座，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-002",
+      "case_id": "CASE-C021-001",
       "field": "evidence_spans",
       "item_id": "EVD-001",
-      "statement": "下一个发了呀啊下一个 ok 下一个下一个 ok 我们来看一看，",
-      "evidence_segment_ids": [
-        "SEG-C021-002508"
-      ],
-      "evidence_texts": [
-        "下一个发了呀啊下一个 ok 下一个下一个 ok 我们来看一看，"
+      "statement": "就是你传递给别人的能量是正面的。",
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-000062",
+          "text": "就是你传递给别人的能量是正面的。"
+        }
       ],
       "verdict": "aligned",
-      "reason": ""
+      "reason": "statement/quote was checked against the cited source text"
     },
     {
-      "case_id": "CASE-C021-002",
+      "case_id": "CASE-C021-001",
       "field": "evidence_spans",
       "item_id": "EVD-002",
-      "statement": "然后他的那个化化完妆的感觉很像，",
-      "evidence_segment_ids": [
-        "SEG-C021-002564"
-      ],
-      "evidence_texts": [
-        "然后他的那个化化完妆的感觉很像，"
+      "statement": "1月30日晚上19:51\n常在汕头吖\n家在这边\n我也刚吃完饭\n之前不常在之后是啦\n也可以咱们一起到成都要待几\n天\n后面我也会飞其他地方\n都能一起旅旅游拍拍照",
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-000205",
+          "text": "1月30日晚上19:51\n常在汕头吖\n家在这边\n我也刚吃完饭\n之前不常在之后是啦\n也可以咱们一起到成都要待几\n天\n后面我也会飞其他地方\n都能一起旅旅游拍拍照"
+        }
       ],
       "verdict": "aligned",
-      "reason": ""
+      "reason": "statement/quote was checked against the cited source text"
     },
     {
-      "case_id": "CASE-C021-002",
+      "case_id": "CASE-C021-001",
       "field": "evidence_spans",
       "item_id": "EVD-003",
-      "statement": "无缘无故的把这些窗口全都露出去了。",
-      "evidence_segment_ids": [
-        "SEG-C021-002633"
-      ],
-      "evidence_texts": [
-        "无缘无故的把这些窗口全都露出去了。"
+      "statement": "我们可以看到这个女孩的窗口其实是不温不火。",
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-000318",
+          "text": "我们可以看到这个女孩的窗口其实是不温不火。"
+        }
       ],
       "verdict": "aligned",
-      "reason": ""
+      "reason": "statement/quote was checked against the cited source text"
     },
     {
-      "case_id": "CASE-C021-002",
+      "case_id": "CASE-C021-001",
       "field": "evidence_spans",
       "item_id": "EVD-004",
-      "statement": "最重要的就是就是问了啥都不吸引，",
-      "evidence_segment_ids": [
-        "SEG-C021-002711"
-      ],
-      "evidence_texts": [
-        "最重要的就是就是问了啥都不吸引，"
+      "statement": "虽然虽然这个我们还没有确定要见面，",
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-000537",
+          "text": "虽然虽然这个我们还没有确定要见面，"
+        }
       ],
       "verdict": "aligned",
-      "reason": ""
+      "reason": "statement/quote was checked against the cited source text"
     },
     {
-      "case_id": "CASE-C021-002",
+      "case_id": "CASE-C021-001",
       "field": "evidence_spans",
       "item_id": "EVD-005",
-      "statement": "我操我的我的微信名字有那么明显吗？",
-      "evidence_segment_ids": [
-        "SEG-C021-002821"
-      ],
-      "evidence_texts": [
-        "我操我的我的微信名字有那么明显吗？"
+      "statement": "一直在旁边叫我看他的红色革\n命\n这么晚了\n哈哈哈哈哈\n晕死\n要不明天一起看呗\n还在刚才那一集\n1月31日晨00:49\n嗯嗯还不知道你名等\n1月31日凌层01:09",
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-000715",
+          "text": "一直在旁边叫我看他的红色革\n命\n这么晚了\n哈哈哈哈哈\n晕死\n要不明天一起看呗\n还在刚才那一集\n1月31日晨00:49\n嗯嗯还不知道你名等\n1月31日凌层01:09"
+        }
       ],
       "verdict": "aligned",
-      "reason": ""
+      "reason": "statement/quote was checked against the cited source text"
     },
     {
-      "case_id": "CASE-C021-002",
+      "case_id": "CASE-C021-001",
       "field": "evidence_spans",
       "item_id": "EVD-006",
-      "statement": "等就是或者说是他会就聪明的人会怎么样呢？",
-      "evidence_segment_ids": [
-        "SEG-C021-002905"
-      ],
-      "evidence_texts": [
-        "等就是或者说是他会就聪明的人会怎么样呢？"
+      "statement": "你才能够提出邀要趁在上头的时候，",
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-000801",
+          "text": "你才能够提出邀要趁在上头的时候，"
+        }
       ],
       "verdict": "aligned",
-      "reason": ""
+      "reason": "statement/quote was checked against the cited source text"
     },
     {
-      "case_id": "CASE-C021-002",
+      "case_id": "CASE-C021-001",
       "field": "evidence_spans",
       "item_id": "EVD-007",
-      "statement": "怎么的都没最适合冰 c 的剧场场，",
-      "evidence_segment_ids": [
-        "SEG-C021-003002"
-      ],
-      "evidence_texts": [
-        "怎么的都没最适合冰 c 的剧场场，"
+      "statement": "哈哈居续课鞋盛用诚系\n70075681\n我治服的话",
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-000979",
+          "text": "哈哈居续课鞋盛用诚系\n70075681\n我治服的话"
+        }
       ],
       "verdict": "aligned",
-      "reason": ""
+      "reason": "statement/quote was checked against the cited source text"
     },
     {
-      "case_id": "CASE-C021-002",
+      "case_id": "CASE-C021-001",
       "field": "evidence_spans",
       "item_id": "EVD-008",
-      "statement": "就在互动上不会太多为难为难你的那种类型。",
-      "evidence_segment_ids": [
-        "SEG-C021-003141"
-      ],
-      "evidence_texts": [
-        "就在互动上不会太多为难为难你的那种类型。"
+      "statement": "然后我就马上切入那个屌丝模式的跟他讲话啊，",
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-001162",
+          "text": "然后我就马上切入那个屌丝模式的跟他讲话啊，"
+        }
       ],
       "verdict": "aligned",
-      "reason": ""
+      "reason": "statement/quote was checked against the cited source text"
     },
     {
-      "case_id": "CASE-C021-002",
+      "case_id": "CASE-C021-001",
       "field": "evidence_spans",
       "item_id": "EVD-009",
-      "statement": "这这个大家我也是从你们这么过来的嘛，",
-      "evidence_segment_ids": [
-        "SEG-C021-003216"
-      ],
-      "evidence_texts": [
-        "这这个大家我也是从你们这么过来的嘛，"
+      "statement": "我用王的姿态蔑视他就 ok 了。",
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-001297",
+          "text": "我用王的姿态蔑视他就 ok 了。"
+        }
       ],
       "verdict": "aligned",
-      "reason": ""
+      "reason": "statement/quote was checked against the cited source text"
     },
     {
-      "case_id": "CASE-C021-002",
+      "case_id": "CASE-C021-001",
       "field": "evidence_spans",
       "item_id": "EVD-010",
-      "statement": "能不能能明白白就是我觉觉得六七年年什年龄况谈六七七年，",
-      "evidence_segment_ids": [
-        "SEG-C021-003280"
-      ],
-      "evidence_texts": [
-        "能不能能明白白就是我觉觉得六七年年什年龄况谈六七七年，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-002",
-      "field": "evidence_spans",
-      "item_id": "EVD-011",
-      "statement": "我就是反正我不搞二十六七的对吧？",
-      "evidence_segment_ids": [
-        "SEG-C021-003320"
-      ],
-      "evidence_texts": [
-        "我就是反正我不搞二十六七的对吧？"
+      "statement": "我晚点也要出门\n没有在家\n1月31日下午17:14\n康康你的位置",
+      "evidence": [
+        {
+          "segment_id": "SEG-C021-001470",
+          "text": "我晚点也要出门\n没有在家\n1月31日下午17:14\n康康你的位置"
+        }
       ],
       "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-002",
-      "field": "evidence_spans",
-      "item_id": "EVD-012",
-      "statement": "你喜欢小的他们的有些你想把这们那些总统，",
-      "evidence_segment_ids": [
-        "SEG-C021-003376"
-      ],
-      "evidence_texts": [
-        "你喜欢小的他们的有些你想把这们那些总统，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-002",
-      "field": "evidence_spans",
-      "item_id": "EVD-013",
-      "statement": "就是说什么就是你是不是还没走出来。",
-      "evidence_segment_ids": [
-        "SEG-C021-003471"
-      ],
-      "evidence_texts": [
-        "就是说什么就是你是不是还没走出来。"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-002",
-      "field": "evidence_spans",
-      "item_id": "EVD-014",
-      "statement": "看过的一些事情又会想起你们之前的过。",
-      "evidence_segment_ids": [
-        "SEG-C021-003557"
-      ],
-      "evidence_texts": [
-        "看过的一些事情又会想起你们之前的过。"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-002",
-      "field": "evidence_spans",
-      "item_id": "EVD-015",
-      "statement": "所以我在回复这个类型的问题的时候，",
-      "evidence_segment_ids": [
-        "SEG-C021-003678"
-      ],
-      "evidence_texts": [
-        "所以我在回复这个类型的问题的时候，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "timeline",
-      "item_id": "EVT-001",
-      "statement": "讲师过渡：好下一个",
-      "evidence_segment_ids": [
-        "SEG-C021-003904"
-      ],
-      "evidence_texts": [
-        "好下一个，"
-      ],
-      "verdict": "repaired",
-      "reason": "evidence segments are too short or empty"
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "timeline",
-      "item_id": "EVT-002",
-      "statement": "展示聊天内容：喝醉小龙乱撞",
-      "evidence_segment_ids": [
-        "SEG-C021-004067"
-      ],
-      "evidence_texts": [
-        "对吧？"
-      ],
-      "verdict": "repaired",
-      "reason": "evidence segments are too short or empty"
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "timeline",
-      "item_id": "EVT-003",
-      "statement": "分析约会场景：开心浪漫微醺",
-      "evidence_segment_ids": [
-        "SEG-C021-004231"
-      ],
-      "evidence_texts": [
-        "还有一个滚，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "timeline",
-      "item_id": "EVT-004",
-      "statement": "讲师解读报备行为",
-      "evidence_segment_ids": [
-        "SEG-C021-004395"
-      ],
-      "evidence_texts": [
-        "他心里大概有个预习，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "timeline",
-      "item_id": "EVT-005",
-      "statement": "关键分析：依恋模式",
-      "evidence_segment_ids": [
-        "SEG-C021-004558"
-      ],
-      "evidence_texts": [
-        "不准你贴。"
-      ],
-      "verdict": "repaired",
-      "reason": "evidence segments are too short or empty"
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "timeline",
-      "item_id": "EVT-006",
-      "statement": "方法应用建议",
-      "evidence_segment_ids": [
-        "SEG-C021-004722"
-      ],
-      "evidence_texts": [
-        "零解我让您共享一点吧。"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "timeline",
-      "item_id": "EVT-007",
-      "statement": "课程收尾：拜拜",
-      "evidence_segment_ids": [
-        "SEG-C021-004885"
-      ],
-      "evidence_texts": [
-        "拜拜。"
-      ],
-      "verdict": "repaired",
-      "reason": "evidence segments are too short or empty"
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "observations",
-      "item_id": "OBS-001",
-      "statement": "就是我们就粗略一下粗粗略看一下啊，",
-      "evidence_segment_ids": [
-        "SEG-C021-003952"
-      ],
-      "evidence_texts": [
-        "就是我们就粗略一下粗粗略看一下啊，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "observations",
-      "item_id": "OBS-002",
-      "statement": "我觉得你有很就是我们要展开讲的话，",
-      "evidence_segment_ids": [
-        "SEG-C021-003954"
-      ],
-      "evidence_texts": [
-        "我觉得你有很就是我们要展开讲的话，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "observations",
-      "item_id": "OBS-003",
-      "statement": "这就是就是很多人他有一个问题是什么问题呢？",
-      "evidence_segment_ids": [
-        "SEG-C021-003964"
-      ],
-      "evidence_texts": [
-        "这就是就是很多人他有一个问题是什么问题呢？"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "observations",
-      "item_id": "OBS-004",
-      "statement": "很多很多人就是那刚才有个问题吧，",
-      "evidence_segment_ids": [
-        "SEG-C021-003992"
-      ],
-      "evidence_texts": [
-        "很多很多人就是那刚才有个问题吧，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "observations",
-      "item_id": "OBS-005",
-      "statement": "那之之前不就是有亚在学院去医院买了，",
-      "evidence_segment_ids": [
-        "SEG-C021-004035"
-      ],
-      "evidence_texts": [
-        "那之之前不就是有亚在学院去医院买了，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "observations",
-      "item_id": "OBS-006",
-      "statement": "这个呃看看看你这个喝醉的这种小龙乱撞的和可可爱爱爱的迷人的样子哈，",
-      "evidence_segment_ids": [
-        "SEG-C021-004046"
-      ],
-      "evidence_texts": [
-        "这个呃看看看你这个喝醉的这种小龙乱撞的和可可爱爱爱的迷人的样子哈，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "observations",
-      "item_id": "OBS-007",
-      "statement": "那你就描述了我们未来这叫这个这个这个技术叫什么呢？",
-      "evidence_segment_ids": [
-        "SEG-C021-004049"
-      ],
-      "evidence_texts": [
-        "那你就描述了我们未来这叫这个这个这个技术叫什么呢？"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "observations",
-      "item_id": "OBS-008",
-      "statement": "描绘就是你就是预先描绘我们约会的时候会很开心的场景，",
-      "evidence_segment_ids": [
-        "SEG-C021-004052"
-      ],
-      "evidence_texts": [
-        "描绘就是你就是预先描绘我们约会的时候会很开心的场景，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "instructor_claims",
-      "item_id": "CLM-001",
-      "statement": "最后一张最后一张是唉最后一张就是就是说什么呢？",
-      "evidence_segment_ids": [
-        "SEG-C021-004449"
-      ],
-      "evidence_texts": [
-        "最后一张最后一张是唉最后一张就是就是说什么呢？"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "instructor_claims",
-      "item_id": "CLM-002",
-      "statement": "或者说什么你再怎么弥补都已经回不到我从前了。",
-      "evidence_segment_ids": [
-        "SEG-C021-004461"
-      ],
-      "evidence_texts": [
-        "或者说什么你再怎么弥补都已经回不到我从前了。"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "instructor_claims",
-      "item_id": "CLM-003",
-      "statement": "对我就我就没有这么那么多逼赖赖赖的。",
-      "evidence_segment_ids": [
-        "SEG-C021-004559"
-      ],
-      "evidence_texts": [
-        "对我就我就没有这么那么多逼赖赖赖的。"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "instructor_claims",
-      "item_id": "CLM-004",
-      "statement": "就是说嘛你们一定要有记我的快捷输入法真符。",
-      "evidence_segment_ids": [
-        "SEG-C021-004567"
-      ],
-      "evidence_texts": [
-        "就是说嘛你们一定要有记我的快捷输入法真符。"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "instructor_claims",
-      "item_id": "CLM-005",
-      "statement": "那你还要你还要你还让他这个我就觉得什么呢？",
-      "evidence_segment_ids": [
-        "SEG-C021-004581"
-      ],
-      "evidence_texts": [
-        "那你还要你还要你还让他这个我就觉得什么呢？"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "instructor_claims",
-      "item_id": "CLM-006",
-      "statement": "我就觉得就是就是什么你我就说你现在打车到我家门口，",
-      "evidence_segment_ids": [
-        "SEG-C021-004582"
-      ],
-      "evidence_texts": [
-        "我就觉得就是就是什么你我就说你现在打车到我家门口，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "instructor_claims",
-      "item_id": "CLM-007",
-      "statement": "我们已经知道他第一句创作这么大了。",
-      "evidence_segment_ids": [
-        "SEG-C021-004598"
-      ],
-      "evidence_texts": [
-        "我们已经知道他第一句创作这么大了。"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "instructor_claims",
-      "item_id": "CLM-008",
-      "statement": "不是因为你不在这个怎怎么打想法肯定是差不多。",
-      "evidence_segment_ids": [
-        "SEG-C021-004603"
-      ],
-      "evidence_texts": [
-        "不是因为你不在这个怎怎么打想法肯定是差不多。"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "quoted_expressions",
-      "item_id": "QUO-001",
-      "statement": "其实其实我在你的回复当中看出了你的虚伪，",
-      "evidence_segment_ids": [
-        "SEG-C021-004257"
-      ],
-      "evidence_texts": [
-        "其实其实我在你的回复当中看出了你的虚伪，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "quoted_expressions",
-      "item_id": "QUO-002",
-      "statement": "就是这个哎哎哎到底是哎这这市场谈恋爱就是这样，",
-      "evidence_segment_ids": [
-        "SEG-C021-004268"
-      ],
-      "evidence_texts": [
-        "就是这个哎哎哎到底是哎这这市场谈恋爱就是这样，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "quoted_expressions",
-      "item_id": "QUO-003",
-      "statement": "然后一节车 OKOKOK 其实就是打个泡妞，",
-      "evidence_segment_ids": [
-        "SEG-C021-004298"
-      ],
-      "evidence_texts": [
-        "然后一节车 OKOKOK 其实就是打个泡妞，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "quoted_expressions",
-      "item_id": "QUO-004",
-      "statement": "就是去哪嗯什么时间去嗯做什么事情嗯，",
-      "evidence_segment_ids": [
-        "SEG-C021-004316"
-      ],
-      "evidence_texts": [
-        "就是去哪嗯什么时间去嗯做什么事情嗯，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "quoted_expressions",
-      "item_id": "QUO-005",
-      "statement": "你知道我是不是不应该这么回复是吧？",
-      "evidence_segment_ids": [
-        "SEG-C021-004372"
-      ],
-      "evidence_texts": [
-        "你知道我是不是不应该这么回复是吧？"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "quoted_expressions",
-      "item_id": "QUO-006",
-      "statement": "只能选择你原谅你啊啊啊你也辛苦了，",
-      "evidence_segment_ids": [
-        "SEG-C021-004405"
-      ],
-      "evidence_texts": [
-        "只能选择你原谅你啊啊啊你也辛苦了，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "quoted_expressions",
-      "item_id": "QUO-007",
-      "statement": "我妹子说阿峰老师进门把箱子一丢五分钟，",
-      "evidence_segment_ids": [
-        "SEG-C021-004427"
-      ],
-      "evidence_texts": [
-        "我妹子说阿峰老师进门把箱子一丢五分钟，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "quoted_expressions",
-      "item_id": "QUO-008",
-      "statement": "这么细节说阿峰说阿峰老师刚从外地回来，",
-      "evidence_segment_ids": [
-        "SEG-C021-004429"
-      ],
-      "evidence_texts": [
-        "这么细节说阿峰说阿峰老师刚从外地回来，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "evidence_spans",
-      "item_id": "EVD-001",
-      "statement": "就是我们就粗略一下粗粗略看一下啊，",
-      "evidence_segment_ids": [
-        "SEG-C021-003952"
-      ],
-      "evidence_texts": [
-        "就是我们就粗略一下粗粗略看一下啊，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "evidence_spans",
-      "item_id": "EVD-002",
-      "statement": "那之之前不就是有亚在学院去医院买了，",
-      "evidence_segment_ids": [
-        "SEG-C021-004035"
-      ],
-      "evidence_texts": [
-        "那之之前不就是有亚在学院去医院买了，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "evidence_spans",
-      "item_id": "EVD-003",
-      "statement": "但是我描述的我们约会的时候会他妈的很开心，",
-      "evidence_segment_ids": [
-        "SEG-C021-004059"
-      ],
-      "evidence_texts": [
-        "但是我描述的我们约会的时候会他妈的很开心，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "evidence_spans",
-      "item_id": "EVD-004",
-      "statement": "那其实里面有很多这些东西你懂吧，",
-      "evidence_segment_ids": [
-        "SEG-C021-004085"
-      ],
-      "evidence_texts": [
-        "那其实里面有很多这些东西你懂吧，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "evidence_spans",
-      "item_id": "EVD-005",
-      "statement": "那这这这这些话就是兄弟们就是你不用看太多啊。",
-      "evidence_segment_ids": [
-        "SEG-C021-004237"
-      ],
-      "evidence_texts": [
-        "那这这这这些话就是兄弟们就是你不用看太多啊。"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "evidence_spans",
-      "item_id": "EVD-006",
-      "statement": "其实其实我在你的回复当中看出了你的虚伪，",
-      "evidence_segment_ids": [
-        "SEG-C021-004257"
-      ],
-      "evidence_texts": [
-        "其实其实我在你的回复当中看出了你的虚伪，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "evidence_spans",
-      "item_id": "EVD-007",
-      "statement": "你知道我是不是不应该这么回复是吧？",
-      "evidence_segment_ids": [
-        "SEG-C021-004372"
-      ],
-      "evidence_texts": [
-        "你知道我是不是不应该这么回复是吧？"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "evidence_spans",
-      "item_id": "EVD-008",
-      "statement": "完完了又在房间里面熟悉的声音又回来了，",
-      "evidence_segment_ids": [
-        "SEG-C021-004432"
-      ],
-      "evidence_texts": [
-        "完完了又在房间里面熟悉的声音又回来了，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "evidence_spans",
-      "item_id": "EVD-009",
-      "statement": "对我就我就没有这么那么多逼赖赖赖的。",
-      "evidence_segment_ids": [
-        "SEG-C021-004559"
-      ],
-      "evidence_texts": [
-        "对我就我就没有这么那么多逼赖赖赖的。"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "evidence_spans",
-      "item_id": "EVD-010",
-      "statement": "我们已经知道他第一句创作这么大了。",
-      "evidence_segment_ids": [
-        "SEG-C021-004598"
-      ],
-      "evidence_texts": [
-        "我们已经知道他第一句创作这么大了。"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "evidence_spans",
-      "item_id": "EVD-011",
-      "statement": "你啊等样你嗯来来来在这里才会认真搞事业的。",
-      "evidence_segment_ids": [
-        "SEG-C021-004646"
-      ],
-      "evidence_texts": [
-        "你啊等样你嗯来来来在这里才会认真搞事业的。"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "evidence_spans",
-      "item_id": "EVD-012",
-      "statement": "这左边还有那是你今天差不多就到这结束了。",
-      "evidence_segment_ids": [
-        "SEG-C021-004709"
-      ],
-      "evidence_texts": [
-        "这左边还有那是你今天差不多就到这结束了。"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "evidence_spans",
-      "item_id": "EVD-013",
-      "statement": "这样子他们喜欢这个见面怎么操作了，",
-      "evidence_segment_ids": [
-        "SEG-C021-004768"
-      ],
-      "evidence_texts": [
-        "这样子他们喜欢这个见面怎么操作了，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "evidence_spans",
-      "item_id": "EVD-014",
-      "statement": "男中这个月看不看过就怎么说呢哈，",
-      "evidence_segment_ids": [
-        "SEG-C021-004804"
-      ],
-      "evidence_texts": [
-        "男中这个月看不看过就怎么说呢哈，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
-    },
-    {
-      "case_id": "CASE-C021-003",
-      "field": "evidence_spans",
-      "item_id": "EVD-015",
-      "statement": "然后他的他的状态就是说什么那里不能那里不能，",
-      "evidence_segment_ids": [
-        "SEG-C021-004839"
-      ],
-      "evidence_texts": [
-        "然后他的他的状态就是说什么那里不能那里不能，"
-      ],
-      "verdict": "aligned",
-      "reason": ""
+      "reason": "statement/quote was checked against the cited source text"
     }
   ]
 }
