@@ -19,35 +19,38 @@
     {
       "case_id": "CASE-C021-001",
       "title": "汕头女生聊天案例分析",
-      "unique_evidence_count": 47,
+      "unique_evidence_count": 44,
       "evidence_spans": 15,
-      "timeline": 10,
+      "timeline": 7,
       "observations": 8,
       "instructor_claims": 8,
       "quoted_expressions": 8,
-      "quartiles_covered": 4
+      "quartiles_covered": 4,
+      "required_min_evidence": 36
     },
     {
       "case_id": "CASE-C021-002",
       "title": "成都女生聊天案例分析",
-      "unique_evidence_count": 48,
+      "unique_evidence_count": 44,
       "evidence_spans": 15,
-      "timeline": 10,
+      "timeline": 7,
       "observations": 8,
       "instructor_claims": 8,
       "quoted_expressions": 8,
-      "quartiles_covered": 4
+      "quartiles_covered": 4,
+      "required_min_evidence": 36
     },
     {
       "case_id": "CASE-C021-003",
-      "title": "课程总结与案例回顾",
-      "unique_evidence_count": 47,
+      "title": "女生报备与依恋行为聊天案例",
+      "unique_evidence_count": 41,
       "evidence_spans": 15,
-      "timeline": 10,
+      "timeline": 7,
       "observations": 8,
       "instructor_claims": 8,
       "quoted_expressions": 8,
-      "quartiles_covered": 4
+      "quartiles_covered": 4,
+      "required_min_evidence": 36
     }
   ],
   "outside_case_evidence": 0,

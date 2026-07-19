@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 from typing import Any
 
@@ -192,6 +193,26 @@ def validate_p04_output(
     claims_sufficient = len(output.get("instructor_claims", [])) >= min_claims
     quotes_sufficient = len(output.get("quoted_expressions", [])) >= min_quotes
 
+    # Content quality checks
+    _placeholder_re = re.compile(r"^(案例阶段|阶段|事件)\s*\d+\s*$")
+    timeline_items = output.get("timeline", [])
+    has_placeholder_timeline = any(
+        _placeholder_re.match(str(item.get("description", "")).strip())
+        for item in timeline_items
+        if isinstance(item, dict)
+    )
+    timeline_content_ok = not has_placeholder_timeline
+
+    # Summary must not mechanically repeat case title
+    summary = str(output.get("summary", "")).strip()
+    case_title = str(output.get("case_title", "")).strip()
+    summary_is_mechanical = (
+        bool(case_title)
+        and len(summary) > 0
+        and summary == f"讲师分析{case_title}"
+    )
+    summary_ok = bool(summary) and not summary_is_mechanical
+
     confidence = output.get("confidence")
     checks = {
         "schema_version": output.get("schema_version") == "1.0",
@@ -212,6 +233,8 @@ def validate_p04_output(
         "claims_sufficient": claims_sufficient,
         "quotes_sufficient": quotes_sufficient,
         "temporal_coverage": quartiles_covered >= 2,
+        "timeline_content_ok": timeline_content_ok,
+        "summary_ok": summary_ok,
         "uncertainties_contract": isinstance(output.get("uncertainties"), list),
         "confidence_contract": isinstance(confidence, (int, float)) and 0 <= confidence <= 1,
     }
@@ -233,6 +256,12 @@ def validate_p04_output(
             "quartiles_covered": quartiles_covered,
             "missing_evidence_count": len(missing_evidence),
             "invalid_evidence_count": len(invalid_evidence),
+            "required_min_evidence": min_evidence,
+            "required_min_spans": min_spans,
+            "required_min_timeline": min_timeline,
+            "required_min_observations": min_observations,
+            "required_min_claims": min_claims,
+            "required_min_quotes": min_quotes,
         },
         "samples": {
             "missing_evidence": missing_evidence[:20],

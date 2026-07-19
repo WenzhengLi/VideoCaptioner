@@ -7,7 +7,7 @@
   "course_id": "C021",
   "case_id": "CASE-C021-002",
   "case_title": "成都女生聊天案例分析",
-  "summary": "讲师分析成都女生聊天案例分析",
+  "summary": "讲师通过分析成都女生聊天案例分析，展示聊天互动中的吸引力建立技巧和沟通模式",
   "participants": [
     {
       "role": "instructor",
@@ -34,7 +34,7 @@
   "timeline": [
     {
       "event_id": "EVT-001",
-      "description": "案例阶段 1",
+      "description": "讲师过渡到下一个案例",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
         "SEG-C021-002508"
@@ -42,74 +42,50 @@
     },
     {
       "event_id": "EVT-002",
-      "description": "案例阶段 2",
+      "description": "展示聊天记录：成都女生、一七八身高",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
-        "SEG-C021-002647"
+        "SEG-C021-002740"
       ]
     },
     {
       "event_id": "EVT-003",
-      "description": "案例阶段 3",
+      "description": "分析吸引力：crush、喜欢你",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
-        "SEG-C021-002787"
+        "SEG-C021-002973"
       ]
     },
     {
       "event_id": "EVT-004",
-      "description": "案例阶段 4",
-      "epistemic_type": "observation",
-      "evidence_segment_ids": [
-        "SEG-C021-002926"
-      ]
-    },
-    {
-      "event_id": "EVT-005",
-      "description": "案例阶段 5",
-      "epistemic_type": "observation",
-      "evidence_segment_ids": [
-        "SEG-C021-003066"
-      ]
-    },
-    {
-      "event_id": "EVT-006",
-      "description": "案例阶段 6",
+      "description": "讲师解读难度：系数难度一星半",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
         "SEG-C021-003206"
       ]
     },
     {
+      "event_id": "EVT-005",
+      "description": "关键分析：七零后爱情长跑",
+      "epistemic_type": "observation",
+      "evidence_segment_ids": [
+        "SEG-C021-003438"
+      ]
+    },
+    {
+      "event_id": "EVT-006",
+      "description": "方法总结：在乎你的女生想了解过往",
+      "epistemic_type": "observation",
+      "evidence_segment_ids": [
+        "SEG-C021-003671"
+      ]
+    },
+    {
       "event_id": "EVT-007",
-      "description": "案例阶段 7",
+      "description": "案例收尾",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
-        "SEG-C021-003345"
-      ]
-    },
-    {
-      "event_id": "EVT-008",
-      "description": "案例阶段 8",
-      "epistemic_type": "observation",
-      "evidence_segment_ids": [
-        "SEG-C021-003485"
-      ]
-    },
-    {
-      "event_id": "EVT-009",
-      "description": "案例阶段 9",
-      "epistemic_type": "observation",
-      "evidence_segment_ids": [
-        "SEG-C021-003624"
-      ]
-    },
-    {
-      "event_id": "EVT-010",
-      "description": "案例阶段 10",
-      "epistemic_type": "observation",
-      "evidence_segment_ids": [
-        "SEG-C021-003764"
+        "SEG-C021-003903"
       ]
     }
   ],
@@ -123,109 +99,109 @@
     },
     {
       "id": "OBS-002",
-      "text": "下一个来看你们的问题啊，",
-      "evidence_segment_ids": [
-        "SEG-C021-002509"
-      ]
-    },
-    {
-      "id": "OBS-003",
       "text": "熊猫熊猫的事情我再单概解释一下啊，",
       "evidence_segment_ids": [
         "SEG-C021-002510"
       ]
     },
     {
-      "id": "OBS-004",
-      "text": "熊猫的事情的话是这个样子，",
+      "id": "OBS-003",
+      "text": "但是他在杭州收的所有他在杭州以及在外面收的，",
       "evidence_segment_ids": [
-        "SEG-C021-002511"
+        "SEG-C021-002519"
+      ]
+    },
+    {
+      "id": "OBS-004",
+      "text": "每一分钱都和我们一点关系都没有，",
+      "evidence_segment_ids": [
+        "SEG-C021-002520"
       ]
     },
     {
       "id": "OBS-005",
-      "text": "不是去年四月份出事了吧，",
+      "text": "就是你们学员有什么服务的问题的话，",
       "evidence_segment_ids": [
-        "SEG-C021-002512"
+        "SEG-C021-002531"
       ]
     },
     {
       "id": "OBS-006",
-      "text": "他就没有我们五五月份直的时候，",
+      "text": "来我们来看这个最新的最新的啊二十七号。",
       "evidence_segment_ids": [
-        "SEG-C021-002514"
+        "SEG-C021-002548"
       ]
     },
     {
       "id": "OBS-007",
-      "text": "不是说他就没有再做了嘛嘛。",
+      "text": "这个女生就是我今天发在群里面的，",
       "evidence_segment_ids": [
-        "SEG-C021-002515"
+        "SEG-C021-002551"
       ]
     },
     {
       "id": "OBS-008",
-      "text": "后来他就自己去杭州了嘛，",
+      "text": "就是刚才就刚才那个这个三三点的爱情哦，",
       "evidence_segment_ids": [
-        "SEG-C021-002517"
+        "SEG-C021-002555"
       ]
     }
   ],
   "instructor_claims": [
     {
       "id": "CLM-001",
-      "text": "她这个系统就是应该这么就是她说了三句话，",
-      "evidence_segment_ids": [
-        "SEG-C021-003196"
-      ]
-    },
-    {
-      "id": "CLM-002",
-      "text": "我已经知道我接下来就是怎么套路，",
-      "evidence_segment_ids": [
-        "SEG-C021-003198"
-      ]
-    },
-    {
-      "id": "CLM-003",
       "text": "就是就是我的我的大数据库和我们的直觉支持，",
       "evidence_segment_ids": [
         "SEG-C021-003201"
       ]
     },
     {
-      "id": "CLM-004",
-      "text": "但是大家可能可能没这个能力，",
+      "id": "CLM-002",
+      "text": "这这个大家我也是从你们这么过来的嘛，",
       "evidence_segment_ids": [
-        "SEG-C021-003203"
+        "SEG-C021-003216"
+      ]
+    },
+    {
+      "id": "CLM-003",
+      "text": "大家都是大家都大家都是大家都是大家都是都是都一样，",
+      "evidence_segment_ids": [
+        "SEG-C021-003217"
+      ]
+    },
+    {
+      "id": "CLM-004",
+      "text": "就是那个然后点你会跟女生说这个就是谈的有多多长，",
+      "evidence_segment_ids": [
+        "SEG-C021-003225"
       ]
     },
     {
       "id": "CLM-005",
-      "text": "然后我确也是跟大家说，",
+      "text": "会说会说会说会说会说谈尝试谈多长啊，",
       "evidence_segment_ids": [
-        "SEG-C021-003204"
+        "SEG-C021-003226"
       ]
     },
     {
       "id": "CLM-006",
-      "text": "其实你们可能是没有这个能力，",
+      "text": "嗯那么在八零后的这个谈的长的有就是我身边谈的长的有谁的七年爱情长宝的，",
       "evidence_segment_ids": [
-        "SEG-C021-003205"
+        "SEG-C021-003233"
       ]
     },
     {
       "id": "CLM-007",
-      "text": "但是什么再夫就是慢慢看嘛，",
+      "text": "就是不不是我们这个圈子里面的啊。",
       "evidence_segment_ids": [
-        "SEG-C021-003213"
+        "SEG-C021-003241"
       ]
     },
     {
       "id": "CLM-008",
-      "text": "这这个大家我也是从你们这么过来的嘛，",
+      "text": "但是我觉得我如果说是我报个七年，",
       "evidence_segment_ids": [
-        "SEG-C021-003216"
+        "SEG-C021-003253"
       ]
     }
   ],
@@ -233,7 +209,7 @@
   "outcomes": [
     {
       "id": "OUT-001",
-      "text": "案例展示了聊天互动过程",
+      "text": "案例展示了聊天互动中的方法应用",
       "status": "observed",
       "evidence_segment_ids": [
         "SEG-C021-003206"
@@ -244,50 +220,23 @@
     {
       "id": "QUO-001",
       "speaker_role": "student",
-      "text": "就是就百分之百已经确定了，",
+      "text": "所以说想多了解一下你嗯哎呀这个就是妈的就会高档，",
       "context": "聊天记录",
       "evidence_segment_ids": [
-        "SEG-C021-002948"
+        "SEG-C021-002940"
       ]
     },
     {
       "id": "QUO-002",
       "speaker_role": "student",
-      "text": "就是安全感对安全的熟悉感。",
+      "text": "就是解决就是吸引问题已经没有了。",
       "context": "聊天记录",
       "evidence_segment_ids": [
-        "SEG-C021-002951"
+        "SEG-C021-002945"
       ]
     },
     {
       "id": "QUO-003",
-      "speaker_role": "student",
-      "text": "她看到这种去这种妹子，",
-      "context": "聊天记录",
-      "evidence_segment_ids": [
-        "SEG-C021-002954"
-      ]
-    },
-    {
-      "id": "QUO-004",
-      "speaker_role": "student",
-      "text": "原因他一看窗口这么大，",
-      "context": "聊天记录",
-      "evidence_segment_ids": [
-        "SEG-C021-002957"
-      ]
-    },
-    {
-      "id": "QUO-005",
-      "speaker_role": "student",
-      "text": "后面的话我看一下你怎么聊的。",
-      "context": "聊天记录",
-      "evidence_segment_ids": [
-        "SEG-C021-002965"
-      ]
-    },
-    {
-      "id": "QUO-006",
       "speaker_role": "student",
       "text": "如果是我的话啊嗯我对这种女人的话就着重是安全组专用人的。",
       "context": "聊天记录",
@@ -296,7 +245,7 @@
       ]
     },
     {
-      "id": "QUO-007",
+      "id": "QUO-004",
       "speaker_role": "student",
       "text": "因为我觉得我的心对我的我觉得他他常来会这么讲话，",
       "context": "聊天记录",
@@ -305,12 +254,39 @@
       ]
     },
     {
-      "id": "QUO-008",
+      "id": "QUO-005",
       "speaker_role": "student",
-      "text": "我的心已经爆了在他面前，",
+      "text": "所以想知道我们是你为什么在女人面前抱请添加微信，",
       "context": "聊天记录",
       "evidence_segment_ids": [
-        "SEG-C021-002969"
+        "SEG-C021-002972"
+      ]
+    },
+    {
+      "id": "QUO-006",
+      "speaker_role": "student",
+      "text": "要不然那样的你他妈自己聊都没有用。",
+      "context": "聊天记录",
+      "evidence_segment_ids": [
+        "SEG-C021-002978"
+      ]
+    },
+    {
+      "id": "QUO-007",
+      "speaker_role": "student",
+      "text": "就是接入也会在私教教你们一些什么哎，",
+      "context": "聊天记录",
+      "evidence_segment_ids": [
+        "SEG-C021-002981"
+      ]
+    },
+    {
+      "id": "QUO-008",
+      "speaker_role": "student",
+      "text": "我说我身边朋友比较多是这种星座，",
+      "context": "聊天记录",
+      "evidence_segment_ids": [
+        "SEG-C021-002991"
       ]
     }
   ],
@@ -325,108 +301,108 @@
     {
       "evidence_id": "EVD-002",
       "segment_ids": [
-        "SEG-C021-002574"
+        "SEG-C021-002564"
       ],
-      "quote": "没有发她任何的身材造。"
+      "quote": "然后他的那个化化完妆的感觉很像，"
     },
     {
       "evidence_id": "EVD-003",
       "segment_ids": [
-        "SEG-C021-002658"
+        "SEG-C021-002633"
       ],
-      "quote": "然后他他们就是把女生当成真正是当成一种猎物，"
+      "quote": "无缘无故的把这些窗口全都露出去了。"
     },
     {
       "evidence_id": "EVD-004",
       "segment_ids": [
-        "SEG-C021-002741"
+        "SEG-C021-002711"
       ],
-      "quote": "然后你看啊就是我这个时候是任性不了。"
+      "quote": "最重要的就是就是问了啥都不吸引，"
     },
     {
       "evidence_id": "EVD-005",
       "segment_ids": [
-        "SEG-C021-002836"
+        "SEG-C021-002821"
       ],
-      "quote": "就他情绪好到我明名前，"
+      "quote": "我操我的我的微信名字有那么明显吗？"
     },
     {
       "evidence_id": "EVD-006",
       "segment_ids": [
-        "SEG-C021-002945"
+        "SEG-C021-002905"
       ],
-      "quote": "就是解决就是吸引问题已经没有了。"
+      "quote": "等就是或者说是他会就聪明的人会怎么样呢？"
     },
     {
       "evidence_id": "EVD-007",
       "segment_ids": [
-        "SEG-C021-003060"
+        "SEG-C021-003002"
       ],
-      "quote": "可能遇到就是就是他接接招吗？"
+      "quote": "怎么的都没最适合冰 c 的剧场场，"
     },
     {
       "evidence_id": "EVD-008",
       "segment_ids": [
-        "SEG-C021-003153"
+        "SEG-C021-003141"
       ],
-      "quote": "就现在大家也能看得出来，"
+      "quote": "就在互动上不会太多为难为难你的那种类型。"
     },
     {
       "evidence_id": "EVD-009",
       "segment_ids": [
-        "SEG-C021-003241"
+        "SEG-C021-003216"
       ],
-      "quote": "就是不不是我们这个圈子里面的啊。"
+      "quote": "这这个大家我也是从你们这么过来的嘛，"
     },
     {
       "evidence_id": "EVD-010",
       "segment_ids": [
-        "SEG-C021-003312"
+        "SEG-C021-003280"
       ],
-      "quote": "单单单单单单单纯纯啊，"
+      "quote": "能不能能明白白就是我觉觉得六七年年什年龄况谈六七七年，"
     },
     {
       "evidence_id": "EVD-011",
       "segment_ids": [
-        "SEG-C021-003403"
+        "SEG-C021-003320"
       ],
-      "quote": "但但是我觉得就是什么呢？"
+      "quote": "我就是反正我不搞二十六七的对吧？"
     },
     {
       "evidence_id": "EVD-012",
       "segment_ids": [
-        "SEG-C021-003502"
+        "SEG-C021-003376"
       ],
-      "quote": "你妈天天几天几天都没。"
+      "quote": "你喜欢小的他们的有些你想把这们那些总统，"
     },
     {
       "evidence_id": "EVD-013",
       "segment_ids": [
-        "SEG-C021-003572"
+        "SEG-C021-003471"
       ],
-      "quote": "网信学员肯定是很懵懂很懵，"
+      "quote": "就是说什么就是你是不是还没走出来。"
     },
     {
       "evidence_id": "EVD-014",
       "segment_ids": [
-        "SEG-C021-003678"
+        "SEG-C021-003557"
       ],
-      "quote": "所以我在回复这个类型的问题的时候，"
+      "quote": "看过的一些事情又会想起你们之前的过。"
     },
     {
       "evidence_id": "EVD-015",
       "segment_ids": [
-        "SEG-C021-003785"
+        "SEG-C021-003678"
       ],
-      "quote": "这哎这个就可以精神精髓，"
+      "quote": "所以我在回复这个类型的问题的时候，"
     }
   ],
   "uncertainties": [
     {
       "field": "outcome",
-      "note": "案例结果不明确",
+      "note": "案例最终结果未在课程中明确展示",
       "evidence_segment_ids": []
     }
   ],
-  "confidence": 0.7
+  "confidence": 0.75
 }

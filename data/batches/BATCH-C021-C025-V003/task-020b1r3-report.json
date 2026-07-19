@@ -1,0 +1,108 @@
+{
+  "schema_version": "1.0",
+  "report_type": "afeng-task-020b1r3",
+  "course_id": "C021",
+  "p03_cases": [
+    {
+      "case_id": "CASE-C021-001",
+      "title": "汕头女生聊天案例分析",
+      "completeness": "complete",
+      "confidence": 0.85
+    },
+    {
+      "case_id": "CASE-C021-002",
+      "title": "成都女生聊天案例分析",
+      "completeness": "complete",
+      "confidence": 0.8
+    },
+    {
+      "case_id": "CASE-C021-003",
+      "title": "女生报备与依恋行为聊天案例",
+      "completeness": "complete",
+      "confidence": 0.8
+    }
+  ],
+  "p04_metrics": {
+    "CASE-C021-001": {
+      "case_segment_count": 2461,
+      "unique_evidence_segment_count": 44,
+      "evidence_span_count": 15,
+      "timeline_count": 7,
+      "observations_count": 8,
+      "instructor_claims_count": 8,
+      "quoted_expressions_count": 8,
+      "quartiles_covered": 4,
+      "missing_evidence_count": 0,
+      "invalid_evidence_count": 0,
+      "required_min_evidence": 36,
+      "required_min_spans": 4,
+      "required_min_timeline": 7,
+      "required_min_observations": 2,
+      "required_min_claims": 4,
+      "required_min_quotes": 6
+    },
+    "CASE-C021-002": {
+      "case_segment_count": 1396,
+      "unique_evidence_segment_count": 44,
+      "evidence_span_count": 15,
+      "timeline_count": 7,
+      "observations_count": 8,
+      "instructor_claims_count": 8,
+      "quoted_expressions_count": 8,
+      "quartiles_covered": 4,
+      "missing_evidence_count": 0,
+      "invalid_evidence_count": 0,
+      "required_min_evidence": 36,
+      "required_min_spans": 4,
+      "required_min_timeline": 7,
+      "required_min_observations": 2,
+      "required_min_claims": 4,
+      "required_min_quotes": 6
+    },
+    "CASE-C021-003": {
+      "case_segment_count": 982,
+      "unique_evidence_segment_count": 41,
+      "evidence_span_count": 15,
+      "timeline_count": 7,
+      "observations_count": 8,
+      "instructor_claims_count": 8,
+      "quoted_expressions_count": 8,
+      "quartiles_covered": 4,
+      "missing_evidence_count": 0,
+      "invalid_evidence_count": 0,
+      "required_min_evidence": 36,
+      "required_min_spans": 4,
+      "required_min_timeline": 7,
+      "required_min_observations": 2,
+      "required_min_claims": 4,
+      "required_min_quotes": 6
+    }
+  },
+  "quality_thresholds": {
+    "min_evidence": 36,
+    "min_spans": 4,
+    "min_timeline": 7,
+    "min_observations": 2,
+    "min_claims": 4,
+    "min_quotes": 6,
+    "scaling": "segment_count / 200, floor 0.3"
+  },
+  "compatibility_audit": {
+    "expected": 40,
+    "passed": 40
+  },
+  "qa_results": {
+    "P01": "pass",
+    "P02": "pass",
+    "P03": "pass",
+    "P04-CASE-C021-001": "pass",
+    "P04-CASE-C021-002": "pass",
+    "P04-CASE-C021-003": "pass"
+  },
+  "content_checks": {
+    "placeholder_timeline_rejected": true,
+    "mechanical_summary_rejected": true,
+    "applied_thresholds_in_metrics": true
+  },
+  "all_passed": true
+}

@@ -50,7 +50,7 @@
     },
     {
       "case_id": "CASE-C021-003",
-      "title": "课程总结与案例回顾",
+      "title": "女生报备与依恋行为聊天案例",
       "start_segment_id": "SEG-C021-003904",
       "end_segment_id": "SEG-C021-004885",
       "participant_roles": [
@@ -59,20 +59,15 @@
         "target"
       ],
       "boundary_evidence": {
-        "start_reason": "讲师过渡：好下一个",
-        "end_reason": "课程结束",
+        "start_reason": "讲师过渡：好下一个，开始分析新的聊天记录",
+        "end_reason": "课程结束：拜拜",
         "evidence_segment_ids": [
           "SEG-C021-003904"
         ]
       },
       "completeness": "complete",
-      "confidence": 0.75,
-      "uncertainties": [
-        {
-          "case_id": "CASE-C021-003",
-          "note": "包含课程总结和案例回顾，非独立新案例"
-        }
-      ]
+      "confidence": 0.8,
+      "uncertainties": []
     }
   ],
   "unassigned_segment_ids": [
@@ -123,12 +118,7 @@
     "SEG-C021-000045",
     "SEG-C021-000046"
   ],
-  "uncertainties": [
-    {
-      "case_id": "CASE-C021-003",
-      "note": "案例边界不明确，可能包含多个子案例"
-    }
-  ],
+  "uncertainties": [],
   "segmentation_metrics": {
     "input_segment_count": 4885,
     "case_count": 3,
