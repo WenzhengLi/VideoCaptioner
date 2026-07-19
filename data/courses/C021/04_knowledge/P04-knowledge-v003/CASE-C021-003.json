@@ -34,10 +34,11 @@
   "timeline": [
     {
       "event_id": "EVT-001",
-      "description": "讲师过渡：好下一个",
+      "description": "讲师过渡到新案例：好下一个",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
-        "SEG-C021-003904"
+        "SEG-C021-003904",
+        "SEG-C021-003907"
       ]
     },
     {
@@ -45,7 +46,7 @@
       "description": "展示聊天内容：喝醉小龙乱撞",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
-        "SEG-C021-004067"
+        "SEG-C021-003941"
       ]
     },
     {
@@ -53,7 +54,7 @@
       "description": "分析约会场景：开心浪漫微醺",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
-        "SEG-C021-004231"
+        "SEG-C021-003941"
       ]
     },
     {
@@ -61,7 +62,7 @@
       "description": "讲师解读报备行为",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
-        "SEG-C021-004395"
+        "SEG-C021-004559"
       ]
     },
     {
@@ -69,7 +70,7 @@
       "description": "关键分析：依恋模式",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
-        "SEG-C021-004558"
+        "SEG-C021-004559"
       ]
     },
     {
@@ -85,6 +86,7 @@
       "description": "课程收尾：拜拜",
       "epistemic_type": "observation",
       "evidence_segment_ids": [
+        "SEG-C021-004884",
         "SEG-C021-004885"
       ]
     }

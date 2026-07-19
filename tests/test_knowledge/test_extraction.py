@@ -128,8 +128,10 @@ def test_p04_qa_accepts_v003_prompt_version(tmp_path: Path) -> None:
     assert report["checks"]["prompt_version"] is True
 
 
-def _make_valid_p04(evidence_count: int = 50, timeline_descs: list[str] | None = None) -> dict:
-    """Helper to create a valid P04 output."""
+def _make_valid_p04(evidence_count: int = 60, timeline_descs: list[str] | None = None) -> dict:
+    """Helper to create a valid P04 output with distinct evidence IDs per field."""
+    # Ensure enough evidence IDs for all fields (need at least 54 for distinct ranges)
+    evidence_count = max(evidence_count, 60)
     evidence = [f"SEG-C001-{i:06d}" for i in range(1, evidence_count + 1)]
     if timeline_descs is None:
         timeline_descs = [
@@ -141,6 +143,7 @@ def _make_valid_p04(evidence_count: int = 50, timeline_descs: list[str] | None =
             "结果展示",
             "案例收尾",
         ]
+    # Use distinct ranges for each field to ensure unique evidence count
     return {
         "schema_version": "1.0",
         "prompt_version": "knowledge-v002-p04",
@@ -149,13 +152,13 @@ def _make_valid_p04(evidence_count: int = 50, timeline_descs: list[str] | None =
         "case_id": "CASE-C001-001",
         "case_title": "测试案例",
         "summary": "讲师通过分析聊天记录展示互动技巧",
-        "participants": [{"evidence_segment_ids": evidence[:5]}],
-        "timeline": [{"evidence_segment_ids": [evidence[i]], "description": desc} for i, desc in enumerate(timeline_descs)],
-        "observations": [{"evidence_segment_ids": [evidence[i]]} for i in range(8)],
-        "instructor_claims": [{"evidence_segment_ids": [evidence[i]]} for i in range(8)],
-        "alternative_explanations": [{"basis_evidence_segment_ids": evidence[:3]}],
-        "outcomes": [{"evidence_segment_ids": evidence[:3]}],
-        "quoted_expressions": [{"evidence_segment_ids": [evidence[i]]} for i in range(8)],
+        "participants": [{"evidence_segment_ids": evidence[:3]}],
+        "timeline": [{"evidence_segment_ids": [evidence[10 + i]], "description": desc} for i, desc in enumerate(timeline_descs)],
+        "observations": [{"evidence_segment_ids": [evidence[20 + i]]} for i in range(8)],
+        "instructor_claims": [{"evidence_segment_ids": [evidence[30 + i]]} for i in range(8)],
+        "alternative_explanations": [{"basis_evidence_segment_ids": evidence[40:43]}],
+        "outcomes": [{"evidence_segment_ids": evidence[43:46]}],
+        "quoted_expressions": [{"evidence_segment_ids": [evidence[46 + i]]} for i in range(8)],
         "evidence_spans": [
             {"evidence_id": f"EVD-{i:03d}", "segment_ids": [evidence[i]], "quote": f"引用{i}"}
             for i in range(15)
@@ -165,8 +168,8 @@ def _make_valid_p04(evidence_count: int = 50, timeline_descs: list[str] | None =
     }
 
 
-def _make_case_input(count: int = 50) -> dict:
-    """Helper to create a case input."""
+def _make_case_input(count: int = 70) -> dict:
+    """Helper to create a case input (default 70 to cover all evidence IDs)."""
     return {"segments": [{"segment_id": f"SEG-C001-{i:06d}"} for i in range(1, count + 1)]}
 
 
@@ -227,9 +230,93 @@ def test_p04_small_case_threshold_scaling(tmp_path: Path) -> None:
     case_input = tmp_path / "case-input.json"
     case_input.write_text(json.dumps(_make_case_input(count=50)), encoding="utf-8")
     output = tmp_path / "p04.json"
-    p04 = _make_valid_p04(evidence_count=20, timeline_descs=["开场", "聊天展示", "分析", "方法", "结果", "复盘", "收尾"])
+    p04 = _make_valid_p04(timeline_descs=["开场", "聊天展示", "分析", "方法", "结果", "复盘", "收尾"])
     output.write_text(json.dumps(p04, ensure_ascii=False), encoding="utf-8")
     report = validate_p04_output("C001", "CASE-C001-001", case_input, output)
     # With 50 segments, scale = 50/200 = 0.25, floor = max(2, int(36 * max(0.3, 0.25))) = max(2, 10) = 10
     assert report["metrics"]["required_min_evidence"] <= 20  # Should pass with scaled threshold
+
+
+def test_p04_threshold_boundary_199(tmp_path: Path) -> None:
+    """segment_count=199 should have slightly scaled thresholds."""
+    case_input = tmp_path / "case-input.json"
+    case_input.write_text(json.dumps(_make_case_input(count=199)), encoding="utf-8")
+    output = tmp_path / "p04.json"
+    p04 = _make_valid_p04(timeline_descs=["开场", "聊天展示", "分析", "方法", "结果", "复盘", "收尾"])
+    output.write_text(json.dumps(p04, ensure_ascii=False), encoding="utf-8")
+    report = validate_p04_output("C001", "CASE-C001-001", case_input, output)
+    # scale = 199/200 = 0.995, floor = max(2, int(36 * max(0.3, 0.995))) = max(2, 35) = 35
+    assert report["metrics"]["required_min_evidence"] == 35
+
+
+def test_p04_threshold_boundary_200(tmp_path: Path) -> None:
+    """segment_count=200 should have full thresholds."""
+    case_input = tmp_path / "case-input.json"
+    case_input.write_text(json.dumps(_make_case_input(count=200)), encoding="utf-8")
+    output = tmp_path / "p04.json"
+    p04 = _make_valid_p04(timeline_descs=["开场", "聊天展示", "分析", "方法", "结果", "复盘", "收尾"])
+    output.write_text(json.dumps(p04, ensure_ascii=False), encoding="utf-8")
+    report = validate_p04_output("C001", "CASE-C001-001", case_input, output)
+    # scale = 200/200 = 1.0, floor = max(2, int(36 * max(0.3, 1.0))) = max(2, 36) = 36
+    assert report["metrics"]["required_min_evidence"] == 36
+    assert report["status"] == "pass"
+
+
+def test_p04_evidence_one_below_threshold_fails(tmp_path: Path) -> None:
+    """Evidence count one below threshold should fail."""
+    case_input = tmp_path / "case-input.json"
+    case_input.write_text(json.dumps(_make_case_input(count=200)), encoding="utf-8")
+    output = tmp_path / "p04.json"
+    # threshold is 36 for 200 segments, so we need to create a P04 with fewer unique evidence
+    p04 = _make_valid_p04(timeline_descs=["开场", "聊天展示", "分析", "方法", "结果", "复盘", "收尾"])
+    # Override to use fewer distinct evidence IDs (only use first 35 across all fields)
+    evidence = [f"SEG-C001-{i:06d}" for i in range(1, 36)]
+    p04["participants"] = [{"evidence_segment_ids": evidence[:3]}]
+    p04["timeline"] = [{"evidence_segment_ids": [evidence[min(i, 34)]], "description": d} for i, d in enumerate(["开场", "聊天展示", "分析", "方法", "结果", "复盘", "收尾"])]
+    p04["observations"] = [{"evidence_segment_ids": [evidence[min(i, 34)]]} for i in range(8)]
+    p04["instructor_claims"] = [{"evidence_segment_ids": [evidence[min(i, 34)]]} for i in range(8)]
+    p04["outcomes"] = [{"evidence_segment_ids": evidence[:3]}]
+    p04["quoted_expressions"] = [{"evidence_segment_ids": [evidence[min(i, 34)]]} for i in range(8)]
+    p04["evidence_spans"] = [{"evidence_id": f"EVD-{i:03d}", "segment_ids": [evidence[min(i, 34)]], "quote": f"q{i}"} for i in range(4)]
+    output.write_text(json.dumps(p04, ensure_ascii=False), encoding="utf-8")
+    report = validate_p04_output("C001", "CASE-C001-001", case_input, output)
+    assert report["checks"]["evidence_sufficient"] is False
+
+
+def test_p04_evidence_exactly_threshold_passes(tmp_path: Path) -> None:
+    """Evidence count exactly at threshold should pass."""
+    case_input = tmp_path / "case-input.json"
+    case_input.write_text(json.dumps(_make_case_input(count=200)), encoding="utf-8")
+    output = tmp_path / "p04.json"
+    p04 = _make_valid_p04(timeline_descs=["开场", "聊天展示", "分析", "方法", "结果", "复盘", "收尾"])
+    output.write_text(json.dumps(p04, ensure_ascii=False), encoding="utf-8")
+    report = validate_p04_output("C001", "CASE-C001-001", case_input, output)
+    assert report["checks"]["evidence_sufficient"] is True
+
+
+def test_p04_spans_one_below_threshold_fails(tmp_path: Path) -> None:
+    """Spans count one below threshold should fail."""
+    case_input = tmp_path / "case-input.json"
+    case_input.write_text(json.dumps(_make_case_input(count=200)), encoding="utf-8")
+    output = tmp_path / "p04.json"
+    p04 = _make_valid_p04(timeline_descs=["开场", "聊天展示", "分析", "方法", "结果", "复盘", "收尾"])
+    # Override spans to be below threshold (min_spans=4 for 200 segments)
+    p04["evidence_spans"] = [
+        {"evidence_id": f"EVD-{i:03d}", "segment_ids": [f"SEG-C001-{i:06d}"], "quote": f"引用{i}"}
+        for i in range(3)
+    ]
+    output.write_text(json.dumps(p04, ensure_ascii=False), encoding="utf-8")
+    report = validate_p04_output("C001", "CASE-C001-001", case_input, output)
+    assert report["checks"]["spans_sufficient"] is False
+
+
+def test_p04_timeline_one_below_threshold_fails(tmp_path: Path) -> None:
+    """Timeline count one below threshold should fail."""
+    case_input = tmp_path / "case-input.json"
+    case_input.write_text(json.dumps(_make_case_input(count=200)), encoding="utf-8")
+    output = tmp_path / "p04.json"
+    p04 = _make_valid_p04(timeline_descs=["开场", "聊天展示", "分析", "方法", "结果", "收尾"])  # 6 < 7
+    output.write_text(json.dumps(p04, ensure_ascii=False), encoding="utf-8")
+    report = validate_p04_output("C001", "CASE-C001-001", case_input, output)
+    assert report["checks"]["timeline_sufficient"] is False
 

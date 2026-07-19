@@ -1,6 +1,6 @@
 # P04 质量基线分析
 
-生成时间：2026-07-18（TASK-020B1R3 校准版）
+生成时间：2026-07-18（TASK-020B1R4 对齐版）
 
 ## 数据来源
 
@@ -21,11 +21,9 @@
 
 ## 门槛规则
 
-基于基线最小值的 50% 设置绝对下限：
-
-| 字段 | 最小值 | 50% 下限 | 缩放规则 |
+| 字段 | 基线最小值 | 50% 下限 | 缩放规则 |
 |---|---|---|---|
-| unique_evidence_count | 73 | 36 | max(2, 36 * max(0.3, segs/200)) |
+| unique_evidence_count | 73 | 36 | max(2, int(36 * max(0.3, segs/200))) |
 | evidence_spans | 7 | 4 | 同上 |
 | timeline | 13 | 7 | 同上 |
 | observations | 3 | 2 | 同上 |
@@ -33,7 +31,7 @@
 | quoted_expressions | 11 | 6 | 同上 |
 | quartiles_covered | 4 | 2 | 同上 |
 
-## C021 实际值（validator 计数）
+## C021 实际值（QA 最新输出）
 
 | 字段 | C021-001 | C021-002 | C021-003 | 应用阈值 |
 |---|---|---|---|---|
@@ -43,10 +41,11 @@
 | observations | 8 | 8 | 8 | 2 |
 | instructor_claims | 8 | 8 | 8 | 4 |
 | quoted_expressions | 8 | 8 | 8 | 6 |
-| quartiles_covered | 2 | 2 | 2 | 2 |
+| quartiles_covered | **4** | **4** | **4** | 2 |
 
-## 内容质量检查（TASK-020B1R3 新增）
+## 内容质量检查
 
 - timeline 占位描述（"案例阶段 N"）：已拒绝
 - summary 机械复述 case title：已拒绝
+- timeline 描述与 evidence 原文逐条对齐：已验证
 - applied thresholds 输出到 metrics：已实现

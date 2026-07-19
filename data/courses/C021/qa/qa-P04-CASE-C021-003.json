@@ -21,6 +21,8 @@
     "claims_sufficient": true,
     "quotes_sufficient": true,
     "temporal_coverage": true,
+    "timeline_content_ok": true,
+    "summary_ok": true,
     "uncertainties_contract": true,
     "confidence_contract": true
   },
@@ -34,7 +36,13 @@
     "quoted_expressions_count": 8,
     "quartiles_covered": 4,
     "missing_evidence_count": 0,
-    "invalid_evidence_count": 0
+    "invalid_evidence_count": 0,
+    "required_min_evidence": 36,
+    "required_min_spans": 4,
+    "required_min_timeline": 7,
+    "required_min_observations": 2,
+    "required_min_claims": 4,
+    "required_min_quotes": 6
   },
   "samples": {
     "missing_evidence": [],
