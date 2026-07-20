@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "course_id": "C022",
+  "p01_version": "knowledge-v003",
+  "p02_version": "knowledge-v003-p02",
+  "p03_version": "knowledge-v003-p03",
+  "p04_version": "knowledge-v003-p04",
+  "case_count": 1,
+  "segment_count": 4429,
+  "qa_results": {
+    "P01": "pass",
+    "P02": "pass",
+    "P03": "pass",
+    "P04-CASE-C022-001": "pass"
+  },
+  "case_stats": [
+    {
+      "case_id": "CASE-C022-001",
+      "title": "汕头白富美长期跟进案例",
+      "unique_evidence_count": 38,
+      "evidence_spans": 15,
+      "timeline": 11,
+      "observations": 8,
+      "instructor_claims": 7,
+      "quoted_expressions": 6,
+      "quartiles_covered": 4,
+      "required_min_evidence": 36
+    }
+  ],
+  "outside_case_evidence": 0,
+  "failed_cases": 0,
+  "note": "Pilot - first case only. Waiting for independent review."
+}

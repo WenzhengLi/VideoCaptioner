@@ -1,0 +1,314 @@
+{
+  "schema_version": "1.0",
+  "course_id": "C022",
+  "stage": "P01",
+  "total_segments": 4429,
+  "changed_segments": 3603,
+  "sample_count": 50,
+  "improved": 50,
+  "neutral": 0,
+  "degraded": 0,
+  "degraded_rate": 0.0,
+  "samples": [
+    {
+      "segment_id": "SEG-C022-003185",
+      "raw_text": "就是这样的,",
+      "normalized_text": "就是这样的，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-000551",
+      "raw_text": "对对对,",
+      "normalized_text": "对对对，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-000127",
+      "raw_text": "因为有很多女生跟我说过,",
+      "normalized_text": "因为有很多女生跟我说过，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-003729",
+      "raw_text": "然后就我觉得是什么?",
+      "normalized_text": "然后就我觉得是什么？",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-001343",
+      "raw_text": "真的对不对?",
+      "normalized_text": "真的对不对？",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-001189",
+      "raw_text": "嗯他的就是就说认证嘛嘛,",
+      "normalized_text": "嗯他的就是就说认证嘛嘛，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-001084",
+      "raw_text": "对吧?",
+      "normalized_text": "对吧？",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-000682",
+      "raw_text": "然后我就不服,",
+      "normalized_text": "然后我就不服，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-003701",
+      "raw_text": "我说最近拍好多轮牌牌,",
+      "normalized_text": "我说最近拍好多轮牌牌，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-000511",
+      "raw_text": "没看进去算了,",
+      "normalized_text": "没看进去算了，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-003381",
+      "raw_text": "到时候我到时候给也就是说什么,",
+      "normalized_text": "到时候我到时候给也就是说什么，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-003724",
+      "raw_text": "就是说要不然你肯定就每天对我就就一定是要练成这样子,",
+      "normalized_text": "就是说要不然你肯定就每天对我就一定是要练成这样子，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-002711",
+      "raw_text": "他这个情绪价值开始提供了,",
+      "normalized_text": "他这个情绪价值开始提供了，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-000437",
+      "raw_text": "你知道吧?",
+      "normalized_text": "你知道吧？",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-002932",
+      "raw_text": "那我就慢刀子拐着,",
+      "normalized_text": "那我就慢刀子拐着，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-002094",
+      "raw_text": "就就别人就别人就你那个想法牛逼,",
+      "normalized_text": "就别人就别人就你那个想法牛逼，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-000161",
+      "raw_text": "如果他养鱼的话,",
+      "normalized_text": "如果他养鱼的话，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-000152",
+      "raw_text": "有一些正美,",
+      "normalized_text": "有一些正美，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-000468",
+      "raw_text": "你要干嘛呢?",
+      "normalized_text": "你要干嘛呢？",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-001061",
+      "raw_text": "很正常,",
+      "normalized_text": "很正常，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-001131",
+      "raw_text": "对这个这个这个这个这个有问题的话,",
+      "normalized_text": "对这个这个这个这个这个有问题的话，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-002513",
+      "raw_text": "我就害怕,",
+      "normalized_text": "我就害怕，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-002997",
+      "raw_text": "对,",
+      "normalized_text": "对，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-000134",
+      "raw_text": "那肯就是因为很简单嘛,",
+      "normalized_text": "那肯就是因为很简单嘛，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-002791",
+      "raw_text": "就跟你说呀,",
+      "normalized_text": "就跟你说呀，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-000969",
+      "raw_text": "其他人有一些是输钱的,",
+      "normalized_text": "其他人有一些是输钱的，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-003583",
+      "raw_text": "对它的吸引还在就是说的需求还在对我的需求现在融你现在这个说话容错率已经很高啊,",
+      "normalized_text": "对它的吸引还在就是说的需求还在对我的需求现在融你现在这个说话容错率已经很高啊，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-003243",
+      "raw_text": "就是把春联先预先安排起来,",
+      "normalized_text": "就是把春联先预先安排起来，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-003509",
+      "raw_text": "你要就观察观察这个女生所说的所有的话,",
+      "normalized_text": "你要就观察观察这个女生所说的所有的话，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-002710",
+      "raw_text": "今天起的好早哦,",
+      "normalized_text": "今天起的好早哦，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-002082",
+      "raw_text": "对,",
+      "normalized_text": "对，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-001070",
+      "raw_text": "假设他的小输,",
+      "normalized_text": "假设他的小输，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-002231",
+      "raw_text": "对吧?",
+      "normalized_text": "对吧？",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-002926",
+      "raw_text": "我相对于他我的兵力三倍于他的这个防守能力,",
+      "normalized_text": "我相对于他我的兵力三倍于他的这个防守能力，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-001357",
+      "raw_text": "我感觉就是展示面靠展示面靠谱了,",
+      "normalized_text": "我感觉就是展示面靠展示面靠谱了，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-004077",
+      "raw_text": "然后呢,",
+      "normalized_text": "然后呢，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-004373",
+      "raw_text": "这个不是,",
+      "normalized_text": "这个不是，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-000033",
+      "raw_text": "她是越没有钱,",
+      "normalized_text": "她是越没有钱，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-003810",
+      "raw_text": "我很开心一下,",
+      "normalized_text": "我很开心一下，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-004055",
+      "raw_text": "我要去看了,",
+      "normalized_text": "我要去看了，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-000776",
+      "raw_text": "他妈随便唱的啊,",
+      "normalized_text": "他妈随便唱的啊，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-003496",
+      "raw_text": "就是你赶紧说出来接触接触啊,",
+      "normalized_text": "就是你赶紧说出来接触接触啊，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-002097",
+      "raw_text": "你把不到,",
+      "normalized_text": "你把不到，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-001689",
+      "raw_text": "其实我说我说句实话,",
+      "normalized_text": "其实我说我说句实话，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-001356",
+      "raw_text": "所以你问我问我什么感觉,",
+      "normalized_text": "所以你问我问我什么感觉，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-000757",
+      "raw_text": "拍了拍什么,",
+      "normalized_text": "拍了拍什么，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-001046",
+      "raw_text": "那个小叔可能说啊,",
+      "normalized_text": "那个小叔可能说啊，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-003834",
+      "raw_text": "对,",
+      "normalized_text": "对，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-001672",
+      "raw_text": "发现跟你交流生活的,",
+      "normalized_text": "发现跟你交流生活的，",
+      "category": "improved"
+    },
+    {
+      "segment_id": "SEG-C022-000510",
+      "raw_text": "没看进去,",
+      "normalized_text": "没看进去，",
+      "category": "improved"
+    }
+  ]
+}

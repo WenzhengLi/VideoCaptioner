@@ -1,0 +1,415 @@
+{
+  "schema_version": "1.0",
+  "prompt_version": "knowledge-v003-p04",
+  "source_ids": [
+    "C022"
+  ],
+  "course_id": "C022",
+  "case_id": "CASE-C022-001",
+  "case_title": "汕头白富美长期跟进案例",
+  "summary": "讲师分析一个历时九个月的汕头白富美跟进案例，展示价值展示、约会安排和长期关系维护策略",
+  "participants": [
+    {
+      "role": "instructor",
+      "description": "课程讲师",
+      "evidence_segment_ids": [
+        "SEG-C022-000011"
+      ]
+    },
+    {
+      "role": "student",
+      "description": "聊天记录中的男性",
+      "evidence_segment_ids": [
+        "SEG-C022-000061"
+      ]
+    },
+    {
+      "role": "target",
+      "description": "汕头白富美女生",
+      "evidence_segment_ids": [
+        "SEG-C022-000061"
+      ]
+    }
+  ],
+  "timeline": [
+    {
+      "event_id": "EVT-001",
+      "description": "讲师引入案例：这个案例有点长",
+      "epistemic_type": "observation",
+      "evidence_segment_ids": [
+        "SEG-C022-000011"
+      ]
+    },
+    {
+      "event_id": "EVT-002",
+      "description": "介绍女生背景：二零二二年一月二十二号，汕头",
+      "epistemic_type": "observation",
+      "evidence_segment_ids": [
+        "SEG-C022-000061"
+      ]
+    },
+    {
+      "event_id": "EVT-003",
+      "description": "分析展示价值策略：不是直接告诉妹子有钱",
+      "epistemic_type": "observation",
+      "evidence_segment_ids": [
+        "SEG-C022-000407"
+      ]
+    },
+    {
+      "event_id": "EVT-004",
+      "description": "展示约会安排：去看烟花秀",
+      "epistemic_type": "observation",
+      "evidence_segment_ids": [
+        "SEG-C022-001408"
+      ]
+    },
+    {
+      "event_id": "EVT-005",
+      "description": "分析靠谱展示面：珠海拍照",
+      "epistemic_type": "observation",
+      "evidence_segment_ids": [
+        "SEG-C022-002269"
+      ]
+    },
+    {
+      "event_id": "EVT-006",
+      "description": "讲师定位案例：相对白富美的案例",
+      "epistemic_type": "observation",
+      "evidence_segment_ids": [
+        "SEG-C022-002909"
+      ]
+    },
+    {
+      "event_id": "EVT-007",
+      "description": "展示聊天互动：不去酒吧",
+      "epistemic_type": "observation",
+      "evidence_segment_ids": [
+        "SEG-C022-001649"
+      ]
+    },
+    {
+      "event_id": "EVT-008",
+      "description": "分析同城约会：在汕头待",
+      "epistemic_type": "observation",
+      "evidence_segment_ids": [
+        "SEG-C022-002681"
+      ]
+    },
+    {
+      "event_id": "EVT-009",
+      "description": "分析价格博弈：炒高价格",
+      "epistemic_type": "observation",
+      "evidence_segment_ids": [
+        "SEG-C022-003627"
+      ]
+    },
+    {
+      "event_id": "EVT-010",
+      "description": "展示约饭聊天：牛肉火锅还是日料",
+      "epistemic_type": "observation",
+      "evidence_segment_ids": [
+        "SEG-C022-004078"
+      ]
+    },
+    {
+      "event_id": "EVT-011",
+      "description": "案例结束",
+      "epistemic_type": "observation",
+      "evidence_segment_ids": [
+        "SEG-C022-004353"
+      ]
+    }
+  ],
+  "observations": [
+    {
+      "id": "OBS-001",
+      "text": "高分的话基本上是属于那种这个这个这个想要想要注重一些情绪价值。",
+      "evidence_segment_ids": [
+        "SEG-C022-000026"
+      ]
+    },
+    {
+      "id": "OBS-002",
+      "text": "我就说哎我看一下时间点吧啊哦我我二十点嗯凌晨四点对哦，",
+      "evidence_segment_ids": [
+        "SEG-C022-001393"
+      ]
+    },
+    {
+      "id": "OBS-003",
+      "text": "一路人山人海\n看完跟爸妈去吃了牛肉\n2个小时\n你们还开车聊\n我车都停在停车场\n好远\n辆\n给",
+      "evidence_segment_ids": [
+        "SEG-C022-001930"
+      ]
+    },
+    {
+      "id": "OBS-004",
+      "text": "删了 CPU 是这个这个 CPU 连上了这个这个太久没有重启了，",
+      "evidence_segment_ids": [
+        "SEG-C022-002286"
+      ]
+    },
+    {
+      "id": "OBS-005",
+      "text": "Hh昨晚睡着了\nhh行嘛微信：1urmuse\n1月25日下午14:52",
+      "evidence_segment_ids": [
+        "SEG-C022-002962"
+      ]
+    },
+    {
+      "id": "OBS-006",
+      "text": "你还住去揭阳吗\n还是在汕头这边\n1月26日凌晨03:26\n我在汕头呀\n我在金平\n你呢\n澄海\n1月26日量03:34",
+      "evidence_segment_ids": [
+        "SEG-C022-003395"
+      ]
+    },
+    {
+      "id": "OBS-007",
+      "text": "到自然醒\n1月27日下午16:20\n你去哪呢\n1月27日下午17:28\n小公园逛逛\n)9\"\n跟谁？跟家里人，我准备收拾\n一下，跟我爸妈他们附近吃饭，\n然后就回家",
+      "evidence_segment_ids": [
+        "SEG-C022-003588"
+      ]
+    },
+    {
+      "id": "OBS-008",
+      "text": "清\n?C出\n说点什么吧\n口提问发送\n8?画小>\n治搜索一下微信：urmuse",
+      "evidence_segment_ids": [
+        "SEG-C022-003763"
+      ]
+    }
+  ],
+  "instructor_claims": [
+    {
+      "id": "CLM-001",
+      "text": "哈\n个朋友叫了跑腿\n腿说送啥她说送她\n思路清奇\n的好处就体现出来了\nT\n的烟花我们一起去看",
+      "evidence_segment_ids": [
+        "SEG-C022-001936"
+      ]
+    },
+    {
+      "id": "CLM-002",
+      "text": "这一次的展示面确实挺靠谱的对珠海的这个展示面很靠谱，",
+      "evidence_segment_ids": [
+        "SEG-C022-002306"
+      ]
+    },
+    {
+      "id": "CLM-003",
+      "text": "1月25日凌展03:18\n1月25日下午14:52微信：urmuse\n我在k歌",
+      "evidence_segment_ids": [
+        "SEG-C022-002968"
+      ]
+    },
+    {
+      "id": "CLM-004",
+      "text": "盗热大\n瞬间移动嘛\n1月26日中午12:10\n昨晚有点醉\n1月26日下午14:14\n哦豁\n那都可以让我去接你吗",
+      "evidence_segment_ids": [
+        "SEG-C022-003413"
+      ]
+    },
+    {
+      "id": "CLM-005",
+      "text": "1月27日晚上20:58\n1月27日晚上21:24\n刚到家去打了没\n1月27日晚上23:07\n刚准备来打",
+      "evidence_segment_ids": [
+        "SEG-C022-003602"
+      ]
+    },
+    {
+      "id": "CLM-006",
+      "text": "中\n?CH\n8?回q口\n文版免费下载搜索一下微信：urmuse",
+      "evidence_segment_ids": [
+        "SEG-C022-003785"
+      ]
+    },
+    {
+      "id": "CLM-007",
+      "text": "1月29日下午17:35\n我刚看完我收拾收拾去找你咯\n到万象那边吧\n你想吃牛肉火锅还是日料这种\n日料吧牛肉火锅最近吃怕了\n你几点好\nOK\n我六点半就可以了\n我出",
+      "evidence_segment_ids": [
+        "SEG-C022-004078"
+      ]
+    }
+  ],
+  "alternative_explanations": [],
+  "outcomes": [
+    {
+      "id": "OUT-001",
+      "text": "案例展示了长期跟进的约会策略应用",
+      "status": "observed",
+      "evidence_segment_ids": [
+        "SEG-C022-004353"
+      ]
+    }
+  ],
+  "quoted_expressions": [
+    {
+      "id": "QUO-001",
+      "speaker_role": "student",
+      "text": "对女朋友那都是应该的\n我是对外人高冷微信：urmuse\n自己人上心",
+      "context": "聊天记录",
+      "evidence_segment_ids": [
+        "SEG-C022-002176"
+      ]
+    },
+    {
+      "id": "QUO-002",
+      "speaker_role": "student",
+      "text": "但是我所以我今天因为今天讲的是个相对来讲比较白富美的案例嘛，",
+      "context": "聊天记录",
+      "evidence_segment_ids": [
+        "SEG-C022-002935"
+      ]
+    },
+    {
+      "id": "QUO-003",
+      "speaker_role": "student",
+      "text": "也今天去酒吧耍\n我好久没耍酒吧了\n年纪大了不爱蹦达\n我也很久一次刚好朋友回来陪\n她们",
+      "context": "聊天记录",
+      "evidence_segment_ids": [
+        "SEG-C022-003302"
+      ]
+    },
+    {
+      "id": "QUO-004",
+      "speaker_role": "student",
+      "text": "1月27日下午14:02\n我醒了\n1月27日下午14:39\n没睡够在家12点我妈准时叫\n我起来吃饭",
+      "context": "聊天记录",
+      "evidence_segment_ids": [
+        "SEG-C022-003575"
+      ]
+    },
+    {
+      "id": "QUO-005",
+      "speaker_role": "student",
+      "text": "之前澳门回去后都瘦回去这次\n也可以\n明天要一起吃饭吗\n1月28日晚上23:50\n这么棒\nAnne:但我一个星期能瘦回去\n我回去也要开始控制点了\n你明天大概几点",
+      "context": "聊天记录",
+      "evidence_segment_ids": [
+        "SEG-C022-003705"
+      ]
+    },
+    {
+      "id": "QUO-006",
+      "speaker_role": "student",
+      "text": "1月29日下午13:09\n我也醒了\n1月29日下午13:48\n嘻嘻刚吃饱准备追下电视剧\n什么好吃的\n我准备洗漱下微信：urmuse",
+      "context": "聊天记录",
+      "evidence_segment_ids": [
+        "SEG-C022-004006"
+      ]
+    }
+  ],
+  "evidence_spans": [
+    {
+      "evidence_id": "EVD-001",
+      "segment_ids": [
+        "SEG-C022-000026"
+      ],
+      "quote": "高分的话基本上是属于那种这个这个这个想要想要注重一些情绪价值。"
+    },
+    {
+      "evidence_id": "EVD-002",
+      "segment_ids": [
+        "SEG-C022-000528"
+      ],
+      "quote": "是他可能他他可能觉得这个下头就比方说什么他他回想起来了，"
+    },
+    {
+      "evidence_id": "EVD-003",
+      "segment_ids": [
+        "SEG-C022-001393"
+      ],
+      "quote": "我就说哎我看一下时间点吧啊哦我我二十点嗯凌晨四点对哦，"
+    },
+    {
+      "evidence_id": "EVD-004",
+      "segment_ids": [
+        "SEG-C022-001535"
+      ],
+      "quote": "小公园\n完才去吃东西\n路人山人海\n爸妈去吃了牛肉\n时\n你们还开车嘛\n都停在停车场\n开共享出去hh"
+    },
+    {
+      "evidence_id": "EVD-005",
+      "segment_ids": [
+        "SEG-C022-001930"
+      ],
+      "quote": "一路人山人海\n看完跟爸妈去吃了牛肉\n2个小时\n你们还开车聊\n我车都停在停车场\n好远\n辆\n给"
+    },
+    {
+      "evidence_id": "EVD-006",
+      "segment_ids": [
+        "SEG-C022-002002"
+      ],
+      "quote": "有那么的好处可以咋样\n有用画友的好处就体现出来了\n下次得好久哈哈\n房间然后准备好零食遇的和\n起待着看烟花就很浪漫了"
+    },
+    {
+      "evidence_id": "EVD-007",
+      "segment_ids": [
+        "SEG-C022-002286"
+      ],
+      "quote": "删了 CPU 是这个这个 CPU 连上了这个这个太久没有重启了，"
+    },
+    {
+      "evidence_id": "EVD-008",
+      "segment_ids": [
+        "SEG-C022-002716"
+      ],
+      "quote": "其实我觉得他在提就说怎么对于我们朋友圈的一个评价啊什么的，"
+    },
+    {
+      "evidence_id": "EVD-009",
+      "segment_ids": [
+        "SEG-C022-002962"
+      ],
+      "quote": "Hh昨晚睡着了\nhh行嘛微信：1urmuse\n1月25日下午14:52"
+    },
+    {
+      "evidence_id": "EVD-010",
+      "segment_ids": [
+        "SEG-C022-003132"
+      ],
+      "quote": "1月26日11期02:34\n刚洗默完躺床\n我跟朋友出来玩准备回去\n酒吧嘛微信：urmuse"
+    },
+    {
+      "evidence_id": "EVD-011",
+      "segment_ids": [
+        "SEG-C022-003395"
+      ],
+      "quote": "你还住去揭阳吗\n还是在汕头这边\n1月26日凌晨03:26\n我在汕头呀\n我在金平\n你呢\n澄海\n1月26日量03:34"
+    },
+    {
+      "evidence_id": "EVD-012",
+      "segment_ids": [
+        "SEG-C022-003461"
+      ],
+      "quote": "一起在汕头待嘛\n然后再一起去成都待两天\n1月27日中午12:11\n每天到点我就睡着了。"
+    },
+    {
+      "evidence_id": "EVD-013",
+      "segment_ids": [
+        "SEG-C022-003588"
+      ],
+      "quote": "到自然醒\n1月27日下午16:20\n你去哪呢\n1月27日下午17:28\n小公园逛逛\n)9\"\n跟谁？跟家里人，我准备收拾\n一下，跟我爸妈他们附近吃饭，\n然后就回家，累死。\n1月27日上19:47\n我跟朋"
+    },
+    {
+      "evidence_id": "EVD-014",
+      "segment_ids": [
+        "SEG-C022-003642"
+      ],
+      "quote": "哈哈哈没必要汕头随便一家都\n好吃这家排好长\n1月28日晚上21:53\n你觉得怎么样\n我送朋友去高铁站\n还不错但跟外面很多家差不\n多就感觉没必要专门排那么长\n的队去吃\n1月28日晚上22:05\n我觉得有"
+    },
+    {
+      "evidence_id": "EVD-015",
+      "segment_ids": [
+        "SEG-C022-003763"
+      ],
+      "quote": "清\n?C出\n说点什么吧\n口提问发送\n8?画小>\n治搜索一下微信：urmuse"
+    }
+  ],
+  "uncertainties": [
+    {
+      "field": "outcome",
+      "note": "案例最终关系结果未在课程中明确展示",
+      "evidence_segment_ids": []
+    }
+  ],
+  "confidence": 0.8
+}
