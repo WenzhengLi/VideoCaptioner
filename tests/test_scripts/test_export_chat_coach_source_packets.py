@@ -1,259 +1,284 @@
-"""Tests for export_chat_coach_source_packets.py."""
+"""Tests for export_chat_coach_source_packets.py (v1.2.0)."""
 
 from __future__ import annotations
 
-import hashlib
 import json
+import time
 from pathlib import Path
 
-
+import scripts.export_chat_coach_source_packets as exporter
 from scripts.export_chat_coach_source_packets import (
+    OUTPUT_FILES,
+    _attach_rerun_hash_evidence,
+    _escape_md,
     _export_course,
+    _file_sha256,
     _find_latest_p02,
     _find_latest_p03,
     _format_ts,
-    _escape_md,
+    _is_excluded,
+    _version_key,
+    _write_global_report,
 )
 
 
+def _make_segments() -> list[dict]:
+    roles = ["instructor_explanation", "actual_chat", "board", "student_question"]
+    segments = []
+    for index in range(10):
+        role = roles[index % len(roles)]
+        content_type = "board_ocr" if role == "board" else "speech"
+        text = "课板聊天：你说呢" if role == "board" else f"text {index}"
+        segments.append({
+            "segment_id": f"SEG-C099-{index + 1:06d}",
+            "start_ms": index * 1000,
+            "end_ms": (index + 1) * 1000,
+            "speaker": "speaker_0",
+            "content_type": content_type,
+            "raw_text": text,
+            "normalized_text": f"{text}。",
+            "source_role": role,
+        })
+    return segments
+
+
+def _make_p02(segments: list[dict] | None = None, version: str = "v003") -> dict:
+    return {
+        "schema_version": "1.0",
+        "prompt_version": f"knowledge-{version}-p02",
+        "source_ids": ["C099"],
+        "segments": segments if segments is not None else _make_segments(),
+    }
+
+
+def _make_p03(version: str = "v003") -> dict:
+    return {
+        "schema_version": "1.0",
+        "prompt_version": f"knowledge-{version}-p03",
+        "source_ids": ["C099"],
+        "course_id": "C099",
+        "cases": [{
+            "case_id": "CASE-C099-001", "title": "Test",
+            "start_segment_id": "SEG-C099-000001", "end_segment_id": "SEG-C099-000010",
+            "completeness": "complete", "confidence": 0.8,
+            "boundary_evidence": {"start_reason": "start", "end_reason": "end"},
+        }],
+        "uncertainties": [],
+    }
+
+
+def _setup_course(tmp_path: Path, *, p02: dict | None = None, p03: dict | None = None,
+                  create_p03: bool = True) -> None:
+    course_root = tmp_path / "data" / "courses" / "C099"
+    p02_dir = course_root / "02_normalized"
+    p02_dir.mkdir(parents=True)
+    (p02_dir / "P02-knowledge-v003.json").write_text(
+        json.dumps(p02 if p02 is not None else _make_p02(), ensure_ascii=False), encoding="utf-8",
+    )
+    if create_p03:
+        p03_dir = course_root / "03_cases"
+        p03_dir.mkdir()
+        (p03_dir / "P03-knowledge-v003.json").write_text(
+            json.dumps(p03 if p03 is not None else _make_p03(), ensure_ascii=False), encoding="utf-8",
+        )
+
+
+def _configure_roots(tmp_path: Path, monkeypatch) -> Path:
+    output_root = tmp_path / "chat-coach" / "source-material"
+    monkeypatch.setattr(exporter, "DATA_ROOT", tmp_path / "data" / "courses")
+    monkeypatch.setattr(exporter, "OUTPUT_ROOT", output_root)
+    return output_root
+
+
+def _hashes(directory: Path) -> dict[str, str]:
+    return {filename: _file_sha256(directory / filename) for filename in OUTPUT_FILES}
+
+
+# --- Basic utility tests ---
+
 def test_format_ts() -> None:
     assert _format_ts(0) == "00:00:00.000"
-    assert _format_ts(1000) == "00:00:01.000"
-    assert _format_ts(61000) == "00:01:01.000"
-    assert _format_ts(3661000) == "01:01:01.000"
-    assert _format_ts(2900) == "00:00:02.900"
+    assert _format_ts(2_900) == "00:00:02.900"
+    assert _format_ts(61_000) == "00:01:01.000"
+    assert _format_ts(3_661_000) == "01:01:01.000"
 
 
 def test_escape_md() -> None:
     assert _escape_md("# heading").startswith("\\")
-    assert _escape_md("- list item").startswith("\\")
-    assert _escape_md("normal text") == "normal text"
-    assert _escape_md("* bullet").startswith("\\")
+    assert _escape_md("- list item").startswith("\\ ")
+    assert _escape_md("* bullet").startswith("\\ ")
     assert _escape_md("微信：abc") == "微信：abc"
 
 
-def test_find_latest_p02_skips_qa(tmp_path: Path) -> None:
-    """P02 finder must skip qa/baseline/input/review files."""
+# --- Exclusion and version selection ---
+
+def test_exclusion_is_case_insensitive() -> None:
+    excluded = [
+        "P02-knowledge-v002-qa.json",
+        "P02-knowledge-v002-QA.json",
+        "P02-knowledge-v002-Baseline.json",
+        "P02-knowledge-v002-INPUT.json",
+        "P02-knowledge-v002-Review-Pack.json",
+        "P02-knowledge-v002-REVIEW-DECISIONS.json",
+        "P02-knowledge-v002.json.cursor-task.json",
+    ]
+    assert all(_is_excluded(filename) for filename in excluded)
+    assert not _is_excluded("P02-knowledge-v010.json")
+
+
+def test_version_key_and_p02_numeric_selection(tmp_path: Path) -> None:
+    assert _version_key(Path("P02-knowledge-v010.json")) == (10,)
     p02_dir = tmp_path / "02_normalized"
     p02_dir.mkdir()
-    # Create files
-    (p02_dir / "P02-knowledge-v002.json").write_text("{}", encoding="utf-8")
-    (p02_dir / "P02-knowledge-v002-qa.json").write_text("{}", encoding="utf-8")
-    (p02_dir / "P02-knowledge-v002-baseline.json").write_text("{}", encoding="utf-8")
-    (p02_dir / "P02-knowledge-v002-input.json").write_text("{}", encoding="utf-8")
-    (p02_dir / "P02-knowledge-v002-review-pack.json").write_text("{}", encoding="utf-8")
-    (p02_dir / "P02-knowledge-v002.cursor-task.json").write_text("{}", encoding="utf-8")
-
+    for filename in ("P02-knowledge-v9.json", "P02-knowledge-v010.json", "P02-knowledge-v999-QA.json"):
+        (p02_dir / filename).write_text("{}", encoding="utf-8")
     result = _find_latest_p02(tmp_path)
     assert result is not None
-    assert result.name == "P02-knowledge-v002.json"
+    assert result.name == "P02-knowledge-v010.json"
 
 
-def test_find_latest_p02_returns_none_when_no_valid(tmp_path: Path) -> None:
-    """Returns None when only qa/baseline files exist."""
-    p02_dir = tmp_path / "02_normalized"
-    p02_dir.mkdir()
-    (p02_dir / "P02-knowledge-v002-qa.json").write_text("{}", encoding="utf-8")
-    assert _find_latest_p02(tmp_path) is None
-
-
-def test_find_latest_p03_checks_both_dirs(tmp_path: Path) -> None:
-    """P03 finder checks both 02_normalized and 03_cases."""
-    # 03_cases has older version
-    p03_dir = tmp_path / "03_cases"
-    p03_dir.mkdir()
-    (p03_dir / "P03-knowledge-v002.json").write_text("{}", encoding="utf-8")
-
-    # 02_normalized has newer version
-    p02_dir = tmp_path / "02_normalized"
-    p02_dir.mkdir()
-    (p02_dir / "P03-knowledge-v003.json").write_text("{}", encoding="utf-8")
-
+def test_p03_numeric_selection_and_exclusions(tmp_path: Path) -> None:
+    (tmp_path / "02_normalized").mkdir()
+    (tmp_path / "03_cases").mkdir()
+    (tmp_path / "03_cases" / "P03-knowledge-v9.json").write_text("{}", encoding="utf-8")
+    (tmp_path / "02_normalized" / "P03-knowledge-v010.json").write_text("{}", encoding="utf-8")
+    (tmp_path / "03_cases" / "P03-knowledge-v999-INPUT.json").write_text("{}", encoding="utf-8")
     result = _find_latest_p03(tmp_path)
     assert result is not None
-    assert "v003" in result.name
+    assert result.name == "P03-knowledge-v010.json"
 
 
-def test_export_course_blocked_without_p02(tmp_path: Path) -> None:
-    """Course without P02 must be blocked."""
-    course_dir = tmp_path / "data" / "courses" / "C099"
-    course_dir.mkdir(parents=True)
-    # Monkey-patch DATA_ROOT and OUTPUT_ROOT
-    import scripts.export_chat_coach_source_packets as mod
-    old_data = mod.DATA_ROOT
-    old_output = mod.OUTPUT_ROOT
-    mod.DATA_ROOT = tmp_path / "data" / "courses"
-    mod.OUTPUT_ROOT = tmp_path / "chat-coach" / "source-material"
-    try:
-        result = _export_course("C099")
-        assert result["status"] == "blocked"
-        assert "P02" in result.get("reason", "")
-    finally:
-        mod.DATA_ROOT = old_data
-        mod.OUTPUT_ROOT = old_output
+# --- Blocking conditions ---
 
-
-def test_export_course_generates_all_files(tmp_path: Path) -> None:
-    """Export must generate all 6 required files."""
-    # Create minimal P02
+def test_export_blocks_without_formal_p02(tmp_path: Path, monkeypatch) -> None:
+    _configure_roots(tmp_path, monkeypatch)
     course_dir = tmp_path / "data" / "courses" / "C099" / "02_normalized"
     course_dir.mkdir(parents=True)
-    p02 = {
-        "schema_version": "1.0",
-        "prompt_version": "knowledge-v003-p02",
-        "source_ids": ["C099"],
-        "segments": [
-            {
-                "segment_id": "SEG-C099-000001",
-                "start_ms": 1000,
-                "end_ms": 2000,
-                "speaker": "speaker_0",
-                "content_type": "speech",
-                "raw_text": "hello world",
-                "normalized_text": "hello world.",
-                "source_role": "instructor_explanation",
-            },
-            {
-                "segment_id": "SEG-C099-000002",
-                "start_ms": 3000,
-                "end_ms": 4000,
-                "speaker": "speaker_0",
-                "content_type": "speech",
-                "raw_text": "她说你好",
-                "normalized_text": "她说你好。",
-                "source_role": "actual_chat",
-            },
-        ],
-    }
-    (course_dir / "P02-knowledge-v003.json").write_text(
-        json.dumps(p02, ensure_ascii=False, indent=2), encoding="utf-8"
-    )
-
-    import scripts.export_chat_coach_source_packets as mod
-    old_data = mod.DATA_ROOT
-    old_output = mod.OUTPUT_ROOT
-    mod.DATA_ROOT = tmp_path / "data" / "courses"
-    mod.OUTPUT_ROOT = tmp_path / "chat-coach" / "source-material"
-    try:
-        result = _export_course("C099")
-        assert result["status"] == "ok"
-        assert result["segment_count"] == 2
-
-        out_dir = tmp_path / "chat-coach" / "source-material" / "C099"
-        assert (out_dir / "source-manifest.md").exists()
-        assert (out_dir / "课程原文.md").exists()
-        assert (out_dir / "聊天原话.md").exists()
-        assert (out_dir / "讲师原话.md").exists()
-        assert (out_dir / "课板原文.md").exists()
-        assert (out_dir / "案例边界.md").exists()
-        assert (out_dir / "提取校验.md").exists()
-    finally:
-        mod.DATA_ROOT = old_data
-        mod.OUTPUT_ROOT = old_output
+    (course_dir / "P02-knowledge-v003-QA.json").write_text("{}", encoding="utf-8")
+    result = _export_course("C099")
+    assert result["status"] == "blocked"
+    assert "P02" in result["reason"]
 
 
-def test_export_course_segment_count_matches(tmp_path: Path) -> None:
-    """课程原文.md segment count must equal P02 segment count."""
-    course_dir = tmp_path / "data" / "courses" / "C099" / "02_normalized"
-    course_dir.mkdir(parents=True)
-    segs = []
-    for i in range(10):
-        segs.append({
-            "segment_id": f"SEG-C099-{i+1:06d}",
-            "start_ms": i * 1000,
-            "end_ms": (i + 1) * 1000,
-            "speaker": "speaker_0",
-            "content_type": "speech",
-            "raw_text": f"text {i}",
-            "normalized_text": f"text {i}.",
-            "source_role": "instructor_explanation",
-        })
-    p02 = {"schema_version": "1.0", "prompt_version": "v", "source_ids": ["C099"], "segments": segs}
-    (course_dir / "P02-knowledge-v003.json").write_text(
-        json.dumps(p02, ensure_ascii=False), encoding="utf-8"
-    )
-
-    import scripts.export_chat_coach_source_packets as mod
-    old_data = mod.DATA_ROOT
-    old_output = mod.OUTPUT_ROOT
-    mod.DATA_ROOT = tmp_path / "data" / "courses"
-    mod.OUTPUT_ROOT = tmp_path / "chat-coach" / "source-material"
-    try:
-        _export_course("C099")
-        md = (tmp_path / "chat-coach" / "source-material" / "C099" / "课程原文.md").read_text(encoding="utf-8")
-        assert md.count("## SEG-C099-") == 10
-    finally:
-        mod.DATA_ROOT = old_data
-        mod.OUTPUT_ROOT = old_output
+def test_export_blocks_without_formal_p03(tmp_path: Path, monkeypatch) -> None:
+    _configure_roots(tmp_path, monkeypatch)
+    _setup_course(tmp_path, create_p03=False)
+    result = _export_course("C099")
+    assert result["status"] == "blocked"
+    assert "P03" in result["reason"]
 
 
-def test_export_course_role_splitting(tmp_path: Path) -> None:
-    """Segments must be split by source_role into correct files."""
-    course_dir = tmp_path / "data" / "courses" / "C099" / "02_normalized"
-    course_dir.mkdir(parents=True)
-    segs = [
-        {"segment_id": "SEG-001", "start_ms": 0, "end_ms": 1000, "speaker": "s0", "content_type": "speech",
-         "raw_text": "讲师说", "normalized_text": "讲师说。", "source_role": "instructor_explanation"},
-        {"segment_id": "SEG-002", "start_ms": 1000, "end_ms": 2000, "speaker": "s0", "content_type": "speech",
-         "raw_text": "她说好", "normalized_text": "她说好。", "source_role": "actual_chat"},
-        {"segment_id": "SEG-003", "start_ms": 2000, "end_ms": 3000, "speaker": "s0", "content_type": "board_ocr",
-         "raw_text": "课板文字", "normalized_text": "课板文字", "source_role": "board"},
-    ]
-    p02 = {"schema_version": "1.0", "prompt_version": "v", "source_ids": ["C099"], "segments": segs}
-    (course_dir / "P02-knowledge-v003.json").write_text(
-        json.dumps(p02, ensure_ascii=False), encoding="utf-8"
-    )
+# --- Output completeness ---
 
-    import scripts.export_chat_coach_source_packets as mod
-    old_data = mod.DATA_ROOT
-    old_output = mod.OUTPUT_ROOT
-    mod.DATA_ROOT = tmp_path / "data" / "courses"
-    mod.OUTPUT_ROOT = tmp_path / "chat-coach" / "source-material"
-    try:
-        _export_course("C099")
-        out = tmp_path / "chat-coach" / "source-material" / "C099"
-        instructor = (out / "讲师原话.md").read_text(encoding="utf-8")
-        assert "SEG-001" in instructor
-        assert "SEG-002" not in instructor
-
-        chat = (out / "聊天原话.md").read_text(encoding="utf-8")
-        assert "SEG-002" in chat
-
-        board = (out / "课板原文.md").read_text(encoding="utf-8")
-        assert "SEG-003" in board
-    finally:
-        mod.DATA_ROOT = old_data
-        mod.OUTPUT_ROOT = old_output
+def test_export_generates_and_rereads_all_seven_utf8_files(tmp_path: Path, monkeypatch) -> None:
+    output_root = _configure_roots(tmp_path, monkeypatch)
+    _setup_course(tmp_path)
+    result = _export_course("C099")
+    assert result["status"] == "ok"
+    assert result["all_ok"] is True
+    assert set(result["output_hashes"]) == set(OUTPUT_FILES)
+    for filename in OUTPUT_FILES:
+        text = (output_root / "C099" / filename).read_text(encoding="utf-8")
+        assert text
 
 
-def test_export_course_idempotent(tmp_path: Path) -> None:
-    """Running twice must produce identical output."""
-    course_dir = tmp_path / "data" / "courses" / "C099" / "02_normalized"
-    course_dir.mkdir(parents=True)
-    segs = [
-        {"segment_id": "SEG-001", "start_ms": 0, "end_ms": 1000, "speaker": "s0", "content_type": "speech",
-         "raw_text": "text", "normalized_text": "text.", "source_role": "instructor_explanation"},
-    ]
-    p02 = {"schema_version": "1.0", "prompt_version": "v", "source_ids": ["C099"], "segments": segs}
-    (course_dir / "P02-knowledge-v003.json").write_text(
-        json.dumps(p02, ensure_ascii=False), encoding="utf-8"
-    )
+# --- Segment output and role splitting ---
 
-    import scripts.export_chat_coach_source_packets as mod
-    old_data = mod.DATA_ROOT
-    old_output = mod.OUTPUT_ROOT
-    mod.DATA_ROOT = tmp_path / "data" / "courses"
-    mod.OUTPUT_ROOT = tmp_path / "chat-coach" / "source-material"
-    try:
-        _export_course("C099")
-        hashes1 = {}
-        out = tmp_path / "chat-coach" / "source-material" / "C099"
-        for f in sorted(out.glob("*.md")):
-            hashes1[f.name] = hashlib.sha256(f.read_bytes()).hexdigest()
+def test_full_segment_output_and_role_splitting(tmp_path: Path, monkeypatch) -> None:
+    output_root = _configure_roots(tmp_path, monkeypatch)
+    _setup_course(tmp_path)
+    result = _export_course("C099")
+    assert result["segment_count"] == 10
+    course_output = output_root / "C099"
+    course_text = (course_output / "课程原文.md").read_text(encoding="utf-8")
+    assert course_text.count("## SEG-C099-") == 10
+    assert "SEG-C099-000001" in (course_output / "讲师原话.md").read_text(encoding="utf-8")
+    assert "SEG-C099-000002" in (course_output / "聊天原话.md").read_text(encoding="utf-8")
+    assert "SEG-C099-000003" in (course_output / "课板原文.md").read_text(encoding="utf-8")
+    assert result["checks"]["role_file_counts"]["passed"] is True
 
-        _export_course("C099")
-        for f in sorted(out.glob("*.md")):
-            assert hashlib.sha256(f.read_bytes()).hexdigest() == hashes1[f.name]
-    finally:
-        mod.DATA_ROOT = old_data
-        mod.OUTPUT_ROOT = old_output
+
+# --- Markdown escaping ---
+
+def test_markdown_special_characters_in_code_fence(tmp_path: Path, monkeypatch) -> None:
+    output_root = _configure_roots(tmp_path, monkeypatch)
+    segments = _make_segments()
+    source = "# heading\n- item\n```nested```\n原样保留"
+    segments[0]["raw_text"] = source
+    segments[0]["normalized_text"] = source
+    _setup_course(tmp_path, p02=_make_p02(segments))
+    result = _export_course("C099")
+    assert result["all_ok"] is True
+    course_text = (output_root / "C099" / "课程原文.md").read_text(encoding="utf-8")
+    assert "# heading" in course_text
+    assert "原样保留" in course_text
+
+
+# --- Time monotonic in original order ---
+
+def test_original_order_time_reversal_fails(tmp_path: Path, monkeypatch) -> None:
+    _configure_roots(tmp_path, monkeypatch)
+    segments = _make_segments()
+    segments[4]["start_ms"] = 500
+    segments[4]["end_ms"] = 900
+    _setup_course(tmp_path, p02=_make_p02(segments))
+    result = _export_course("C099")
+    check = result["checks"]["time_monotonic_original_order"]
+    assert check["passed"] is False
+    assert check["violations"][0]["previous_segment_id"] == "SEG-C099-000004"
+    assert check["violations"][0]["current_segment_id"] == "SEG-C099-000005"
+
+
+# --- P03 boundary resolution ---
+
+def test_p03_boundary_must_resolve_to_p02(tmp_path: Path, monkeypatch) -> None:
+    _configure_roots(tmp_path, monkeypatch)
+    p03 = _make_p03()
+    p03["cases"][0]["start_segment_id"] = "SEG-DOES-NOT-EXIST"
+    _setup_course(tmp_path, p03=p03)
+    result = _export_course("C099")
+    check = result["checks"]["p03_boundaries_in_p02"]
+    assert check["passed"] is False
+    assert check["failures"][0]["segment_id"] == "SEG-DOES-NOT-EXIST"
+
+
+# --- Deterministic manifest ---
+
+def test_manifest_is_deterministic_and_has_no_current_time(tmp_path: Path, monkeypatch) -> None:
+    output_root = _configure_roots(tmp_path, monkeypatch)
+    _setup_course(tmp_path)
+    _export_course("C099")
+    manifest = (output_root / "C099" / "source-manifest.md").read_text(encoding="utf-8")
+    assert "生成时间" not in manifest
+    assert "deterministic-from-input" in manifest
+
+
+# --- Cross-second idempotency ---
+
+def test_real_cross_second_disk_rerun_hashes_are_identical(tmp_path: Path, monkeypatch) -> None:
+    output_root = _configure_roots(tmp_path, monkeypatch)
+    _setup_course(tmp_path)
+    _export_course("C099")
+    first_hashes = _hashes(output_root / "C099")
+    time.sleep(1.5)
+    _export_course("C099")
+    second_hashes = _hashes(output_root / "C099")
+    assert first_hashes == second_hashes
+
+
+# --- Global report ---
+
+def test_machine_readable_report(tmp_path: Path, monkeypatch) -> None:
+    _configure_roots(tmp_path, monkeypatch)
+    _setup_course(tmp_path)
+    first = _export_course("C099")
+    time.sleep(1.5)
+    second = _export_course("C099")
+    results = _attach_rerun_hash_evidence([first], [second])
+    report_path = _write_global_report(results, 1.5)
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    assert report["exported"] == 1
+    assert report["all_passed"] is True
+    course = report["courses"][0]
+    assert course["rerun_hash_check"]["passed"] is True
+    assert set(course["output_hashes"]) == set(OUTPUT_FILES)

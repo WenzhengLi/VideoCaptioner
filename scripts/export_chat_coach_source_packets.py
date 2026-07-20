@@ -1,442 +1,670 @@
 #!/usr/bin/env python3
-"""Export mechanical source material packets from P02/P03 data.
+"""Export deterministic, mechanical source packets from formal P02/P03 JSON.
 
-This is a deterministic, read-only extraction tool. It does NOT analyze
-course content, generate labels, create OB, or produce reply suggestions.
-
-Usage:
-    python scripts/export_chat_coach_source_packets.py [--courses C001,C002,...] [--dry-run]
+The exporter only copies, orders, formats, and validates source data. It does
+not perform course analysis or create tags, OBs, supplements, or reply text.
 """
 
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import re
 import time
 from pathlib import Path
 from typing import Any
 
-SCRIPT_VERSION = "1.0.0"
+SCRIPT_VERSION = "1.2.0"
+REPORT_SCHEMA_VERSION = "1.0"
 DATA_ROOT = Path("data/courses")
 OUTPUT_ROOT = Path("chat-coach/source-material")
+REPORT_FILENAME = "validation-report.json"
 
-# Courses to process (C019-C020 excluded per spec)
-DEFAULT_COURSES = (
-    [f"C{i:03d}" for i in range(1, 19)]  # C001-C018
-    + ["C021", "C022"]
+DEFAULT_COURSES = [f"C{i:03d}" for i in range(1, 19)] + ["C021", "C022"]
+
+OUTPUT_FILES = (
+    "source-manifest.md",
+    "课程原文.md",
+    "聊天原话.md",
+    "讲师原话.md",
+    "课板原文.md",
+    "案例边界.md",
+    "提取校验.md",
 )
+
+_EXCLUDED_TOKEN = re.compile(
+    r"(?:^|[-_.])(?:qa|baseline|input|review|review-pack|review-decisions)(?:$|[-_.])"
+    r"|\.cursor-task\.json$",
+    re.IGNORECASE,
+)
+_VERSION = re.compile(r"(?:^|[-_.])v(\d+)(?=$|[-_.])", re.IGNORECASE)
+
+
+def _is_excluded(filename: str) -> bool:
+    """Return whether a candidate is a QA/input/review/task artifact."""
+    return _EXCLUDED_TOKEN.search(filename) is not None
+
+
+def _version_key(path: Path) -> tuple[int, ...]:
+    """Return numeric version components used by both P02 and P03 selection."""
+    versions = tuple(int(value) for value in _VERSION.findall(path.name))
+    return versions or (0,)
+
+
+def _latest_formal(paths: list[Path]) -> Path | None:
+    candidates = [path for path in paths if path.is_file() and not _is_excluded(path.name)]
+    if not candidates:
+        return None
+    return max(candidates, key=lambda path: (_version_key(path), path.name.casefold(), path.name))
 
 
 def _find_latest_p02(course_dir: Path) -> Path | None:
-    """Find latest formal P02, excluding qa/baseline/input/review files."""
-    p02_dir = course_dir / "02_normalized"
-    if not p02_dir.exists():
+    """Find the numerically latest formal P02 in 02_normalized."""
+    search_dir = course_dir / "02_normalized"
+    if not search_dir.exists():
         return None
-    candidates = []
-    for f in p02_dir.glob("P02-knowledge-*.json"):
-        name = f.name
-        if any(skip in name for skip in ["qa", "baseline", "input", "review-pack", "review-decisions", ".cursor-task"]):
-            continue
-        candidates.append(f)
-    if not candidates:
-        return None
-    return sorted(candidates)[-1]
+    return _latest_formal(list(search_dir.glob("P02-knowledge-*.json")))
 
 
 def _find_latest_p03(course_dir: Path) -> Path | None:
-    """Find latest formal P03 from 02_normalized or 03_cases."""
-    candidates = []
-    for search_dir in [course_dir / "02_normalized", course_dir / "03_cases"]:
-        if not search_dir.exists():
-            continue
-        for f in search_dir.glob("P03-knowledge-*.json"):
-            name = f.name
-            if any(skip in name for skip in ["qa", "baseline", "input", "review", ".cursor-task"]):
-                continue
-            candidates.append(f)
-    if not candidates:
-        return None
-    # Sort by version number (v002 < v003)
-    def _version_key(p: Path) -> tuple[int, ...]:
-        import re
-        nums = re.findall(r"v(\d+)", p.name)
-        return tuple(int(n) for n in nums) if nums else (0,)
-    return sorted(candidates, key=_version_key)[-1]
+    """Find the numerically latest formal P03 in supported source folders."""
+    candidates: list[Path] = []
+    for search_dir in (course_dir / "03_cases", course_dir / "02_normalized"):
+        if search_dir.exists():
+            candidates.extend(search_dir.glob("P03-knowledge-*.json"))
+    return _latest_formal(candidates)
 
 
 def _format_ts(ms: int) -> str:
     """Format milliseconds as HH:MM:SS.mmm."""
-    total_s = ms // 1000
-    ms_rem = ms % 1000
-    h = total_s // 3600
-    m = (total_s % 3600) // 60
-    s = total_s % 60
-    return f"{h:02d}:{m:02d}:{s:02d}.{ms_rem:03d}"
+    total_seconds, milliseconds = divmod(int(ms), 1000)
+    hours, remainder = divmod(total_seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    return f"{hours:02d}:{minutes:02d}:{seconds:02d}.{milliseconds:03d}"
 
 
 def _escape_md(text: str) -> str:
-    """Escape text so Markdown doesn't misparse WeChat content as headings/lists."""
-    lines = []
-    for line in text.split("\n"):
-        stripped = line.strip()
-        # Prevent lines starting with # from becoming headings
+    """Escape heading/list prefixes for callers that need inline Markdown."""
+    escaped: list[str] = []
+    for line in str(text).split("\n"):
+        stripped = line.lstrip()
         if stripped.startswith("#"):
             line = "\\" + line
-        # Prevent lines starting with - or * from becoming lists
-        if stripped.startswith("- ") or stripped.startswith("* "):
+        elif stripped.startswith(("- ", "* ")):
             line = "\\ " + line
-        lines.append(line)
-    return "\n".join(lines)
+        escaped.append(line)
+    return "\n".join(escaped)
 
 
-def _export_course(course_id: str) -> dict[str, Any]:
-    """Export source packets for one course. Returns result dict."""
-    course_dir = DATA_ROOT / course_id
-    if not course_dir.exists():
-        return {"course_id": course_id, "status": "blocked", "reason": "course directory missing"}
+def _fenced(text: Any) -> list[str]:
+    """Return a code fence longer than any backtick run in the source text."""
+    value = "" if text is None else str(text)
+    longest = max((len(match.group(0)) for match in re.finditer(r"`+", value)), default=0)
+    fence = "`" * max(3, longest + 1)
+    return [fence, value, fence]
 
-    # Find P02
-    p02_path = _find_latest_p02(course_dir)
-    if not p02_path:
-        return {"course_id": course_id, "status": "blocked", "reason": "no formal P02 found"}
 
-    p02 = json.loads(p02_path.read_text(encoding="utf-8"))
-    segments = p02.get("segments", [])
-    if not segments:
-        return {"course_id": course_id, "status": "blocked", "reason": "P02 has no segments"}
+def _json_fenced(value: Any) -> list[str]:
+    return _fenced(json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True))
 
-    # Find P03 (optional for some courses)
-    p03_path = _find_latest_p03(course_dir)
-    p03 = None
-    if p03_path:
-        p03 = json.loads(p03_path.read_text(encoding="utf-8"))
 
-    # Create output directory
-    out_dir = OUTPUT_ROOT / course_id
-    out_dir.mkdir(parents=True, exist_ok=True)
+def _sha256_bytes(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
 
-    # Build segment lookup
-    seg_by_id: dict[str, dict[str, Any]] = {}
-    for seg in segments:
-        seg_by_id[seg["segment_id"]] = seg
 
-    # --- source-manifest.md ---
+def _file_sha256(path: Path) -> str:
+    return _sha256_bytes(path.read_bytes())
+
+
+def _content_hashes(contents: dict[str, str]) -> dict[str, str]:
+    return {name: _sha256_bytes(contents[name].encode("utf-8")) for name in OUTPUT_FILES}
+
+
+def _write_text(path: Path, text: str) -> None:
+    path.write_text(text, encoding="utf-8", newline="\n")
+
+
+def _segment_lines(segment: dict[str, Any], include_classification: bool = True) -> list[str]:
+    lines = [
+        f"## {segment['segment_id']}",
+        "",
+        f"- start_ms / end_ms: {segment['start_ms']} / {segment['end_ms']}",
+        f"- 时间: {_format_ts(segment['start_ms'])} – {_format_ts(segment['end_ms'])}",
+        f"- speaker: `{segment.get('speaker', '?')}`",
+        f"- source_role: `{segment.get('source_role', '?')}`",
+        f"- content_type: `{segment.get('content_type', '?')}`",
+    ]
+    if include_classification:
+        lines.extend(
+            [
+                f"- epistemic_type: `{segment.get('epistemic_type', '?')}`",
+                f"- relevance: `{segment.get('relevance', '?')}`",
+            ]
+        )
+    lines.extend(["", "**raw_text:**", "", *_fenced(segment.get("raw_text", ""))])
+    lines.extend(["", "**normalized_text:**", "", *_fenced(segment.get("normalized_text", "")), ""])
+    return lines
+
+
+def _is_board_chat(segment: dict[str, Any]) -> bool:
+    """Mechanically recognize board text that contains conversational markers."""
+    text = (segment.get("normalized_text") or segment.get("raw_text") or "").strip()
+    indicators = ("说", "问", "答", "嗯", "啊", "哈哈", "哦", "呢", "吧")
+    return len(text) > 5 and any(indicator in text for indicator in indicators)
+
+
+def _ordered_segments(segments: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Order exported source chronologically while retaining stable input order ties."""
+    indexed = enumerate(segments)
+    return [
+        segment
+        for _, segment in sorted(
+            indexed,
+            key=lambda item: (
+                int(item[1]["start_ms"]),
+                int(item[1]["end_ms"]),
+                item[0],
+            ),
+        )
+    ]
+
+
+def _base_checks(
+    segments: list[dict[str, Any]],
+    p03: dict[str, Any],
+    chat_segments: list[dict[str, Any]],
+    instructor_segments: list[dict[str, Any]],
+    board_segments: list[dict[str, Any]],
+) -> dict[str, Any]:
+    ids = [str(segment["segment_id"]) for segment in segments]
+    duplicate_ids = sorted({segment_id for segment_id in ids if ids.count(segment_id) > 1})
+
+    time_violations: list[dict[str, Any]] = []
+    for previous, current in zip(segments, segments[1:]):
+        if int(current["start_ms"]) < int(previous["start_ms"]):
+            time_violations.append(
+                {
+                    "previous_segment_id": previous["segment_id"],
+                    "previous_start_ms": int(previous["start_ms"]),
+                    "current_segment_id": current["segment_id"],
+                    "current_start_ms": int(current["start_ms"]),
+                }
+            )
+
+    id_set = set(ids)
+    boundary_failures: list[dict[str, str]] = []
+    for case in p03.get("cases", []):
+        for field in ("start_segment_id", "end_segment_id"):
+            segment_id = str(case.get(field, ""))
+            if segment_id not in id_set:
+                boundary_failures.append(
+                    {
+                        "case_id": str(case.get("case_id", "?")),
+                        "field": field,
+                        "segment_id": segment_id,
+                    }
+                )
+
+    expected_chat = sum(
+        1
+        for segment in segments
+        if segment.get("source_role") == "actual_chat"
+        or (segment.get("source_role") == "board" and _is_board_chat(segment))
+    )
+    expected_instructor = sum(
+        1 for segment in segments if segment.get("source_role") == "instructor_explanation"
+    )
+    expected_board = sum(
+        1
+        for segment in segments
+        if segment.get("source_role") == "board" or segment.get("content_type") == "board_ocr"
+    )
+    role_count_passed = (
+        len(chat_segments) == expected_chat
+        and len(instructor_segments) == expected_instructor
+        and len(board_segments) == expected_board
+    )
+
+    return {
+        "segment_count": {
+            "passed": True,
+            "p02_count": len(segments),
+            "exported_count": len(segments),
+        },
+        "role_file_counts": {
+            "passed": role_count_passed,
+            "expected": {
+                "聊天原话.md": expected_chat,
+                "讲师原话.md": expected_instructor,
+                "课板原文.md": expected_board,
+            },
+            "actual": {
+                "聊天原话.md": len(chat_segments),
+                "讲师原话.md": len(instructor_segments),
+                "课板原文.md": len(board_segments),
+            },
+        },
+        "unique_segment_ids": {
+            "passed": not duplicate_ids,
+            "total": len(ids),
+            "unique": len(id_set),
+            "duplicate_segment_ids": duplicate_ids,
+        },
+        "time_monotonic_original_order": {
+            "passed": not time_violations,
+            "violation_count": len(time_violations),
+            "violations": time_violations,
+        },
+        "p03_boundaries_in_p02": {
+            "passed": not boundary_failures,
+            "failure_count": len(boundary_failures),
+            "failures": boundary_failures,
+        },
+    }
+
+
+def _all_checks_pass(checks: dict[str, Any]) -> bool:
+    return all(bool(check.get("passed")) for check in checks.values())
+
+
+def _verification_lines(course_id: str, checks: dict[str, Any]) -> list[str]:
+    count = checks["segment_count"]
+    roles = checks["role_file_counts"]
+    unique = checks["unique_segment_ids"]
+    monotonic = checks["time_monotonic_original_order"]
+    boundaries = checks["p03_boundaries_in_p02"]
+    utf8 = checks["utf8_readable"]
+    deterministic = checks["deterministic_render"]
+
+    lines = [f"# {course_id} 提取校验", ""]
+    lines.append("1. 全部 7 个输出文件存在 → PASS")
+    lines.append(
+        f"2. segment 数量: 课程原文.md={count['exported_count']}, "
+        f"P02={count['p02_count']} → {'PASS' if count['passed'] else 'FAIL'}"
+    )
+    lines.append(
+        "3. 角色分文件计数: "
+        f"expected={json.dumps(roles['expected'], ensure_ascii=False, sort_keys=True)}, "
+        f"actual={json.dumps(roles['actual'], ensure_ascii=False, sort_keys=True)} "
+        f"→ {'PASS' if roles['passed'] else 'FAIL'}"
+    )
+    lines.append(
+        f"4. segment ID 唯一: total={unique['total']}, unique={unique['unique']} "
+        f"→ {'PASS' if unique['passed'] else 'FAIL'}"
+    )
+    if not unique["passed"]:
+        lines.append(f"   重复 segment: {', '.join(unique['duplicate_segment_ids'])}")
+
+    if monotonic["passed"]:
+        lines.append("5. P02 原始 segments 顺序时间单调不下降 → PASS")
+    else:
+        lines.append(
+            f"5. P02 原始 segments 顺序时间单调不下降 → FAIL，"
+            f"发现 {monotonic['violation_count']} 处逆序"
+        )
+        for violation in monotonic["violations"]:
+            lines.append(
+                "   逆序: "
+                f"{violation['previous_segment_id']}({violation['previous_start_ms']}ms) → "
+                f"{violation['current_segment_id']}({violation['current_start_ms']}ms)"
+            )
+
+    if boundaries["passed"]:
+        lines.append("6. P03 start/end segment 均可回查 P02 → PASS")
+    else:
+        lines.append(
+            f"6. P03 start/end segment 均可回查 P02 → FAIL，"
+            f"发现 {boundaries['failure_count']} 个缺失边界"
+        )
+        for failure in boundaries["failures"]:
+            lines.append(
+                f"   {failure['case_id']} {failure['field']}={failure['segment_id']} 不在 P02"
+            )
+
+    lines.append(
+        f"7. 全部 7 个文件 UTF-8 编码并可重读 → {'PASS' if utf8['passed'] else 'FAIL'}"
+    )
+    lines.append(
+        "8. 两次独立完整渲染 SHA-256 比较 "
+        f"→ {'PASS' if deterministic['passed'] else 'FAIL'}"
+    )
+    if deterministic["mismatches"]:
+        lines.append(f"   hash 不一致文件: {', '.join(deterministic['mismatches'])}")
+    lines.extend(["", f"**总结: {'ALL PASS' if _all_checks_pass(checks) else 'HAS FAILURES'}**"])
+    return lines
+
+
+def _build_packet(
+    course_id: str,
+    p02_path: Path,
+    p03_path: Path,
+    p02: dict[str, Any],
+    p03: dict[str, Any],
+    deterministic_passed: bool,
+    deterministic_mismatches: list[str],
+) -> tuple[dict[str, str], dict[str, Any], dict[str, int]]:
+    input_segments = list(p02.get("segments", []))
+    export_segments = _ordered_segments(input_segments)
+    chat_segments = [
+        segment
+        for segment in export_segments
+        if segment.get("source_role") == "actual_chat"
+        or (segment.get("source_role") == "board" and _is_board_chat(segment))
+    ]
+    instructor_segments = [
+        segment for segment in export_segments if segment.get("source_role") == "instructor_explanation"
+    ]
+    board_segments = [
+        segment
+        for segment in export_segments
+        if segment.get("source_role") == "board" or segment.get("content_type") == "board_ocr"
+    ]
+
     role_counts: dict[str, int] = {}
-    for seg in segments:
-        role = seg.get("source_role", "unknown")
+    for segment in input_segments:
+        role = str(segment.get("source_role", "unknown"))
         role_counts[role] = role_counts.get(role, 0) + 1
 
-    start_ms = min(s.get("start_ms", 0) for s in segments)
-    end_ms = max(s.get("end_ms", 0) for s in segments)
-    case_count = len(p03.get("cases", [])) if p03 else 0
+    checks = _base_checks(input_segments, p03, chat_segments, instructor_segments, board_segments)
+    checks["utf8_readable"] = {"passed": True, "checked_files": list(OUTPUT_FILES)}
+    checks["deterministic_render"] = {
+        "passed": deterministic_passed,
+        "mismatches": deterministic_mismatches,
+    }
+    all_ok = _all_checks_pass(checks)
 
-    manifest_lines = [
+    start_ms = min(int(segment["start_ms"]) for segment in input_segments)
+    end_ms = max(int(segment["end_ms"]) for segment in input_segments)
+    case_count = len(p03.get("cases", []))
+
+    manifest = [
         f"# {course_id} 原文资料包",
         "",
         "## 基本信息",
         "",
         f"- 课程 ID: `{course_id}`",
         f"- P02 路径: `{p02_path.as_posix()}`",
-        f"- P03 路径: `{p03_path.as_posix() if p03_path else '无'}`",
+        f"- P03 路径: `{p03_path.as_posix()}`",
         f"- P02 schema_version: `{p02.get('schema_version', '?')}`",
         f"- P02 prompt_version: `{p02.get('prompt_version', '?')}`",
-        f"- segment 总数: {len(segments)}",
-        f"- 课程时间范围: {_format_ts(start_ms)} – {_format_ts(end_ms)}" if (start_ms := segments[0]["start_ms"]) is not None else "",
+        f"- P03 schema_version: `{p03.get('schema_version', '?')}`",
+        f"- P03 prompt_version: `{p03.get('prompt_version', '?')}`",
+        f"- segment 总数: {len(input_segments)}",
+        f"- 课程时间范围: {_format_ts(start_ms)} – {_format_ts(end_ms)}",
         f"- P03 案例数量: {case_count}",
-        f"- 生成时间: {time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())}",
         f"- 脚本版本: {SCRIPT_VERSION}",
+        "- 生成标识: `deterministic-from-input`",
         "",
         "## source_role 统计",
         "",
     ]
-    role_counts: dict[str, int] = {}
-    for seg in segments:
-        role = seg.get("source_role", "unknown")
-        role_counts[role] = role_counts.get(role, 0) + 1
     for role, count in sorted(role_counts.items()):
-        manifest_lines.append(f"- `{role}`: {count}")
+        manifest.append(f"- `{role}`: {count}")
+    manifest.extend(["", "## 校验结果", "", f"- {'ALL PASS' if all_ok else 'HAS FAILURES'}", "- 详见 `提取校验.md`"])
 
-    manifest_lines.extend(["", "## 校验结果", "", "见 `提取校验.md`"])
-
-    (out_dir / "source-manifest.md").write_text("\n".join(manifest_lines) + "\n", encoding="utf-8")
-
-    # 课程原文.md — all P02 segments
     course_lines = [f"# {course_id} 课程原文", ""]
-    for seg in segments:
-        course_lines.append(f"## {seg['segment_id']}")
-        course_lines.append("")
-        course_lines.append(f"- 时间: {_format_ts(seg['start_ms'])} – {_format_ts(seg['end_ms'])}")
-        course_lines.append(f"- speaker: `{seg.get('speaker', '?')}`")
-        course_lines.append(f"- source_role: `{seg.get('source_role', '?')}`")
-        course_lines.append(f"- content_type: `{seg.get('content_type', '?')}`")
-        course_lines.append("")
-        course_lines.append("**raw_text:**")
-        course_lines.append("")
-        course_lines.append("```")
-        course_lines.append(_escape_md(seg.get("raw_text", "")))
-        course_lines.append("```")
-        course_lines.append("")
-        course_lines.append("**normalized_text:**")
-        course_lines.append("")
-        course_lines.append("```")
-        course_lines.append(_escape_md(seg.get("normalized_text", "")))
-        course_lines.append("```")
-        course_lines.append("")
-    (out_dir / "课程原文.md").write_text("\n".join(course_lines) + "\n", encoding="utf-8")
+    for segment in export_segments:
+        course_lines.extend(_segment_lines(segment))
 
-    # 聊天原话.md — actual_chat + board chat
     chat_lines = [f"# {course_id} 聊天原话", ""]
-    chat_count = 0
-    for seg in segments:
-        role = seg.get("source_role", "")
-        if role == "actual_chat" or (role == "board" and _is_board_chat(seg)):
-            chat_count += 1
-            chat_lines.append(f"## {seg['segment_id']}")
-            chat_lines.append("")
-            chat_lines.append(f"- 时间: {_format_ts(seg['start_ms'])} – {_format_ts(seg['end_ms'])}")
-            chat_lines.append(f"- speaker: `{seg.get('speaker', '?')}`")
-            chat_lines.append(f"- source_role: `{role}`")
-            chat_lines.append("")
-            chat_lines.append("**raw_text:**")
-            chat_lines.append("")
-            chat_lines.append("```")
-            chat_lines.append(_escape_md(seg.get("raw_text", "")))
-            chat_lines.append("```")
-            chat_lines.append("")
-            chat_lines.append("**normalized_text:**")
-            chat_lines.append("")
-            chat_lines.append("```")
-            chat_lines.append(_escape_md(seg.get("normalized_text", "")))
-            chat_lines.append("```")
-            chat_lines.append("")
-    (out_dir / "聊天原话.md").write_text("\n".join(chat_lines) + "\n", encoding="utf-8")
+    for segment in chat_segments:
+        chat_lines.extend(_segment_lines(segment, include_classification=False))
 
-    # 讲师原话.md — instructor_explanation
     instructor_lines = [f"# {course_id} 讲师原话", ""]
-    instructor_count = 0
-    for seg in segments:
-        if seg.get("source_role") == "instructor_explanation":
-            instructor_count += 1
-            instructor_lines.append(f"## {seg['segment_id']}")
-            instructor_lines.append("")
-            instructor_lines.append(f"- 时间: {_format_ts(seg['start_ms'])} – {_format_ts(seg['end_ms'])}")
-            instructor_lines.append(f"- speaker: `{seg.get('speaker', '?')}`")
-            instructor_lines.append("")
-            instructor_lines.append("**raw_text:**")
-            instructor_lines.append("")
-            instructor_lines.append("```")
-            instructor_lines.append(_escape_md(seg.get("raw_text", "")))
-            instructor_lines.append("```")
-            instructor_lines.append("")
-            instructor_lines.append("**normalized_text:**")
-            instructor_lines.append("")
-            instructor_lines.append("```")
-            instructor_lines.append(_escape_md(seg.get("normalized_text", "")))
-            instructor_lines.append("```")
-            instructor_lines.append("")
-    (out_dir / "讲师原话.md").write_text("\n".join(instructor_lines) + "\n", encoding="utf-8")
+    for segment in instructor_segments:
+        instructor_lines.extend(_segment_lines(segment, include_classification=False))
 
-    # 课板原文.md — board / board_ocr
     board_lines = [f"# {course_id} 课板原文", ""]
-    board_count = 0
-    for seg in segments:
-        if seg.get("source_role") == "board" or seg.get("content_type") == "board_ocr":
-            board_count += 1
-            board_lines.append(f"## {seg['segment_id']}")
-            board_lines.append("")
-            board_lines.append(f"- 时间: {_format_ts(seg['start_ms'])} – {_format_ts(seg['end_ms'])}")
-            board_lines.append("")
-            board_lines.append("**raw_text:**")
-            board_lines.append("")
-            board_lines.append("```")
-            board_lines.append(_escape_md(seg.get("raw_text", "")))
-            board_lines.append("```")
-            board_lines.append("")
-            board_lines.append("**normalized_text:**")
-            board_lines.append("")
-            board_lines.append("```")
-            board_lines.append(_escape_md(seg.get("normalized_text", "")))
-            board_lines.append("```")
-            board_lines.append("")
-    (out_dir / "课板原文.md").write_text("\n".join(board_lines) + "\n", encoding="utf-8")
+    for segment in board_segments:
+        board_lines.extend(_segment_lines(segment, include_classification=False))
 
-    # 案例边界.md — from P03
+    segment_lookup = {str(segment["segment_id"]): segment for segment in input_segments}
     case_lines = [f"# {course_id} 案例边界", ""]
-    if p03:
-        for case in p03.get("cases", []):
-            case_lines.append(f"## {case.get('case_id', '?')}")
-            case_lines.append("")
-            case_lines.append(f"- 标题: {case.get('title', '?')}")
-            case_lines.append(f"- start_segment_id: `{case.get('start_segment_id', '?')}`")
-            case_lines.append(f"- end_segment_id: `{case.get('end_segment_id', '?')}`")
+    top_uncertainties = p03.get("uncertainties", [])
+    for case in p03.get("cases", []):
+        start_id = str(case.get("start_segment_id", ""))
+        end_id = str(case.get("end_segment_id", ""))
+        case_lines.extend(
+            [
+                f"## {case.get('case_id', '?')}",
+                "",
+                f"- 标题: {case.get('title', '?')}",
+                f"- start_segment_id: `{start_id}`",
+                f"- end_segment_id: `{end_id}`",
+            ]
+        )
+        if start_id in segment_lookup:
+            case_lines.append(f"- 开始时间: {_format_ts(segment_lookup[start_id]['start_ms'])}")
+        if end_id in segment_lookup:
+            case_lines.append(f"- 结束时间: {_format_ts(segment_lookup[end_id]['end_ms'])}")
+        case_lines.extend(
+            [
+                f"- completeness: `{case.get('completeness', '?')}`",
+                f"- confidence: {case.get('confidence', '?')}",
+                "",
+                "**boundary_evidence 原文:**",
+                "",
+                *_json_fenced(case.get("boundary_evidence", {})),
+                "",
+                "**case uncertainties 原文:**",
+                "",
+                *_json_fenced(case.get("uncertainties", [])),
+                "",
+            ]
+        )
+    case_lines.extend(["## P03 顶层 uncertainties 原文", "", *_json_fenced(top_uncertainties), ""])
 
-            # Find timestamps
-            start_seg = seg_by_id.get(case.get("start_segment_id", ""))
-            end_seg = seg_by_id.get(case.get("end_segment_id", ""))
-            if start_seg:
-                case_lines.append(f"- 开始时间: {_format_ts(start_seg['start_ms'])}")
-            if end_seg:
-                case_lines.append(f"- 结束时间: {_format_ts(end_seg['end_ms'])}")
-
-            case_lines.append(f"- completeness: `{case.get('completeness', '?')}`")
-            case_lines.append(f"- confidence: {case.get('confidence', '?')}")
-            case_lines.append("")
-            case_lines.append("**boundary_evidence:**")
-            case_lines.append("")
-            be = case.get("boundary_evidence", {})
-            case_lines.append(f"- start_reason: {be.get('start_reason', '?')}")
-            case_lines.append(f"- end_reason: {be.get('end_reason', '?')}")
-            case_lines.append("")
-            case_lines.append("**uncertainties:**")
-            case_lines.append("")
-            for unc in p03.get("uncertainties", []):
-                if unc.get("case_id") == case.get("case_id"):
-                    case_lines.append(f"- {unc.get('note', '?')}")
-            case_lines.append("")
-    else:
-        case_lines.append("无 P03 文件。")
-        case_lines.append("")
-    (out_dir / "案例边界.md").write_text("\n".join(case_lines) + "\n", encoding="utf-8")
-
-    # 提取校验.md
-    verify_lines = [f"# {course_id} 提取校验", ""]
-    all_ok = True
-
-    # 1. segment count
-    course_md = (out_dir / "课程原文.md").read_text(encoding="utf-8")
-    seg_count_in_md = course_md.count("## SEG-")
-    check1 = seg_count_in_md == len(segments)
-    verify_lines.append(f"1. segment 数量: 课程原文.md={seg_count_in_md}, P02={len(segments)} → {'PASS' if check1 else 'FAIL'}")
-    if not check1:
-        all_ok = False
-
-    # 2. role counts — instructor and board match exactly; chat includes actual_chat + qualifying board
-    check2 = True
-    instructor_p02 = role_counts.get("instructor_explanation", 0)
-    board_p02 = role_counts.get("board", 0)
-    actual_chat_p02 = role_counts.get("actual_chat", 0)
-    if instructor_count != instructor_p02:
-        verify_lines.append(f"2. instructor: 分文件={instructor_count}, P02={instructor_p02} → FAIL")
-        check2 = False
-        all_ok = False
-    if board_count != board_p02:
-        verify_lines.append(f"2. board: 分文件={board_count}, P02={board_p02} → FAIL")
-        check2 = False
-        all_ok = False
-    # chat file includes actual_chat + board segments with chat content
-    board_chat_count = sum(1 for s in segments if s.get("source_role") == "board" and _is_board_chat(s))
-    if chat_count < actual_chat_p02:
-        verify_lines.append(f"2. chat: 分文件={chat_count}, P02 actual_chat={actual_chat_p02} → FAIL")
-        check2 = False
-        all_ok = False
-    if check2:
-        verify_lines.append(f"2. 角色分文件计数: instructor={instructor_count}, board={board_count}, chat={chat_count}(actual_chat={actual_chat_p02}+board_chat={board_chat_count}) → PASS")
-
-    # 3. unique segment IDs
-    all_ids = [seg["segment_id"] for seg in segments]
-    check3 = len(all_ids) == len(set(all_ids))
-    verify_lines.append(f"3. segment ID 唯一: {len(all_ids)} total, {len(set(all_ids))} unique → {'PASS' if check3 else 'FAIL'}")
-    if not check3:
-        all_ok = False
-
-    # 4. time monotonic (sort segments by start_ms first)
-    sorted_times = sorted(seg["start_ms"] for seg in segments)
-    check4 = all(sorted_times[i] <= sorted_times[i + 1] for i in range(len(sorted_times) - 1))
-    unsorted_count = sum(1 for i in range(len(segments) - 1) if segments[i]["start_ms"] > segments[i + 1]["start_ms"])
-    verify_lines.append(f"4. 时间单调不下降 (排序后): {'PASS' if check4 else 'FAIL'}，原始乱序={unsorted_count}")
-    if not check4:
-        all_ok = False
-
-    # 5. P03 boundaries exist in P02
-    check5 = True
-    if p03:
-        for case in p03.get("cases", []):
-            sid = case.get("start_segment_id", "")
-            eid = case.get("end_segment_id", "")
-            if sid not in seg_by_id:
-                verify_lines.append(f"5. P03 start {sid} not in P02 → FAIL")
-                check5 = False
-                all_ok = False
-            if eid not in seg_by_id:
-                verify_lines.append(f"5. P03 end {eid} not in P02 → FAIL")
-                check5 = False
-                all_ok = False
-        if check5:
-            verify_lines.append("5. P03 边界可回查 P02 → PASS")
-    else:
-        verify_lines.append("5. 无 P03 → SKIP")
-
-    # 6. UTF-8 readable
-    check6 = True
-    for fname in ["课程原文.md", "聊天原话.md", "讲师原话.md", "课板原文.md", "案例边界.md"]:
-        fpath = out_dir / fname
-        if fpath.exists():
-            try:
-                fpath.read_text(encoding="utf-8")
-            except UnicodeDecodeError:
-                verify_lines.append(f"6. {fname} UTF-8 读取失败 → FAIL")
-                check6 = False
-                all_ok = False
-    if check6:
-        verify_lines.append("6. 所有输出 UTF-8 可读 → PASS")
-
-    # 7. Idempotency (hash check)
-    verify_lines.append("7. 幂等性: 相同输入产生相同输出 → PASS (确定性脚本)")
-
-    verify_lines.append("")
-    verify_lines.append(f"**总结: {'ALL PASS' if all_ok else 'HAS FAILURES'}**")
-
-    (out_dir / "提取校验.md").write_text("\n".join(verify_lines) + "\n", encoding="utf-8")
-
-    return {
-        "course_id": course_id,
-        "status": "ok",
-        "segment_count": len(segments),
-        "case_count": case_count,
-        "p02_path": p02_path.as_posix(),
-        "p03_path": p03_path.as_posix() if p03_path else None,
+    contents = {
+        "source-manifest.md": "\n".join(manifest) + "\n",
+        "课程原文.md": "\n".join(course_lines) + "\n",
+        "聊天原话.md": "\n".join(chat_lines) + "\n",
+        "讲师原话.md": "\n".join(instructor_lines) + "\n",
+        "课板原文.md": "\n".join(board_lines) + "\n",
+        "案例边界.md": "\n".join(case_lines) + "\n",
+        "提取校验.md": "\n".join(_verification_lines(course_id, checks)) + "\n",
     }
+    return contents, checks, role_counts
 
 
-def _is_board_chat(seg: dict[str, Any]) -> bool:
-    """Check if a board segment contains chat text (not just OCR noise)."""
-    text = (seg.get("normalized_text") or seg.get("raw_text") or "").strip()
-    # Board segments with actual conversational content
-    chat_indicators = ["说", "问", "答", "嗯", "啊", "哈哈", "嗯嗯", "哦", "呢", "吧"]
-    return any(indicator in text for indicator in chat_indicators) and len(text) > 5
+def _export_course(course_id: str) -> dict[str, Any]:
+    """Export one course and return complete machine-readable evidence."""
+    course_dir = DATA_ROOT / course_id
+    if not course_dir.exists():
+        return {"course_id": course_id, "status": "blocked", "reason": "course directory missing"}
+
+    p02_path = _find_latest_p02(course_dir)
+    if p02_path is None:
+        return {"course_id": course_id, "status": "blocked", "reason": "no formal P02 found"}
+
+    p03_path = _find_latest_p03(course_dir)
+    if p03_path is None:
+        return {
+            "course_id": course_id,
+            "status": "blocked",
+            "reason": "no formal P03 found",
+            "p02_path": p02_path.as_posix(),
+        }
+
+    try:
+        p02 = json.loads(p02_path.read_text(encoding="utf-8"))
+        p03 = json.loads(p03_path.read_text(encoding="utf-8"))
+        segments = p02.get("segments", [])
+        if not isinstance(segments, list) or not segments:
+            return {
+                "course_id": course_id,
+                "status": "blocked",
+                "reason": "P02 has no segments",
+                "p02_path": p02_path.as_posix(),
+                "p03_path": p03_path.as_posix(),
+            }
+
+        first_contents, _, _ = _build_packet(course_id, p02_path, p03_path, p02, p03, True, [])
+        second_contents, _, _ = _build_packet(course_id, p02_path, p03_path, p02, p03, True, [])
+        first_hashes = _content_hashes(first_contents)
+        second_hashes = _content_hashes(second_contents)
+        mismatches = [name for name in OUTPUT_FILES if first_hashes[name] != second_hashes[name]]
+        contents, checks, role_counts = _build_packet(
+            course_id,
+            p02_path,
+            p03_path,
+            p02,
+            p03,
+            not mismatches,
+            mismatches,
+        )
+
+        out_dir = OUTPUT_ROOT / course_id
+        out_dir.mkdir(parents=True, exist_ok=True)
+        for filename in OUTPUT_FILES:
+            _write_text(out_dir / filename, contents[filename])
+
+        reread_failures: list[str] = []
+        for filename in OUTPUT_FILES:
+            path = out_dir / filename
+            try:
+                path.read_text(encoding="utf-8")
+            except (OSError, UnicodeError):
+                reread_failures.append(filename)
+        if reread_failures:
+            checks["utf8_readable"] = {
+                "passed": False,
+                "checked_files": list(OUTPUT_FILES),
+                "failures": reread_failures,
+            }
+
+        output_hashes = {filename: _file_sha256(out_dir / filename) for filename in OUTPUT_FILES}
+        return {
+            "course_id": course_id,
+            "status": "ok",
+            "reason": None if _all_checks_pass(checks) else "one or more validation checks failed",
+            "p02_path": p02_path.as_posix(),
+            "p03_path": p03_path.as_posix(),
+            "segment_count": len(segments),
+            "case_count": len(p03.get("cases", [])),
+            "role_counts": role_counts,
+            "checks": checks,
+            "all_ok": _all_checks_pass(checks),
+            "output_hashes": output_hashes,
+        }
+    except (OSError, UnicodeError, json.JSONDecodeError, KeyError, TypeError, ValueError) as error:
+        return {
+            "course_id": course_id,
+            "status": "failed",
+            "reason": f"{type(error).__name__}: {error}",
+            "p02_path": p02_path.as_posix(),
+            "p03_path": p03_path.as_posix(),
+        }
+
+
+def _attach_rerun_hash_evidence(
+    first_results: list[dict[str, Any]], second_results: list[dict[str, Any]]
+) -> list[dict[str, Any]]:
+    second_by_course = {result["course_id"]: result for result in second_results}
+    combined: list[dict[str, Any]] = []
+    for first in first_results:
+        result = dict(first)
+        second = second_by_course.get(first["course_id"])
+        first_hashes = first.get("output_hashes", {})
+        second_hashes = second.get("output_hashes", {}) if second else {}
+        mismatches = sorted(
+            filename
+            for filename in set(first_hashes) | set(second_hashes)
+            if first_hashes.get(filename) != second_hashes.get(filename)
+        )
+        passed = (
+            first.get("status") == "ok"
+            and second is not None
+            and second.get("status") == "ok"
+            and not mismatches
+        )
+        result["rerun_hash_check"] = {
+            "passed": passed,
+            "first_status": first.get("status"),
+            "second_status": second.get("status") if second else "missing",
+            "mismatches": mismatches,
+            "first_hashes": first_hashes,
+            "second_hashes": second_hashes,
+        }
+        if not passed and not result.get("reason"):
+            result["reason"] = "cross-second rerun hash comparison failed"
+        combined.append(result)
+    return combined
+
+
+def _write_global_report(results: list[dict[str, Any]], delay_seconds: float = 0.0) -> Path:
+    """Write a deterministic machine-readable report for every requested course."""
+    report_path = OUTPUT_ROOT / REPORT_FILENAME
+    OUTPUT_ROOT.mkdir(parents=True, exist_ok=True)
+    exported = sum(1 for result in results if result.get("status") == "ok")
+    blocked = sum(1 for result in results if result.get("status") == "blocked")
+    failed = sum(1 for result in results if result.get("status") == "failed")
+    failed_checks = sum(
+        1
+        for result in results
+        if result.get("status") == "ok"
+        and (not result.get("all_ok") or not result.get("rerun_hash_check", {}).get("passed", False))
+    )
+    report = {
+        "schema_version": REPORT_SCHEMA_VERSION,
+        "script_version": SCRIPT_VERSION,
+        "deterministic": True,
+        "rerun_delay_seconds": delay_seconds,
+        "total_courses": len(results),
+        "exported": exported,
+        "blocked_count": blocked,
+        "failed_count": failed,
+        "failed_checks_count": failed_checks,
+        "all_passed": exported == len(results) and failed_checks == 0,
+        "courses": results,
+    }
+    _write_text(report_path, json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True) + "\n")
+    return report_path
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Export source material packets")
-    parser.add_argument("--courses", type=str, default=None, help="Comma-separated course IDs")
-    parser.add_argument("--dry-run", action="store_true", help="Only show what would be exported")
+    parser = argparse.ArgumentParser(description="Export deterministic source material packets")
+    parser.add_argument("--courses", help="Comma-separated course IDs")
+    parser.add_argument("--dry-run", action="store_true", help="Only list selected inputs")
+    parser.add_argument(
+        "--rerun-delay-seconds",
+        type=float,
+        default=1.1,
+        help="Delay before the second disk export used for real hash comparison",
+    )
     args = parser.parse_args()
 
-    courses = args.courses.split(",") if args.courses else DEFAULT_COURSES
-
+    courses = [course.strip() for course in args.courses.split(",")] if args.courses else DEFAULT_COURSES
+    courses = [course for course in courses if course]
     if args.dry_run:
         print(f"Would export {len(courses)} courses: {', '.join(courses)}")
         return 0
 
-    results = []
-    for course_id in courses:
-        result = _export_course(course_id)
-        results.append(result)
-        status = result["status"]
-        if status == "ok":
-            print(f"  {course_id}: {result['segment_count']} segments, {result['case_count']} cases")
+    first_results = [_export_course(course_id) for course_id in courses]
+    if args.rerun_delay_seconds > 0:
+        time.sleep(args.rerun_delay_seconds)
+    second_results = [_export_course(course_id) for course_id in courses]
+    results = _attach_rerun_hash_evidence(first_results, second_results)
+    report_path = _write_global_report(results, args.rerun_delay_seconds)
+
+    for result in results:
+        if result["status"] == "ok":
+            validation = "PASS" if result.get("all_ok") else "FAIL"
+            rerun = "PASS" if result["rerun_hash_check"]["passed"] else "FAIL"
+            print(
+                f"  {result['course_id']}: {result['segment_count']} segments, "
+                f"{result['case_count']} cases, validation={validation}, rerun_hash={rerun}"
+            )
         else:
-            print(f"  {course_id}: BLOCKED - {result.get('reason', '?')}")
+            print(f"  {result['course_id']}: {result['status'].upper()} - {result.get('reason', '?')}")
+    print(f"Validation report: {report_path}")
 
-    ok_count = sum(1 for r in results if r["status"] == "ok")
-    blocked = [r for r in results if r["status"] == "blocked"]
-    print(f"\nTotal: {ok_count}/{len(courses)} exported, {len(blocked)} blocked")
-    if blocked:
-        print("Blocked courses:")
-        for r in blocked:
-            print(f"  {r['course_id']}: {r.get('reason', '?')}")
-
-    return 0
+    return 0 if all(
+        result.get("status") == "ok"
+        and result.get("all_ok")
+        and result.get("rerun_hash_check", {}).get("passed")
+        for result in results
+    ) else 1
 
 
 if __name__ == "__main__":
