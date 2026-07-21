@@ -96,6 +96,45 @@ def _run(cmd: list[str], *, timeout: int | None = None) -> subprocess.CompletedP
     )
 
 
+def _cmd_error(result: subprocess.CompletedProcess[str], *, log_path: Path | None = None) -> str:
+    parts = [
+        f"rc={result.returncode}",
+        (result.stderr or "").strip(),
+        (result.stdout or "").strip(),
+    ]
+    detail = " | ".join(part for part in parts if part)
+    if log_path and log_path.exists():
+        try:
+            tail = log_path.read_text(encoding="utf-8", errors="replace")[-2000:]
+            detail = f"{detail} | log_tail={tail!r}" if detail else f"log_tail={tail!r}"
+        except OSError:
+            pass
+    return detail or "no stdout/stderr captured"
+
+
+def _clean_cursor_sidecars(output: Path) -> None:
+    for path in (
+        output.with_suffix(output.suffix + ".cursor-task.json"),
+        output.with_suffix(output.suffix + ".cursor.log"),
+    ):
+        if path.exists():
+            try:
+                path.unlink()
+            except OSError:
+                pass
+
+
+def _valid_json_file(path: Path) -> bool:
+    if not path.exists():
+        return False
+    try:
+        json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return False
+    return True
+
+
+
 def build_unique_video_queue() -> dict[str, Any]:
     courses = _load_jsonl(CATALOG_COURSES)
     sources = _load_jsonl(CATALOG_SOURCES)
@@ -415,6 +454,7 @@ def stage_p01(course_id: str, output_version: str, prompt_root: str, raw_run_id:
     baseline = norm_dir / f"P01-baseline-{output_version}.json"
     output = norm_dir / f"P01-{output_version}.json"
     qa_output = qa_dir / f"P01-{output_version}-qa.json"
+    cursor_log = output.with_suffix(output.suffix + ".cursor.log")
     if output.exists() and _qa_passed(qa_output):
         return
     if not baseline.exists():
@@ -432,33 +472,39 @@ def stage_p01(course_id: str, output_version: str, prompt_root: str, raw_run_id:
             ]
         )
         if result.returncode != 0:
-            raise RuntimeError(f"normalize-p01 failed: {result.stderr or result.stdout}")
-    if output.exists():
-        stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-        output.rename(Path(str(output) + f".invalid-{stamp}"))
-    result = _run(
-        [
-            _python(),
-            "-m",
-            "course_video_analyzer.knowledge.cli",
-            "cursor-stage",
-            course_id,
-            "P01",
-            str(baseline),
-            str(output),
-            "--workspace",
-            str(WORKSPACE),
-            "--model",
-            "auto",
-            "--prompt-root",
-            prompt_root,
-            "--timeout-seconds",
-            "3600",
-        ],
-        timeout=3900,
-    )
-    if result.returncode != 0:
-        raise RuntimeError(f"cursor P01 failed: {result.stderr or result.stdout}")
+            raise RuntimeError(f"normalize-p01 failed: {_cmd_error(result)}")
+    # Reuse a valid existing P01 output; only rebuild when missing/invalid.
+    if not _valid_json_file(output):
+        if output.exists():
+            stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+            output.rename(Path(str(output) + f".invalid-{stamp}"))
+        _clean_cursor_sidecars(output)
+        result = _run(
+            [
+                _python(),
+                "-m",
+                "course_video_analyzer.knowledge.cli",
+                "cursor-stage",
+                course_id,
+                "P01",
+                str(baseline),
+                str(output),
+                "--workspace",
+                str(WORKSPACE),
+                "--model",
+                "auto",
+                "--prompt-root",
+                prompt_root,
+                "--timeout-seconds",
+                "3600",
+                "--finish-on-stable-output",
+                "--output-stability-seconds",
+                "30",
+            ],
+            timeout=3900,
+        )
+        if result.returncode != 0 and not _valid_json_file(output):
+            raise RuntimeError(f"cursor P01 failed: {_cmd_error(result, log_path=cursor_log)}")
     result = _run(
         [
             _python(),
@@ -474,7 +520,7 @@ def stage_p01(course_id: str, output_version: str, prompt_root: str, raw_run_id:
         ]
     )
     if result.returncode != 0 or not _qa_passed(qa_output):
-        raise RuntimeError(f"qa-p01 failed: {result.stderr or result.stdout}")
+        raise RuntimeError(f"qa-p01 failed: {_cmd_error(result)}")
 
 
 def stage_p02(
@@ -505,7 +551,7 @@ def stage_p02(
             ]
         )
         if result.returncode != 0:
-            raise RuntimeError(f"classify-p02 failed: {result.stderr or result.stdout}")
+            raise RuntimeError(f"classify-p02 failed: {_cmd_error(result)}")
     if not review_pack.exists():
         result = _run(
             [
@@ -519,54 +565,57 @@ def stage_p02(
             ]
         )
         if result.returncode != 0:
-            raise RuntimeError(f"build-p02-review failed: {result.stderr or result.stdout}")
-    if review_decision.exists():
-        stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-        review_decision.rename(Path(str(review_decision) + f".invalid-{stamp}"))
-    if output.exists():
-        stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-        output.rename(Path(str(output) + f".invalid-{stamp}"))
-    result = _run(
-        [
-            _python(),
-            "-m",
-            "course_video_analyzer.knowledge.cli",
-            "cursor-stage",
-            course_id,
-            "P02",
-            str(review_pack),
-            str(review_decision),
-            "--workspace",
-            str(WORKSPACE),
-            "--model",
-            "auto",
-            "--prompt-root",
-            compact_prompt_root,
-            "--timeout-seconds",
-            "1200",
-            "--finish-on-stable-output",
-            "--output-stability-seconds",
-            "30",
-        ],
-        timeout=1500,
-    )
-    if result.returncode != 0:
-        raise RuntimeError(f"cursor P02 failed: {result.stderr or result.stdout}")
-    result = _run(
-        [
-            _python(),
-            "-m",
-            "course_video_analyzer.knowledge.cli",
-            "apply-p02-review",
-            course_id,
-            str(baseline),
-            str(review_pack),
-            str(review_decision),
-            str(output),
-        ]
-    )
-    if result.returncode != 0:
-        raise RuntimeError(f"apply-p02-review failed: {result.stderr or result.stdout}")
+            raise RuntimeError(f"build-p02-review failed: {_cmd_error(result)}")
+    if not _valid_json_file(output):
+        if review_decision.exists():
+            stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+            review_decision.rename(Path(str(review_decision) + f".invalid-{stamp}"))
+        if output.exists():
+            stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+            output.rename(Path(str(output) + f".invalid-{stamp}"))
+        _clean_cursor_sidecars(review_decision)
+        result = _run(
+            [
+                _python(),
+                "-m",
+                "course_video_analyzer.knowledge.cli",
+                "cursor-stage",
+                course_id,
+                "P02",
+                str(review_pack),
+                str(review_decision),
+                "--workspace",
+                str(WORKSPACE),
+                "--model",
+                "auto",
+                "--prompt-root",
+                compact_prompt_root,
+                "--timeout-seconds",
+                "1200",
+                "--finish-on-stable-output",
+                "--output-stability-seconds",
+                "30",
+            ],
+            timeout=1500,
+        )
+        cursor_log = review_decision.with_suffix(review_decision.suffix + ".cursor.log")
+        if result.returncode != 0 and not _valid_json_file(review_decision):
+            raise RuntimeError(f"cursor P02 failed: {_cmd_error(result, log_path=cursor_log)}")
+        result = _run(
+            [
+                _python(),
+                "-m",
+                "course_video_analyzer.knowledge.cli",
+                "apply-p02-review",
+                course_id,
+                str(baseline),
+                str(review_pack),
+                str(review_decision),
+                str(output),
+            ]
+        )
+        if result.returncode != 0:
+            raise RuntimeError(f"apply-p02-review failed: {_cmd_error(result)}")
     result = _run(
         [
             _python(),
@@ -582,7 +631,7 @@ def stage_p02(
         ]
     )
     if result.returncode != 0 or not _qa_passed(qa_output):
-        raise RuntimeError(f"qa-p02 failed: {result.stderr or result.stdout}")
+        raise RuntimeError(f"qa-p02 failed: {_cmd_error(result)}")
 
 
 def stage_p03(course_id: str, output_version: str, prompt_root: str) -> None:
@@ -594,6 +643,7 @@ def stage_p03(course_id: str, output_version: str, prompt_root: str) -> None:
     timeline = case_dir / f"P03-input-{output_version}.json"
     output = case_dir / f"P03-{output_version}.json"
     qa_output = qa_dir / f"P03-{output_version}-qa.json"
+    cursor_log = output.with_suffix(output.suffix + ".cursor.log")
     if output.exists() and _qa_passed(qa_output):
         return
     if not timeline.exists():
@@ -609,33 +659,38 @@ def stage_p03(course_id: str, output_version: str, prompt_root: str) -> None:
             ]
         )
         if result.returncode != 0:
-            raise RuntimeError(f"build-p03-input failed: {result.stderr or result.stdout}")
-    if output.exists():
-        stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-        output.rename(Path(str(output) + f".invalid-{stamp}"))
-    result = _run(
-        [
-            _python(),
-            "-m",
-            "course_video_analyzer.knowledge.cli",
-            "cursor-stage",
-            course_id,
-            "P03",
-            str(timeline),
-            str(output),
-            "--workspace",
-            str(WORKSPACE),
-            "--model",
-            "auto",
-            "--prompt-root",
-            prompt_root,
-            "--timeout-seconds",
-            "3600",
-        ],
-        timeout=3900,
-    )
-    if result.returncode != 0:
-        raise RuntimeError(f"cursor P03 failed: {result.stderr or result.stdout}")
+            raise RuntimeError(f"build-p03-input failed: {_cmd_error(result)}")
+    if not _valid_json_file(output):
+        if output.exists():
+            stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+            output.rename(Path(str(output) + f".invalid-{stamp}"))
+        _clean_cursor_sidecars(output)
+        result = _run(
+            [
+                _python(),
+                "-m",
+                "course_video_analyzer.knowledge.cli",
+                "cursor-stage",
+                course_id,
+                "P03",
+                str(timeline),
+                str(output),
+                "--workspace",
+                str(WORKSPACE),
+                "--model",
+                "auto",
+                "--prompt-root",
+                prompt_root,
+                "--timeout-seconds",
+                "3600",
+                "--finish-on-stable-output",
+                "--output-stability-seconds",
+                "30",
+            ],
+            timeout=3900,
+        )
+        if result.returncode != 0 and not _valid_json_file(output):
+            raise RuntimeError(f"cursor P03 failed: {_cmd_error(result, log_path=cursor_log)}")
     result = _run(
         [
             _python(),
@@ -651,7 +706,7 @@ def stage_p03(course_id: str, output_version: str, prompt_root: str) -> None:
         ]
     )
     if result.returncode != 0 or not _qa_passed(qa_output):
-        raise RuntimeError(f"qa-p03 failed: {result.stderr or result.stdout}")
+        raise RuntimeError(f"qa-p03 failed: {_cmd_error(result)}")
 
 
 def stage_source_packet(course_id: str) -> None:
@@ -667,7 +722,31 @@ def stage_source_packet(course_id: str) -> None:
         timeout=600,
     )
     if result.returncode != 0:
-        raise RuntimeError(f"source packet export failed: {result.stderr or result.stdout}")
+        raise RuntimeError(f"source packet export failed: {_cmd_error(result)}")
+
+
+def reset_failed_courses(state: dict[str, Any], course_ids: list[str] | None = None) -> list[str]:
+    reset: list[str] = []
+    targets = course_ids or list(state["courses"])
+    for course_id in targets:
+        info = state["courses"].get(course_id)
+        if not info:
+            continue
+        if info.get("status") != "failed" and course_ids is None:
+            continue
+        # Keep completed stages; clear only failed-stage attempt counters.
+        completed = set(info.get("completed_stages", []))
+        attempts = {
+            stage: count
+            for stage, count in info.get("attempts", {}).items()
+            if stage in completed
+        }
+        info["attempts"] = attempts
+        info["errors"] = []
+        info["status"] = "pending" if not completed else "running"
+        info["stage"] = None
+        reset.append(course_id)
+    return reset
 
 
 def process_course(state_dir: Path, state: dict[str, Any], course_id: str, max_attempts: int) -> str:
@@ -782,12 +861,22 @@ def main() -> int:
     parser.add_argument("--courses", help="Comma-separated course IDs override for ad-hoc run")
     parser.add_argument("--max-attempts", type=int, default=2)
     parser.add_argument("--min-free-gb", type=float, default=MIN_FREE_GB)
+    parser.add_argument(
+        "--reset-failed",
+        action="store_true",
+        help="Clear failed status/attempts while keeping completed stages, then continue",
+    )
     args = parser.parse_args()
 
     state_dir = args.state_dir
     state_dir.mkdir(parents=True, exist_ok=True)
     state = _load_state(state_dir)
     state["min_free_gb"] = args.min_free_gb
+
+    if args.reset_failed:
+        reset = reset_failed_courses(state)
+        _save_state(state_dir, state)
+        print(f"reset_failed={reset}")
 
     if args.init_only:
         _save_state(state_dir, state)
@@ -800,6 +889,12 @@ def main() -> int:
         print(f"current_wave_index={state['current_wave_index']}")
         if state["current_wave_index"] < len(state["waves"]):
             print(f"current_wave={state['waves'][state['current_wave_index']]}")
+        for course_id in state["waves"][state["current_wave_index"]] if state["current_wave_index"] < len(state["waves"]) else []:
+            info = state["courses"][course_id]
+            print(
+                f"  {course_id}: status={info.get('status')} stage={info.get('stage')} "
+                f"done={info.get('completed_stages')}"
+            )
         return 0
 
     if args.courses:
