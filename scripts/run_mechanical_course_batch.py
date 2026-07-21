@@ -290,6 +290,13 @@ def _find_raw_transcript(course_id: str, preferred_run_id: str) -> Path | None:
     return candidates[-1] if candidates else None
 
 
+def _resolve_raw_run_id(course_id: str, preferred_run_id: str) -> str:
+    existing = _find_raw_transcript(course_id, preferred_run_id)
+    if existing is not None:
+        return existing.parent.name
+    return f"RUN-MECHANICAL-{course_id}-V001"
+
+
 def _disk_gate(min_free_gb: float) -> tuple[bool, dict[str, float]]:
     frees = {"D": _disk_free_gb("D"), "E": _disk_free_gb("E")}
     ok = frees["D"] >= min_free_gb and frees["E"] >= min_free_gb
@@ -323,15 +330,78 @@ def stage_duplicate_check(course_id: str, queue: dict[str, Any]) -> None:
         raise RuntimeError(f"{course_id} is in skip list")
 
 
-def stage_raw(course_id: str, raw_run_id: str) -> None:
+def stage_raw(course_id: str, raw_run_id: str, *, jobs_root: Path | None = None) -> None:
+    transcript = _find_raw_transcript(course_id, raw_run_id)
+    if transcript is not None:
+        qa_path = DATA_ROOT / "courses" / course_id / "qa" / f"{transcript.parent.name}.json"
+        if not _qa_passed(qa_path):
+            raise RuntimeError(f"{course_id} raw QA not pass: {qa_path}")
+        return
+
+    source_path = DATA_ROOT / "courses" / course_id / "source.json"
+    source = json.loads(source_path.read_text(encoding="utf-8"))
+    original = Path(str(source.get("original_path") or ""))
+    if not original.exists():
+        raise FileNotFoundError(f"{course_id} source video missing: {original}")
+
+    jobs_root = jobs_root or (WORKSPACE / "jobs" / "batch")
+    jobs_root.mkdir(parents=True, exist_ok=True)
+    job_id = f"{course_id}-{raw_run_id}"
+    log_path = DEFAULT_STATE_DIR / "logs" / f"{course_id}-raw.log"
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    cmd = [
+        _python(),
+        "-m",
+        "course_video_analyzer.analysis_cli",
+        str(original),
+        "--jobs-root",
+        str(jobs_root),
+        "--job-id",
+        job_id,
+        "--processing-profile",
+        "complete-v1",
+        "--archive-course",
+        course_id,
+        "--data-root",
+        str(DATA_ROOT),
+        "--run-id",
+        raw_run_id,
+    ]
+    with log_path.open("w", encoding="utf-8") as log:
+        completed = subprocess.run(
+            cmd,
+            cwd=str(WORKSPACE),
+            stdout=log,
+            stderr=subprocess.STDOUT,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=14_400,
+            check=False,
+        )
+    if completed.returncode != 0:
+        raise RuntimeError(f"raw analysis failed rc={completed.returncode}; see {log_path}")
+
     transcript = _find_raw_transcript(course_id, raw_run_id)
     if transcript is None:
-        raise FileNotFoundError(
-            f"{course_id} raw transcript missing; run video analysis before mechanical stages"
-        )
+        raise FileNotFoundError(f"{course_id} raw transcript still missing after analysis")
     qa_path = DATA_ROOT / "courses" / course_id / "qa" / f"{transcript.parent.name}.json"
     if not _qa_passed(qa_path):
-        raise RuntimeError(f"{course_id} raw QA not pass: {qa_path}")
+        # Attempt formal qa-run if archive exists but qa marker missing/failed.
+        result = _run(
+            [
+                _python(),
+                "-m",
+                "course_video_analyzer.knowledge.cli",
+                "qa-run",
+                course_id,
+                transcript.parent.name,
+                "--data-root",
+                str(DATA_ROOT),
+            ]
+        )
+        if result.returncode != 0 or not _qa_passed(qa_path):
+            raise RuntimeError(f"{course_id} raw QA not pass after analysis: {qa_path}")
 
 
 def stage_p01(course_id: str, output_version: str, prompt_root: str, raw_run_id: str) -> None:
@@ -605,12 +675,13 @@ def process_course(state_dir: Path, state: dict[str, Any], course_id: str, max_a
     if info.get("status") == "succeeded" and set(STAGES).issubset(set(info.get("completed_stages", []))):
         return "skipped_done"
 
+    resolved_raw_run_id = _resolve_raw_run_id(course_id, state["raw_run_id"])
     stage_runners = {
         "source_lock": lambda: stage_source_lock(course_id),
         "duplicate_check": lambda: stage_duplicate_check(course_id, state["queue"]),
-        "raw": lambda: stage_raw(course_id, state["raw_run_id"]),
+        "raw": lambda: stage_raw(course_id, resolved_raw_run_id),
         "p01": lambda: stage_p01(
-            course_id, state["output_version"], state["prompt_root"], state["raw_run_id"]
+            course_id, state["output_version"], state["prompt_root"], resolved_raw_run_id
         ),
         "p02": lambda: stage_p02(
             course_id,
