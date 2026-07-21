@@ -1,4 +1,4 @@
-"""Tests for export_chat_coach_source_packets.py (v1.2.0)."""
+"""Tests for export_chat_coach_source_packets.py (v1.3.0)."""
 
 from __future__ import annotations
 
@@ -17,8 +17,10 @@ from scripts.export_chat_coach_source_packets import (
     _find_latest_p03,
     _format_ts,
     _is_excluded,
+    _ordered_segments,
     _version_key,
     _write_global_report,
+    main,
 )
 
 
@@ -94,8 +96,6 @@ def _hashes(directory: Path) -> dict[str, str]:
     return {filename: _file_sha256(directory / filename) for filename in OUTPUT_FILES}
 
 
-# --- Basic utility tests ---
-
 def test_format_ts() -> None:
     assert _format_ts(0) == "00:00:00.000"
     assert _format_ts(2_900) == "00:00:02.900"
@@ -109,8 +109,6 @@ def test_escape_md() -> None:
     assert _escape_md("* bullet").startswith("\\ ")
     assert _escape_md("微信：abc") == "微信：abc"
 
-
-# --- Exclusion and version selection ---
 
 def test_exclusion_is_case_insensitive() -> None:
     excluded = [
@@ -148,8 +146,6 @@ def test_p03_numeric_selection_and_exclusions(tmp_path: Path) -> None:
     assert result.name == "P03-knowledge-v010.json"
 
 
-# --- Blocking conditions ---
-
 def test_export_blocks_without_formal_p02(tmp_path: Path, monkeypatch) -> None:
     _configure_roots(tmp_path, monkeypatch)
     course_dir = tmp_path / "data" / "courses" / "C099" / "02_normalized"
@@ -168,21 +164,17 @@ def test_export_blocks_without_formal_p03(tmp_path: Path, monkeypatch) -> None:
     assert "P03" in result["reason"]
 
 
-# --- Output completeness ---
-
 def test_export_generates_and_rereads_all_seven_utf8_files(tmp_path: Path, monkeypatch) -> None:
     output_root = _configure_roots(tmp_path, monkeypatch)
     _setup_course(tmp_path)
     result = _export_course("C099")
     assert result["status"] == "ok"
     assert result["all_ok"] is True
+    assert result["reason"] is None
     assert set(result["output_hashes"]) == set(OUTPUT_FILES)
     for filename in OUTPUT_FILES:
-        text = (output_root / "C099" / filename).read_text(encoding="utf-8")
-        assert text
+        assert (output_root / "C099" / filename).read_text(encoding="utf-8")
 
-
-# --- Segment output and role splitting ---
 
 def test_full_segment_output_and_role_splitting(tmp_path: Path, monkeypatch) -> None:
     output_root = _configure_roots(tmp_path, monkeypatch)
@@ -198,8 +190,6 @@ def test_full_segment_output_and_role_splitting(tmp_path: Path, monkeypatch) -> 
     assert result["checks"]["role_file_counts"]["passed"] is True
 
 
-# --- Markdown escaping ---
-
 def test_markdown_special_characters_in_code_fence(tmp_path: Path, monkeypatch) -> None:
     output_root = _configure_roots(tmp_path, monkeypatch)
     segments = _make_segments()
@@ -214,22 +204,78 @@ def test_markdown_special_characters_in_code_fence(tmp_path: Path, monkeypatch) 
     assert "原样保留" in course_text
 
 
-# --- Time monotonic in original order ---
-
-def test_original_order_time_reversal_fails(tmp_path: Path, monkeypatch) -> None:
-    _configure_roots(tmp_path, monkeypatch)
+def test_input_order_reversal_is_warning_and_export_is_monotonic(
+    tmp_path: Path, monkeypatch
+) -> None:
+    output_root = _configure_roots(tmp_path, monkeypatch)
     segments = _make_segments()
     segments[4]["start_ms"] = 500
     segments[4]["end_ms"] = 900
     _setup_course(tmp_path, p02=_make_p02(segments))
     result = _export_course("C099")
-    check = result["checks"]["time_monotonic_original_order"]
-    assert check["passed"] is False
-    assert check["violations"][0]["previous_segment_id"] == "SEG-C099-000004"
-    assert check["violations"][0]["current_segment_id"] == "SEG-C099-000005"
+    input_check = result["checks"]["input_order_time_violations"]
+    assert input_check["severity"] == "warning"
+    assert input_check["warning"] is True
+    assert input_check["passed"] is True
+    assert input_check["violation_count"] >= 1
+    assert result["checks"]["exported_order_time_monotonic"]["passed"] is True
+    assert result["checks"]["segment_set_preserved"]["passed"] is True
+    assert result["status"] == "ok"
+    assert result["reason"] is None
+    assert result["warning_count"] == 1
+    assert result["failed_checks_count"] == 0
+    ordered = _ordered_segments(segments)
+    assert {s["segment_id"] for s in ordered} == {s["segment_id"] for s in segments}
+    assert len(ordered) == len(segments)
+    starts = [int(s["start_ms"]) for s in ordered]
+    assert starts == sorted(starts)
+    course_text = (output_root / "C099" / "课程原文.md").read_text(encoding="utf-8")
+    assert course_text.index("## SEG-C099-000005") < course_text.index("## SEG-C099-000002")
 
 
-# --- P03 boundary resolution ---
+def test_hard_gate_failure_sets_status_failed_and_cli_nonzero(
+    tmp_path: Path, monkeypatch
+) -> None:
+    _configure_roots(tmp_path, monkeypatch)
+    p03 = _make_p03()
+    p03["cases"][0]["start_segment_id"] = "SEG-DOES-NOT-EXIST"
+    _setup_course(tmp_path, p03=p03)
+    result = _export_course("C099")
+    assert result["status"] == "failed"
+    assert result["reason"] == "one or more hard validation checks failed"
+    assert result["failed_checks_count"] >= 1
+    monkeypatch.setattr(
+        "sys.argv",
+        ["export_chat_coach_source_packets.py", "--courses", "C099", "--rerun-delay-seconds", "0"],
+    )
+    assert main() == 1
+
+
+def test_warning_only_allows_all_passed_true(tmp_path: Path, monkeypatch) -> None:
+    _configure_roots(tmp_path, monkeypatch)
+    segments = _make_segments()
+    segments[4]["start_ms"] = 500
+    segments[4]["end_ms"] = 900
+    _setup_course(tmp_path, p02=_make_p02(segments))
+    first = _export_course("C099")
+    time.sleep(1.1)
+    second = _export_course("C099")
+    results = _attach_rerun_hash_evidence([first], [second])
+    report = json.loads(_write_global_report(results, 1.1).read_text(encoding="utf-8"))
+    assert report["warning_count"] == 1
+    assert report["failed_checks_count"] == 0
+    assert report["all_passed"] is True
+    assert results[0]["status"] == "ok"
+    assert results[0]["reason"] is None
+
+
+def test_status_ok_never_has_failure_reason(tmp_path: Path, monkeypatch) -> None:
+    _configure_roots(tmp_path, monkeypatch)
+    _setup_course(tmp_path)
+    result = _export_course("C099")
+    assert result["status"] == "ok"
+    assert result["reason"] is None
+
 
 def test_p03_boundary_must_resolve_to_p02(tmp_path: Path, monkeypatch) -> None:
     _configure_roots(tmp_path, monkeypatch)
@@ -237,12 +283,9 @@ def test_p03_boundary_must_resolve_to_p02(tmp_path: Path, monkeypatch) -> None:
     p03["cases"][0]["start_segment_id"] = "SEG-DOES-NOT-EXIST"
     _setup_course(tmp_path, p03=p03)
     result = _export_course("C099")
-    check = result["checks"]["p03_boundaries_in_p02"]
-    assert check["passed"] is False
-    assert check["failures"][0]["segment_id"] == "SEG-DOES-NOT-EXIST"
+    assert result["checks"]["p03_boundaries_in_p02"]["passed"] is False
+    assert result["status"] == "failed"
 
-
-# --- Deterministic manifest ---
 
 def test_manifest_is_deterministic_and_has_no_current_time(tmp_path: Path, monkeypatch) -> None:
     output_root = _configure_roots(tmp_path, monkeypatch)
@@ -253,8 +296,6 @@ def test_manifest_is_deterministic_and_has_no_current_time(tmp_path: Path, monke
     assert "deterministic-from-input" in manifest
 
 
-# --- Cross-second idempotency ---
-
 def test_real_cross_second_disk_rerun_hashes_are_identical(tmp_path: Path, monkeypatch) -> None:
     output_root = _configure_roots(tmp_path, monkeypatch)
     _setup_course(tmp_path)
@@ -262,11 +303,8 @@ def test_real_cross_second_disk_rerun_hashes_are_identical(tmp_path: Path, monke
     first_hashes = _hashes(output_root / "C099")
     time.sleep(1.5)
     _export_course("C099")
-    second_hashes = _hashes(output_root / "C099")
-    assert first_hashes == second_hashes
+    assert first_hashes == _hashes(output_root / "C099")
 
-
-# --- Global report ---
 
 def test_machine_readable_report(tmp_path: Path, monkeypatch) -> None:
     _configure_roots(tmp_path, monkeypatch)
@@ -275,10 +313,10 @@ def test_machine_readable_report(tmp_path: Path, monkeypatch) -> None:
     time.sleep(1.5)
     second = _export_course("C099")
     results = _attach_rerun_hash_evidence([first], [second])
-    report_path = _write_global_report(results, 1.5)
-    report = json.loads(report_path.read_text(encoding="utf-8"))
+    report = json.loads(_write_global_report(results, 1.5).read_text(encoding="utf-8"))
     assert report["exported"] == 1
     assert report["all_passed"] is True
-    course = report["courses"][0]
-    assert course["rerun_hash_check"]["passed"] is True
-    assert set(course["output_hashes"]) == set(OUTPUT_FILES)
+    assert report["failed_checks_count"] == 0
+    assert report["warning_count"] == 0
+    assert results[0]["status"] == "ok"
+    assert results[0]["reason"] is None

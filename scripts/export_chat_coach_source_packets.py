@@ -694,22 +694,30 @@ def _attach_rerun_hash_evidence(
             for filename in set(first_hashes) | set(second_hashes)
             if first_hashes.get(filename) != second_hashes.get(filename)
         )
-        passed = (
+        both_ok = (
             first.get("status") == "ok"
             and second is not None
             and second.get("status") == "ok"
-            and not mismatches
         )
+        hash_passed = both_ok and not mismatches
         result["rerun_hash_check"] = {
-            "passed": passed,
+            "passed": hash_passed,
             "first_status": first.get("status"),
             "second_status": second.get("status") if second else "missing",
             "mismatches": mismatches,
             "first_hashes": first_hashes,
             "second_hashes": second_hashes,
         }
-        if not passed and not result.get("reason"):
+        if first.get("status") in {"blocked", "failed"}:
+            combined.append(result)
+            continue
+        if not hash_passed:
+            result["status"] = "failed"
+            result["all_ok"] = False
             result["reason"] = "cross-second rerun hash comparison failed"
+            result["failed_checks_count"] = int(result.get("failed_checks_count", 0)) + 1
+        else:
+            result["reason"] = None
         combined.append(result)
     return combined
 
@@ -721,23 +729,34 @@ def _write_global_report(results: list[dict[str, Any]], delay_seconds: float = 0
     exported = sum(1 for result in results if result.get("status") == "ok")
     blocked = sum(1 for result in results if result.get("status") == "blocked")
     failed = sum(1 for result in results if result.get("status") == "failed")
-    failed_checks = sum(
-        1
-        for result in results
-        if result.get("status") == "ok"
-        and (not result.get("all_ok") or not result.get("rerun_hash_check", {}).get("passed", False))
+    warning_count = sum(int(result.get("warning_count", 0)) for result in results)
+    failed_checks = sum(int(result.get("failed_checks_count", 0)) for result in results)
+    all_passed = (
+        len(results) > 0
+        and exported == len(results)
+        and blocked == 0
+        and failed == 0
+        and failed_checks == 0
+        and all(
+            result.get("status") == "ok"
+            and result.get("all_ok") is True
+            and result.get("reason") is None
+            and result.get("rerun_hash_check", {}).get("passed") is True
+            for result in results
+        )
     )
     report = {
         "schema_version": REPORT_SCHEMA_VERSION,
         "script_version": SCRIPT_VERSION,
-        "deterministic": True,
+        "deterministic": bool(all_passed),
         "rerun_delay_seconds": delay_seconds,
         "total_courses": len(results),
         "exported": exported,
         "blocked_count": blocked,
         "failed_count": failed,
+        "warning_count": warning_count,
         "failed_checks_count": failed_checks,
-        "all_passed": exported == len(results) and failed_checks == 0,
+        "all_passed": all_passed,
         "courses": results,
     }
     _write_text(report_path, json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True) + "\n")
@@ -771,11 +790,12 @@ def main() -> int:
 
     for result in results:
         if result["status"] == "ok":
-            validation = "PASS" if result.get("all_ok") else "FAIL"
-            rerun = "PASS" if result["rerun_hash_check"]["passed"] else "FAIL"
+            warning = int(result.get("warning_count", 0))
+            warning_label = f", warnings={warning}" if warning else ""
             print(
                 f"  {result['course_id']}: {result['segment_count']} segments, "
-                f"{result['case_count']} cases, validation={validation}, rerun_hash={rerun}"
+                f"{result['case_count']} cases, status=ok, "
+                f"rerun_hash=PASS{warning_label}"
             )
         else:
             print(f"  {result['course_id']}: {result['status'].upper()} - {result.get('reason', '?')}")
@@ -784,6 +804,7 @@ def main() -> int:
     return 0 if all(
         result.get("status") == "ok"
         and result.get("all_ok")
+        and result.get("reason") is None
         and result.get("rerun_hash_check", {}).get("passed")
         for result in results
     ) else 1

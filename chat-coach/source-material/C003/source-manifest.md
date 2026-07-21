@@ -12,7 +12,7 @@
 - segment 总数: 4679
 - 课程时间范围: 00:00:00.000 – 01:54:43.220
 - P03 案例数量: 3
-- 脚本版本: 1.2.0
+- 脚本版本: 1.3.0
 - 生成标识: `deterministic-from-input`
 
 ## source_role 统计
@@ -26,5 +26,5 @@
 
 ## 校验结果
 
-- HAS FAILURES
+- ALL PASS (1 warning)
 - 详见 `提取校验.md`
