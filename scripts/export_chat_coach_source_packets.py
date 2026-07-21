@@ -15,8 +15,8 @@ import time
 from pathlib import Path
 from typing import Any
 
-SCRIPT_VERSION = "1.2.0"
-REPORT_SCHEMA_VERSION = "1.0"
+SCRIPT_VERSION = "1.3.0"
+REPORT_SCHEMA_VERSION = "1.1"
 DATA_ROOT = Path("data/courses")
 OUTPUT_ROOT = Path("chat-coach/source-material")
 REPORT_FILENAME = "validation-report.json"
@@ -32,6 +32,19 @@ OUTPUT_FILES = (
     "案例边界.md",
     "提取校验.md",
 )
+
+# Hard gates decide ok/failed. Input-order time reversals are warnings only.
+HARD_CHECK_KEYS = (
+    "segment_count",
+    "role_file_counts",
+    "unique_segment_ids",
+    "exported_order_time_monotonic",
+    "segment_set_preserved",
+    "p03_boundaries_in_p02",
+    "utf8_readable",
+    "deterministic_render",
+)
+WARNING_CHECK_KEYS = ("input_order_time_violations",)
 
 _EXCLUDED_TOKEN = re.compile(
     r"(?:^|[-_.])(?:qa|baseline|input|review|review-pack|review-decisions)(?:$|[-_.])"
@@ -170,20 +183,12 @@ def _ordered_segments(segments: list[dict[str, Any]]) -> list[dict[str, Any]]:
     ]
 
 
-def _base_checks(
-    segments: list[dict[str, Any]],
-    p03: dict[str, Any],
-    chat_segments: list[dict[str, Any]],
-    instructor_segments: list[dict[str, Any]],
-    board_segments: list[dict[str, Any]],
-) -> dict[str, Any]:
-    ids = [str(segment["segment_id"]) for segment in segments]
-    duplicate_ids = sorted({segment_id for segment_id in ids if ids.count(segment_id) > 1})
-
-    time_violations: list[dict[str, Any]] = []
+def _time_violations(segments: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Return adjacent start_ms reversals in the given segment sequence."""
+    violations: list[dict[str, Any]] = []
     for previous, current in zip(segments, segments[1:]):
         if int(current["start_ms"]) < int(previous["start_ms"]):
-            time_violations.append(
+            violations.append(
                 {
                     "previous_segment_id": previous["segment_id"],
                     "previous_start_ms": int(previous["start_ms"]),
@@ -191,13 +196,31 @@ def _base_checks(
                     "current_start_ms": int(current["start_ms"]),
                 }
             )
+    return violations
 
-    id_set = set(ids)
+
+def _base_checks(
+    input_segments: list[dict[str, Any]],
+    export_segments: list[dict[str, Any]],
+    p03: dict[str, Any],
+    chat_segments: list[dict[str, Any]],
+    instructor_segments: list[dict[str, Any]],
+    board_segments: list[dict[str, Any]],
+) -> dict[str, Any]:
+    input_ids = [str(segment["segment_id"]) for segment in input_segments]
+    export_ids = [str(segment["segment_id"]) for segment in export_segments]
+    duplicate_ids = sorted({segment_id for segment_id in export_ids if export_ids.count(segment_id) > 1})
+    input_id_set = set(input_ids)
+    export_id_set = set(export_ids)
+
+    input_violations = _time_violations(input_segments)
+    export_violations = _time_violations(export_segments)
+
     boundary_failures: list[dict[str, str]] = []
     for case in p03.get("cases", []):
         for field in ("start_segment_id", "end_segment_id"):
             segment_id = str(case.get(field, ""))
-            if segment_id not in id_set:
+            if segment_id not in input_id_set:
                 boundary_failures.append(
                     {
                         "case_id": str(case.get("case_id", "?")),
@@ -208,16 +231,16 @@ def _base_checks(
 
     expected_chat = sum(
         1
-        for segment in segments
+        for segment in export_segments
         if segment.get("source_role") == "actual_chat"
         or (segment.get("source_role") == "board" and _is_board_chat(segment))
     )
     expected_instructor = sum(
-        1 for segment in segments if segment.get("source_role") == "instructor_explanation"
+        1 for segment in export_segments if segment.get("source_role") == "instructor_explanation"
     )
     expected_board = sum(
         1
-        for segment in segments
+        for segment in export_segments
         if segment.get("source_role") == "board" or segment.get("content_type") == "board_ocr"
     )
     role_count_passed = (
@@ -225,12 +248,18 @@ def _base_checks(
         and len(instructor_segments) == expected_instructor
         and len(board_segments) == expected_board
     )
+    set_preserved = (
+        len(input_segments) == len(export_segments)
+        and input_id_set == export_id_set
+        and len(input_ids) == len(input_id_set)
+        and len(export_ids) == len(export_id_set)
+    )
 
     return {
         "segment_count": {
-            "passed": True,
-            "p02_count": len(segments),
-            "exported_count": len(segments),
+            "passed": len(input_segments) == len(export_segments),
+            "p02_count": len(input_segments),
+            "exported_count": len(export_segments),
         },
         "role_file_counts": {
             "passed": role_count_passed,
@@ -247,14 +276,30 @@ def _base_checks(
         },
         "unique_segment_ids": {
             "passed": not duplicate_ids,
-            "total": len(ids),
-            "unique": len(id_set),
+            "total": len(export_ids),
+            "unique": len(export_id_set),
             "duplicate_segment_ids": duplicate_ids,
         },
-        "time_monotonic_original_order": {
-            "passed": not time_violations,
-            "violation_count": len(time_violations),
-            "violations": time_violations,
+        "input_order_time_violations": {
+            "severity": "warning",
+            "passed": True,
+            "warning": bool(input_violations),
+            "violation_count": len(input_violations),
+            "violations": input_violations,
+        },
+        "exported_order_time_monotonic": {
+            "passed": not export_violations,
+            "violation_count": len(export_violations),
+            "violations": export_violations,
+        },
+        "segment_set_preserved": {
+            "passed": set_preserved,
+            "p02_count": len(input_segments),
+            "exported_count": len(export_segments),
+            "p02_unique_ids": len(input_id_set),
+            "exported_unique_ids": len(export_id_set),
+            "missing_ids": sorted(input_id_set - export_id_set),
+            "extra_ids": sorted(export_id_set - input_id_set),
         },
         "p03_boundaries_in_p02": {
             "passed": not boundary_failures,
@@ -264,15 +309,33 @@ def _base_checks(
     }
 
 
-def _all_checks_pass(checks: dict[str, Any]) -> bool:
-    return all(bool(check.get("passed")) for check in checks.values())
+def _hard_checks(checks: dict[str, Any]) -> dict[str, Any]:
+    return {key: checks[key] for key in HARD_CHECK_KEYS if key in checks}
+
+
+def _warning_checks(checks: dict[str, Any]) -> dict[str, Any]:
+    return {key: checks[key] for key in WARNING_CHECK_KEYS if key in checks}
+
+
+def _all_hard_checks_pass(checks: dict[str, Any]) -> bool:
+    return all(bool(check.get("passed")) for check in _hard_checks(checks).values())
+
+
+def _count_failed_hard_checks(checks: dict[str, Any]) -> int:
+    return sum(1 for check in _hard_checks(checks).values() if not check.get("passed"))
+
+
+def _count_warnings(checks: dict[str, Any]) -> int:
+    return sum(1 for check in _warning_checks(checks).values() if check.get("warning"))
 
 
 def _verification_lines(course_id: str, checks: dict[str, Any]) -> list[str]:
     count = checks["segment_count"]
     roles = checks["role_file_counts"]
     unique = checks["unique_segment_ids"]
-    monotonic = checks["time_monotonic_original_order"]
+    input_order = checks["input_order_time_violations"]
+    exported_order = checks["exported_order_time_monotonic"]
+    preserved = checks["segment_set_preserved"]
     boundaries = checks["p03_boundaries_in_p02"]
     utf8 = checks["utf8_readable"]
     deterministic = checks["deterministic_render"]
@@ -296,25 +359,52 @@ def _verification_lines(course_id: str, checks: dict[str, Any]) -> list[str]:
     if not unique["passed"]:
         lines.append(f"   重复 segment: {', '.join(unique['duplicate_segment_ids'])}")
 
-    if monotonic["passed"]:
-        lines.append("5. P02 原始 segments 顺序时间单调不下降 → PASS")
+    if input_order["violation_count"] == 0:
+        lines.append("5. P02 原始顺序时间逆序检查 → PASS（无输入逆序）")
     else:
         lines.append(
-            f"5. P02 原始 segments 顺序时间单调不下降 → FAIL，"
-            f"发现 {monotonic['violation_count']} 处逆序"
+            f"5. P02 原始顺序时间逆序检查 → WARNING（输入数据），"
+            f"发现 {input_order['violation_count']} 处逆序；不判定导出失败"
         )
-        for violation in monotonic["violations"]:
+        for violation in input_order["violations"][:20]:
             lines.append(
-                "   逆序: "
+                "   输入逆序: "
+                f"{violation['previous_segment_id']}({violation['previous_start_ms']}ms) → "
+                f"{violation['current_segment_id']}({violation['current_start_ms']}ms)"
+            )
+        if input_order["violation_count"] > 20:
+            lines.append(f"   … 另有 {input_order['violation_count'] - 20} 处未展开")
+
+    if exported_order["passed"]:
+        lines.append("6. 课程原文.md 导出顺序 start_ms 单调不下降 → PASS")
+    else:
+        lines.append(
+            f"6. 课程原文.md 导出顺序 start_ms 单调不下降 → FAIL，"
+            f"发现 {exported_order['violation_count']} 处逆序"
+        )
+        for violation in exported_order["violations"][:20]:
+            lines.append(
+                "   导出逆序: "
                 f"{violation['previous_segment_id']}({violation['previous_start_ms']}ms) → "
                 f"{violation['current_segment_id']}({violation['current_start_ms']}ms)"
             )
 
-    if boundaries["passed"]:
-        lines.append("6. P03 start/end segment 均可回查 P02 → PASS")
+    if preserved["passed"]:
+        lines.append(
+            "7. segment 集合保持完整（无丢失/重复/合并）: "
+            f"p02={preserved['p02_count']}, exported={preserved['exported_count']} → PASS"
+        )
     else:
         lines.append(
-            f"6. P03 start/end segment 均可回查 P02 → FAIL，"
+            "7. segment 集合保持完整（无丢失/重复/合并） → FAIL "
+            f"(missing={len(preserved['missing_ids'])}, extra={len(preserved['extra_ids'])})"
+        )
+
+    if boundaries["passed"]:
+        lines.append("8. P03 start/end segment 均可回查 P02 → PASS")
+    else:
+        lines.append(
+            f"8. P03 start/end segment 均可回查 P02 → FAIL，"
             f"发现 {boundaries['failure_count']} 个缺失边界"
         )
         for failure in boundaries["failures"]:
@@ -323,15 +413,23 @@ def _verification_lines(course_id: str, checks: dict[str, Any]) -> list[str]:
             )
 
     lines.append(
-        f"7. 全部 7 个文件 UTF-8 编码并可重读 → {'PASS' if utf8['passed'] else 'FAIL'}"
+        f"9. 全部 7 个文件 UTF-8 编码并可重读 → {'PASS' if utf8['passed'] else 'FAIL'}"
     )
     lines.append(
-        "8. 两次独立完整渲染 SHA-256 比较 "
+        "10. 两次独立完整渲染 SHA-256 比较 "
         f"→ {'PASS' if deterministic['passed'] else 'FAIL'}"
     )
     if deterministic["mismatches"]:
         lines.append(f"   hash 不一致文件: {', '.join(deterministic['mismatches'])}")
-    lines.extend(["", f"**总结: {'ALL PASS' if _all_checks_pass(checks) else 'HAS FAILURES'}**"])
+
+    hard_ok = _all_hard_checks_pass(checks)
+    warning_count = _count_warnings(checks)
+    summary = "ALL PASS"
+    if not hard_ok:
+        summary = "HAS FAILURES"
+    elif warning_count:
+        summary = f"ALL PASS WITH {warning_count} WARNING(S)"
+    lines.extend(["", f"**总结: {summary}**"])
     return lines
 
 
@@ -366,13 +464,21 @@ def _build_packet(
         role = str(segment.get("source_role", "unknown"))
         role_counts[role] = role_counts.get(role, 0) + 1
 
-    checks = _base_checks(input_segments, p03, chat_segments, instructor_segments, board_segments)
+    checks = _base_checks(
+        input_segments,
+        export_segments,
+        p03,
+        chat_segments,
+        instructor_segments,
+        board_segments,
+    )
     checks["utf8_readable"] = {"passed": True, "checked_files": list(OUTPUT_FILES)}
     checks["deterministic_render"] = {
         "passed": deterministic_passed,
         "mismatches": deterministic_mismatches,
     }
-    all_ok = _all_checks_pass(checks)
+    all_ok = _all_hard_checks_pass(checks)
+    warning_count = _count_warnings(checks)
 
     start_ms = min(int(segment["start_ms"]) for segment in input_segments)
     end_ms = max(int(segment["end_ms"]) for segment in input_segments)
@@ -401,7 +507,16 @@ def _build_packet(
     ]
     for role, count in sorted(role_counts.items()):
         manifest.append(f"- `{role}`: {count}")
-    manifest.extend(["", "## 校验结果", "", f"- {'ALL PASS' if all_ok else 'HAS FAILURES'}", "- 详见 `提取校验.md`"])
+    manifest.extend(
+        [
+            "",
+            "## 校验结果",
+            "",
+            f"- {'ALL PASS' if all_ok else 'HAS FAILURES'}"
+            + (f" ({warning_count} warning)" if all_ok and warning_count else ""),
+            "- 详见 `提取校验.md`",
+        ]
+    )
 
     course_lines = [f"# {course_id} 课程原文", ""]
     for segment in export_segments:
@@ -534,17 +649,24 @@ def _export_course(course_id: str) -> dict[str, Any]:
             }
 
         output_hashes = {filename: _file_sha256(out_dir / filename) for filename in OUTPUT_FILES}
+        hard_ok = _all_hard_checks_pass(checks)
+        warning_count = _count_warnings(checks)
+        failed_hard = _count_failed_hard_checks(checks)
+        status = "ok" if hard_ok else "failed"
+        reason = None if hard_ok else "one or more hard validation checks failed"
         return {
             "course_id": course_id,
-            "status": "ok",
-            "reason": None if _all_checks_pass(checks) else "one or more validation checks failed",
+            "status": status,
+            "reason": reason,
             "p02_path": p02_path.as_posix(),
             "p03_path": p03_path.as_posix(),
             "segment_count": len(segments),
             "case_count": len(p03.get("cases", [])),
             "role_counts": role_counts,
             "checks": checks,
-            "all_ok": _all_checks_pass(checks),
+            "all_ok": hard_ok,
+            "warning_count": warning_count,
+            "failed_checks_count": failed_hard,
             "output_hashes": output_hashes,
         }
     except (OSError, UnicodeError, json.JSONDecodeError, KeyError, TypeError, ValueError) as error:
