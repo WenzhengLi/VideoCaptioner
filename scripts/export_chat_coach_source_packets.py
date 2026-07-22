@@ -15,8 +15,8 @@ import time
 from pathlib import Path
 from typing import Any
 
-SCRIPT_VERSION = "1.3.0"
-REPORT_SCHEMA_VERSION = "1.1"
+SCRIPT_VERSION = "1.4.0"
+REPORT_SCHEMA_VERSION = "1.2"
 DATA_ROOT = Path("data/courses")
 OUTPUT_ROOT = Path("chat-coach/source-material")
 REPORT_FILENAME = "validation-report.json"
@@ -722,6 +722,53 @@ def _attach_rerun_hash_evidence(
     return combined
 
 
+def _write_course_report(course_id: str, result: dict[str, Any], delay_seconds: float = 0.0) -> Path:
+    """Write one course validation report under the course packet directory."""
+    course_dir = OUTPUT_ROOT / course_id
+    course_dir.mkdir(parents=True, exist_ok=True)
+    report_path = course_dir / REPORT_FILENAME
+    payload = {
+        "schema_version": REPORT_SCHEMA_VERSION,
+        "script_version": SCRIPT_VERSION,
+        "course_id": course_id,
+        "rerun_delay_seconds": delay_seconds,
+        "status": result.get("status"),
+        "reason": result.get("reason"),
+        "all_ok": result.get("all_ok"),
+        "warning_count": result.get("warning_count", 0),
+        "failed_checks_count": result.get("failed_checks_count", 0),
+        "rerun_hash_check": result.get("rerun_hash_check"),
+        "checks": result.get("checks"),
+        "segment_count": result.get("segment_count"),
+        "case_count": result.get("case_count"),
+        "output_hashes": result.get("output_hashes"),
+        "p02_path": result.get("p02_path"),
+        "p03_path": result.get("p03_path"),
+    }
+    _write_text(report_path, json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n")
+    return report_path
+
+
+def _course_report_to_result(course_id: str, payload: dict[str, Any]) -> dict[str, Any]:
+    """Normalize a per-course report into the global courses[] entry shape."""
+    result = dict(payload)
+    result["course_id"] = course_id
+    return result
+
+
+def _discover_completed_course_ids() -> list[str]:
+    """Return course IDs that have a full 7-file packet on disk."""
+    if not OUTPUT_ROOT.exists():
+        return []
+    completed: list[str] = []
+    for path in sorted(OUTPUT_ROOT.iterdir()):
+        if not path.is_dir() or not path.name.startswith("C"):
+            continue
+        if all((path / filename).is_file() for filename in OUTPUT_FILES):
+            completed.append(path.name)
+    return completed
+
+
 def _write_global_report(results: list[dict[str, Any]], delay_seconds: float = 0.0) -> Path:
     """Write a deterministic machine-readable report for every requested course."""
     report_path = OUTPUT_ROOT / REPORT_FILENAME
@@ -763,10 +810,42 @@ def _write_global_report(results: list[dict[str, Any]], delay_seconds: float = 0
     return report_path
 
 
+def aggregate_validation_reports(
+    course_ids: list[str] | None = None, *, delay_seconds: float = 0.0
+) -> Path:
+    """Aggregate per-course reports into the global validation-report.json."""
+    ids = course_ids if course_ids is not None else _discover_completed_course_ids()
+    results: list[dict[str, Any]] = []
+    for course_id in ids:
+        report_path = OUTPUT_ROOT / course_id / REPORT_FILENAME
+        if not report_path.is_file():
+            # Missing per-course report: treat as failed entry so aggregate cannot falsely pass.
+            results.append(
+                {
+                    "course_id": course_id,
+                    "status": "failed",
+                    "reason": "missing per-course validation-report.json",
+                    "all_ok": False,
+                    "warning_count": 0,
+                    "failed_checks_count": 1,
+                    "rerun_hash_check": {"passed": False},
+                }
+            )
+            continue
+        payload = json.loads(report_path.read_text(encoding="utf-8"))
+        results.append(_course_report_to_result(course_id, payload))
+    return _write_global_report(results, delay_seconds)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Export deterministic source material packets")
     parser.add_argument("--courses", help="Comma-separated course IDs")
     parser.add_argument("--dry-run", action="store_true", help="Only list selected inputs")
+    parser.add_argument(
+        "--aggregate-only",
+        action="store_true",
+        help="Only rebuild the global validation-report.json from per-course reports",
+    )
     parser.add_argument(
         "--rerun-delay-seconds",
         type=float,
@@ -774,6 +853,21 @@ def main() -> int:
         help="Delay before the second disk export used for real hash comparison",
     )
     args = parser.parse_args()
+
+    if args.aggregate_only:
+        course_ids = (
+            [course.strip() for course in args.courses.split(",") if course.strip()]
+            if args.courses
+            else None
+        )
+        report_path = aggregate_validation_reports(course_ids, delay_seconds=args.rerun_delay_seconds)
+        report = json.loads(report_path.read_text(encoding="utf-8"))
+        print(
+            f"Aggregated {report['total_courses']} courses: exported={report['exported']}, "
+            f"all_passed={report['all_passed']}"
+        )
+        print(f"Validation report: {report_path}")
+        return 0 if report.get("all_passed") else 1
 
     courses = [course.strip() for course in args.courses.split(",")] if args.courses else DEFAULT_COURSES
     courses = [course for course in courses if course]
@@ -786,7 +880,12 @@ def main() -> int:
         time.sleep(args.rerun_delay_seconds)
     second_results = [_export_course(course_id) for course_id in courses]
     results = _attach_rerun_hash_evidence(first_results, second_results)
-    report_path = _write_global_report(results, args.rerun_delay_seconds)
+
+    for result in results:
+        _write_course_report(result["course_id"], result, args.rerun_delay_seconds)
+
+    # Always re-aggregate all completed packets so a single-course export cannot shrink the global report.
+    report_path = aggregate_validation_reports(delay_seconds=args.rerun_delay_seconds)
 
     for result in results:
         if result["status"] == "ok":

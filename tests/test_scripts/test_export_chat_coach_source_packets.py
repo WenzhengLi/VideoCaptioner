@@ -1,4 +1,4 @@
-"""Tests for export_chat_coach_source_packets.py (v1.3.0)."""
+"""Tests for export_chat_coach_source_packets.py (v1.4.0)."""
 
 from __future__ import annotations
 
@@ -19,7 +19,9 @@ from scripts.export_chat_coach_source_packets import (
     _is_excluded,
     _ordered_segments,
     _version_key,
+    _write_course_report,
     _write_global_report,
+    aggregate_validation_reports,
     main,
 )
 
@@ -320,3 +322,40 @@ def test_machine_readable_report(tmp_path: Path, monkeypatch) -> None:
     assert report["warning_count"] == 0
     assert results[0]["status"] == "ok"
     assert results[0]["reason"] is None
+
+
+def test_per_course_report_and_aggregate_preserves_all_courses(
+    tmp_path: Path, monkeypatch
+) -> None:
+    output_root = _configure_roots(tmp_path, monkeypatch)
+    _setup_course(tmp_path)
+    first = _export_course("C099")
+    second = _export_course("C099")
+    results = _attach_rerun_hash_evidence([first], [second])
+    _write_course_report("C099", results[0], 0.0)
+    # Pre-existing completed course with its own report.
+    other = output_root / "C098"
+    other.mkdir(parents=True)
+    for name in OUTPUT_FILES:
+        (other / name).write_text(f"C098-{name}", encoding="utf-8")
+    (other / "validation-report.json").write_text(
+        json.dumps(
+            {
+                "course_id": "C098",
+                "status": "ok",
+                "all_ok": True,
+                "reason": None,
+                "warning_count": 0,
+                "failed_checks_count": 0,
+                "rerun_hash_check": {"passed": True},
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    report = json.loads(aggregate_validation_reports().read_text(encoding="utf-8"))
+    assert report["total_courses"] == 2
+    assert report["exported"] == 2
+    assert report["all_passed"] is True
+    assert {row["course_id"] for row in report["courses"]} == {"C098", "C099"}
+    assert (output_root / "C099" / "validation-report.json").is_file()

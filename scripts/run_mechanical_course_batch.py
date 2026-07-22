@@ -10,24 +10,40 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import shutil
 import subprocess
+import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-SCRIPT_VERSION = "1.0.0"
+_UNSET = object()
+
+SCRIPT_VERSION = "1.2.0"
 WORKSPACE = Path(__file__).resolve().parents[1]
 DATA_ROOT = WORKSPACE / "data"
 CATALOG_COURSES = DATA_ROOT / "catalog" / "courses.jsonl"
 CATALOG_SOURCES = DATA_ROOT / "catalog" / "sources.jsonl"
 DEFAULT_STATE_DIR = DATA_ROOT / "batches" / "MECHANICAL-QUEUE"
 DEFAULT_OUTPUT_VERSION = "knowledge-v003"
+# Historical C001–C015 formal packets were produced from knowledge-v002.
+RECONCILE_OUTPUT_VERSIONS = ("knowledge-v003", "knowledge-v002")
 DEFAULT_PROMPT_ROOT = "prompts/knowledge-v003"
 DEFAULT_COMPACT_PROMPT_ROOT = "prompts/knowledge-v003-compact"
 DEFAULT_RAW_RUN_ID = "RUN-C021-C025-V003-V001"
 MIN_FREE_GB = 20.0
+LOCK_FILENAME = "batch.lock"
+PACKET_FILES = (
+    "source-manifest.md",
+    "课程原文.md",
+    "聊天原话.md",
+    "讲师原话.md",
+    "课板原文.md",
+    "案例边界.md",
+    "提取校验.md",
+)
 
 # Fixed catalog facts
 SKIP_COURSE_IDS = {"C078", "C087"}
@@ -59,8 +75,276 @@ def _load_jsonl(path: Path) -> list[dict[str, Any]]:
 
 
 def _write_json(path: Path, payload: dict[str, Any]) -> None:
+    """Atomically write JSON via temp file + replace."""
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    text = json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
+    tmp_path = path.with_name(f".{path.name}.{os.getpid()}.{time.time_ns()}.tmp")
+    tmp_path.write_text(text, encoding="utf-8", newline="\n")
+    os.replace(tmp_path, path)
+
+
+def _pid_alive(pid: int) -> bool:
+    if pid <= 0:
+        return False
+    try:
+        import ctypes
+
+        kernel32 = ctypes.windll.kernel32  # type: ignore[attr-defined]
+        SYNCHRONIZE = 0x00100000
+        handle = kernel32.OpenProcess(SYNCHRONIZE, 0, pid)
+        if handle:
+            kernel32.CloseHandle(handle)
+            return True
+        # Fallback for non-Windows or access denied: use os.kill(pid, 0) semantics.
+    except Exception:  # noqa: BLE001
+        pass
+    try:
+        os.kill(pid, 0)
+    except (OSError, SystemError):
+        return False
+    else:
+        return True
+
+
+def acquire_batch_lock(
+    state_dir: Path,
+    *,
+    command: list[str],
+    wave: int | None = None,
+) -> Path:
+    """Acquire a single-instance lock; stale PID locks are reclaimable.
+
+    Uses O_CREAT|O_EXCL so two processes cannot both claim the lock via
+    check-then-write races (the failure mode that allowed dual wave-3 runners).
+    """
+    lock_path = state_dir / LOCK_FILENAME
+    state_dir.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "schema_version": "1.0",
+        "pid": os.getpid(),
+        "started_at": _utc_now(),
+        "command": command,
+        "wave": wave,
+        "state_dir": str(state_dir.resolve()),
+    }
+    text = json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
+
+    def _try_create() -> bool:
+        flags = os.O_CREAT | os.O_EXCL | os.O_WRONLY
+        try:
+            fd = os.open(str(lock_path), flags)
+        except FileExistsError:
+            return False
+        try:
+            with os.fdopen(fd, "w", encoding="utf-8", newline="\n") as handle:
+                handle.write(text)
+        except Exception:
+            try:
+                lock_path.unlink()
+            except OSError:
+                pass
+            raise
+        return True
+
+    if _try_create():
+        return lock_path
+
+    # Lock exists: live owner → reject; stale PID → reclaim once.
+    try:
+        existing = json.loads(lock_path.read_text(encoding="utf-8"))
+        existing_pid = int(existing.get("pid") or 0)
+    except (OSError, json.JSONDecodeError, TypeError, ValueError):
+        existing_pid = 0
+        existing = {}
+    if existing_pid and _pid_alive(existing_pid):
+        raise RuntimeError(
+            f"another mechanical batch is running: pid={existing_pid} "
+            f"wave={existing.get('wave')} command={existing.get('command')}"
+        )
+    try:
+        lock_path.unlink()
+    except OSError as exc:
+        raise RuntimeError(f"unable to clear stale batch lock: {lock_path}") from exc
+    if not _try_create():
+        raise RuntimeError(
+            f"another mechanical batch claimed the lock while reclaiming: {lock_path}"
+        )
+    return lock_path
+
+
+def release_batch_lock(state_dir: Path) -> None:
+    lock_path = state_dir / LOCK_FILENAME
+    if not lock_path.exists():
+        return
+    try:
+        payload = json.loads(lock_path.read_text(encoding="utf-8"))
+        if int(payload.get("pid") or 0) not in {0, os.getpid()}:
+            return
+    except (OSError, json.JSONDecodeError, TypeError, ValueError):
+        pass
+    try:
+        lock_path.unlink()
+    except OSError:
+        pass
+
+
+def _find_stage_qa(course_id: str, stage: str, output_version: str) -> Path | None:
+    """Locate QA JSON, including legacy C021/C022 naming."""
+    qa_dir = DATA_ROOT / "courses" / course_id / "qa"
+    if not qa_dir.exists():
+        return None
+    stage = stage.upper()
+    candidates = [
+        qa_dir / f"{stage}-{output_version}-qa.json",
+        qa_dir / f"qa-{stage}-{course_id}.json",
+        qa_dir / f"{stage}-{output_version}.json",
+    ]
+    for path in candidates:
+        if path.is_file():
+            return path
+    return None
+
+
+def _packet_complete(course_id: str) -> bool:
+    packet_dir = WORKSPACE / "chat-coach" / "source-material" / course_id
+    return all((packet_dir / name).is_file() for name in PACKET_FILES)
+
+
+def _packet_report_ok(course_id: str) -> bool:
+    report_path = WORKSPACE / "chat-coach" / "source-material" / course_id / "validation-report.json"
+    if not report_path.is_file():
+        return False
+    try:
+        payload = json.loads(report_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return False
+    return (
+        payload.get("status") == "ok"
+        and payload.get("all_ok") is True
+        and payload.get("reason") is None
+        and payload.get("rerun_hash_check", {}).get("passed") is True
+    )
+
+
+def discover_completed_stages(course_id: str, output_version: str, raw_run_id: str) -> list[str]:
+    """Infer completed stages from on-disk artifacts and QA."""
+    completed: list[str] = []
+    course_dir = DATA_ROOT / "courses" / course_id
+    if not (course_dir / "source.json").is_file():
+        return completed
+    try:
+        # Skip full SHA during reconcile to keep inventory fast.
+        stage_source_lock(course_id, verify_hash=False)
+    except Exception:  # noqa: BLE001
+        return completed
+    completed.append("source_lock")
+
+    # duplicate_check is a catalog rule; if course is in unique queue it passes.
+    completed.append("duplicate_check")
+
+    transcript = _find_raw_transcript(course_id, raw_run_id)
+    if transcript is not None:
+        qa_path = course_dir / "qa" / f"{transcript.parent.name}.json"
+        if _qa_passed(qa_path):
+            completed.append("raw")
+
+    versions: list[str] = []
+    for version in (output_version, *RECONCILE_OUTPUT_VERSIONS):
+        if version not in versions:
+            versions.append(version)
+
+    for version in versions:
+        p01 = course_dir / "02_normalized" / f"P01-{version}.json"
+        p01_qa = _find_stage_qa(course_id, "P01", version)
+        if p01.is_file() and p01_qa and _qa_passed(p01_qa):
+            completed.append("p01")
+            break
+
+    for version in versions:
+        p02 = course_dir / "02_normalized" / f"P02-{version}.json"
+        p02_qa = _find_stage_qa(course_id, "P02", version)
+        if p02.is_file() and p02_qa and _qa_passed(p02_qa):
+            completed.append("p02")
+            break
+
+    for version in versions:
+        p03_candidates = [
+            course_dir / "03_cases" / f"P03-{version}.json",
+            course_dir / "02_normalized" / f"P03-{version}.json",
+        ]
+        p03 = next((path for path in p03_candidates if path.is_file()), None)
+        p03_qa = _find_stage_qa(course_id, "P03", version)
+        if p03 is not None and p03_qa and _qa_passed(p03_qa):
+            completed.append("p03")
+            break
+
+    if _packet_complete(course_id) and _packet_report_ok(course_id):
+        completed.append("source_packet")
+
+    return completed
+
+
+def reconcile_state(state_dir: Path, state: dict[str, Any]) -> dict[str, Any]:
+    """Reconcile state/coverage/wave reports from on-disk artifacts."""
+    output_version = str(state.get("output_version", DEFAULT_OUTPUT_VERSION))
+    raw_run_id = str(state.get("raw_run_id", DEFAULT_RAW_RUN_ID))
+    summary = {"updated_courses": [], "resolved_failures": [], "succeeded": []}
+    for course_id, info in state["courses"].items():
+        discovered = discover_completed_stages(course_id, output_version, raw_run_id)
+        previous = list(info.get("completed_stages", []))
+        merged = []
+        for stage in STAGES:
+            if stage in discovered or stage in previous:
+                # Only keep stages that are still true on disk for formal gates.
+                if stage in discovered:
+                    merged.append(stage)
+        if merged != previous:
+            summary["updated_courses"].append(course_id)
+        info["completed_stages"] = merged
+        if set(STAGES).issubset(set(merged)):
+            if info.get("status") == "failed":
+                summary["resolved_failures"].append(course_id)
+                for error in info.get("errors", []):
+                    error["resolved"] = True
+                    error["resolved_at"] = _utc_now()
+            info["status"] = "succeeded"
+            info["stage"] = None
+            summary["succeeded"].append(course_id)
+        elif info.get("status") == "succeeded" and not set(STAGES).issubset(set(merged)):
+            info["status"] = "running" if merged else "pending"
+            info["stage"] = None
+        elif info.get("status") == "failed" and set(STAGES).issubset(set(merged)):
+            info["status"] = "succeeded"
+            info["stage"] = None
+
+    # Repair wave reports: remove resolved courses from failed_courses.
+    for wave_path in sorted(state_dir.glob("wave-*-report.json")):
+        try:
+            report = json.loads(wave_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        changed = False
+        failed = list(report.get("failed_courses") or [])
+        new_failed = []
+        for course_id in failed:
+            info = state["courses"].get(course_id, {})
+            if info.get("status") == "succeeded":
+                result = report.get("results", {}).get(course_id)
+                if isinstance(result, str) and "failed" in result:
+                    report.setdefault("results", {})[course_id] = "resolved:succeeded"
+                    changed = True
+                continue
+            new_failed.append(course_id)
+        if new_failed != failed:
+            report["failed_courses"] = new_failed
+            changed = True
+        if changed:
+            report["reconciled_at"] = _utc_now()
+            _write_json(wave_path, report)
+
+    _save_state(state_dir, state)
+    summary["coverage"] = state["coverage"]
+    return summary
 
 
 def _sha256_file(path: Path) -> str:
@@ -242,20 +526,17 @@ def _load_state(state_dir: Path) -> dict[str, Any]:
 
 def _save_state(state_dir: Path, state: dict[str, Any]) -> None:
     state["updated_at"] = _utc_now()
-    # Refresh coverage counts from filesystem.
-    packet_root = WORKSPACE / "chat-coach" / "source-material"
+    # Refresh coverage from the same disk gates used by reconcile.
+    output_version = str(state.get("output_version", DEFAULT_OUTPUT_VERSION))
+    raw_run_id = str(state.get("raw_run_id", DEFAULT_RAW_RUN_ID))
     raw = p02 = packet = 0
     for course_id in state["courses"]:
-        course_dir = DATA_ROOT / "courses" / course_id
-        if any((course_dir / "01_raw").glob("*/transcript.txt")):
+        discovered = set(discover_completed_stages(course_id, output_version, raw_run_id))
+        if "raw" in discovered:
             raw += 1
-        has_p02 = any((course_dir / "02_normalized").glob("P02-knowledge-*.json"))
-        has_p03 = any((course_dir / "03_cases").glob("P03-knowledge-*.json")) or any(
-            (course_dir / "02_normalized").glob("P03-knowledge-*.json")
-        )
-        if has_p02 and has_p03:
+        if "p02" in discovered and "p03" in discovered:
             p02 += 1
-        if (packet_root / course_id / "课程原文.md").exists():
+        if "source_packet" in discovered:
             packet += 1
     state["coverage"] = {
         "raw": raw,
@@ -291,19 +572,24 @@ def _mark(
     course_id: str,
     *,
     status: str | None = None,
-    stage: str | None = None,
+    stage: Any = _UNSET,
     error: str | None = None,
     completed_stage: str | None = None,
 ) -> None:
     info = state["courses"][course_id]
     if status is not None:
         info["status"] = status
-    if stage is not None:
+    if stage is not _UNSET:
         info["stage"] = stage
-        info.setdefault("attempts", {})
-        info["attempts"][stage] = int(info["attempts"].get(stage, 0)) + (1 if status == "running" else 0)
+        if isinstance(stage, str) and stage:
+            info.setdefault("attempts", {})
+            info["attempts"][stage] = int(info["attempts"].get(stage, 0)) + (
+                1 if status == "running" else 0
+            )
     if error:
-        info.setdefault("errors", []).append({"at": _utc_now(), "stage": stage, "error": error})
+        info.setdefault("errors", []).append(
+            {"at": _utc_now(), "stage": None if stage is _UNSET else stage, "error": error}
+        )
     if completed_stage and completed_stage not in info.setdefault("completed_stages", []):
         info["completed_stages"].append(completed_stage)
 
@@ -342,7 +628,7 @@ def _disk_gate(min_free_gb: float) -> tuple[bool, dict[str, float]]:
     return ok, frees
 
 
-def stage_source_lock(course_id: str) -> None:
+def stage_source_lock(course_id: str, *, verify_hash: bool = True) -> None:
     source_path = DATA_ROOT / "courses" / course_id / "source.json"
     if not source_path.exists():
         raise FileNotFoundError(f"{course_id} missing source.json")
@@ -355,7 +641,7 @@ def stage_source_lock(course_id: str) -> None:
     if expected_size and actual_size != expected_size:
         raise ValueError(f"{course_id} size mismatch expected={expected_size} actual={actual_size}")
     expected_sha = str(source.get("sha256") or "")
-    if expected_sha:
+    if verify_hash and expected_sha:
         actual_sha = _sha256_file(original)
         if actual_sha.lower() != expected_sha.lower():
             raise ValueError(f"{course_id} sha256 mismatch")
@@ -840,15 +1126,37 @@ def run_wave(state_dir: Path, state: dict[str, Any], wave_index: int, max_attemp
     # Unified retry pass for failures in this wave.
     for course_id in list(failed):
         result = process_course(state_dir, state, course_id, max_attempts)
-        report["results"][course_id] = f"retry:{result}"
         if result == "succeeded":
+            report["results"][course_id] = "resolved:succeeded"
             failed.remove(course_id)
+        else:
+            report["results"][course_id] = f"retry:{result}"
 
     state["current_wave_index"] = wave_index + (0 if report["stopped_for_disk"] else 1)
     _save_state(state_dir, state)
     report["failed_courses"] = failed
     report["finished_at"] = _utc_now()
     _write_json(state_dir / f"wave-{wave_index:03d}-report.json", report)
+
+    # Wave-end: aggregate global validation report from all completed packets.
+    try:
+        agg = _run(
+            [
+                _python(),
+                str(WORKSPACE / "scripts" / "export_chat_coach_source_packets.py"),
+                "--aggregate-only",
+                "--rerun-delay-seconds",
+                "0",
+            ],
+            timeout=120,
+        )
+        report["aggregate_returncode"] = agg.returncode
+        report["aggregate_stdout"] = (agg.stdout or "")[-2000:]
+        _write_json(state_dir / f"wave-{wave_index:03d}-report.json", report)
+    except Exception as error:  # noqa: BLE001
+        report["aggregate_error"] = str(error)
+        _write_json(state_dir / f"wave-{wave_index:03d}-report.json", report)
+
     return report
 
 
@@ -857,6 +1165,7 @@ def main() -> int:
     parser.add_argument("--state-dir", type=Path, default=DEFAULT_STATE_DIR)
     parser.add_argument("--init-only", action="store_true")
     parser.add_argument("--status", action="store_true")
+    parser.add_argument("--reconcile-only", action="store_true", help="Reconcile state from disk artifacts")
     parser.add_argument("--wave-index", type=int, help="Run one wave by index")
     parser.add_argument("--courses", help="Comma-separated course IDs override for ad-hoc run")
     parser.add_argument("--max-attempts", type=int, default=2)
@@ -866,6 +1175,11 @@ def main() -> int:
         action="store_true",
         help="Clear failed status/attempts while keeping completed stages, then continue",
     )
+    parser.add_argument(
+        "--no-lock",
+        action="store_true",
+        help="Skip single-instance lock (tests / emergency only)",
+    )
     args = parser.parse_args()
 
     state_dir = args.state_dir
@@ -873,60 +1187,80 @@ def main() -> int:
     state = _load_state(state_dir)
     state["min_free_gb"] = args.min_free_gb
 
-    if args.reset_failed:
-        reset = reset_failed_courses(state)
-        _save_state(state_dir, state)
-        print(f"reset_failed={reset}")
+    needs_lock = not args.init_only and not args.status and not args.reconcile_only and not args.no_lock
+    lock_acquired = False
+    if needs_lock:
+        wave_hint = args.wave_index if args.wave_index is not None else int(state.get("current_wave_index", 0))
+        acquire_batch_lock(state_dir, command=list(sys.argv), wave=wave_hint)
+        lock_acquired = True
 
-    if args.init_only:
-        _save_state(state_dir, state)
-        print(f"Initialized queue with {state['queue']['unique_count']} unique courses")
-        print(f"Waves: {len(state['waves'])}; first={state['waves'][0] if state['waves'] else []}")
-        return 0
+    try:
+        if args.reset_failed:
+            reset = reset_failed_courses(state)
+            _save_state(state_dir, state)
+            print(f"reset_failed={reset}")
 
-    if args.status:
-        print(json.dumps(state["coverage"], ensure_ascii=False, indent=2))
-        print(f"current_wave_index={state['current_wave_index']}")
-        if state["current_wave_index"] < len(state["waves"]):
-            print(f"current_wave={state['waves'][state['current_wave_index']]}")
-        for course_id in state["waves"][state["current_wave_index"]] if state["current_wave_index"] < len(state["waves"]) else []:
-            info = state["courses"][course_id]
-            print(
-                f"  {course_id}: status={info.get('status')} stage={info.get('stage')} "
-                f"done={info.get('completed_stages')}"
-            )
-        return 0
+        if args.init_only:
+            _save_state(state_dir, state)
+            print(f"Initialized queue with {state['queue']['unique_count']} unique courses")
+            print(f"Waves: {len(state['waves'])}; first={state['waves'][0] if state['waves'] else []}")
+            return 0
 
-    if args.courses:
-        course_ids = [item.strip() for item in args.courses.split(",") if item.strip()]
-        report = {"courses": course_ids, "started_at": _utc_now(), "results": {}}
-        for course_id in course_ids:
-            if course_id not in state["courses"]:
-                state["courses"][course_id] = {
-                    "course_id": course_id,
-                    "status": "pending",
-                    "stage": None,
-                    "attempts": {},
-                    "errors": [],
-                    "completed_stages": [],
-                }
-            report["results"][course_id] = process_course(
-                state_dir, state, course_id, args.max_attempts
-            )
-        report["finished_at"] = _utc_now()
-        _write_json(state_dir / "ad-hoc-report.json", report)
+        if args.reconcile_only:
+            summary = reconcile_state(state_dir, state)
+            print(json.dumps(summary, ensure_ascii=False, indent=2))
+            return 0
+
+        if args.status:
+            print(json.dumps(state["coverage"], ensure_ascii=False, indent=2))
+            print(f"current_wave_index={state['current_wave_index']}")
+            if state["current_wave_index"] < len(state["waves"]):
+                print(f"current_wave={state['waves'][state['current_wave_index']]}")
+            for course_id in (
+                state["waves"][state["current_wave_index"]]
+                if state["current_wave_index"] < len(state["waves"])
+                else []
+            ):
+                info = state["courses"][course_id]
+                print(
+                    f"  {course_id}: status={info.get('status')} stage={info.get('stage')} "
+                    f"done={info.get('completed_stages')}"
+                )
+            return 0
+
+        if args.courses:
+            course_ids = [item.strip() for item in args.courses.split(",") if item.strip()]
+            report = {"courses": course_ids, "started_at": _utc_now(), "results": {}}
+            for course_id in course_ids:
+                if course_id not in state["courses"]:
+                    state["courses"][course_id] = {
+                        "course_id": course_id,
+                        "status": "pending",
+                        "stage": None,
+                        "attempts": {},
+                        "errors": [],
+                        "completed_stages": [],
+                    }
+                report["results"][course_id] = process_course(
+                    state_dir, state, course_id, args.max_attempts
+                )
+            report["finished_at"] = _utc_now()
+            _write_json(state_dir / "ad-hoc-report.json", report)
+            print(json.dumps(report, ensure_ascii=False, indent=2))
+            return 0 if all(
+                value in {"succeeded", "skipped_done"} or str(value).endswith("succeeded")
+                for value in report["results"].values()
+            ) else 1
+
+        wave_index = args.wave_index if args.wave_index is not None else int(state["current_wave_index"])
+        report = run_wave(state_dir, state, wave_index, args.max_attempts)
         print(json.dumps(report, ensure_ascii=False, indent=2))
-        return 0 if all(
-            value in {"succeeded", "skipped_done"} or str(value).endswith("succeeded")
-            for value in report["results"].values()
-        ) else 1
-
-    wave_index = args.wave_index if args.wave_index is not None else int(state["current_wave_index"])
-    report = run_wave(state_dir, state, wave_index, args.max_attempts)
-    print(json.dumps(report, ensure_ascii=False, indent=2))
-    if report.get("stopped_for_disk"):
-        return 2
-    return 0 if not report.get("failed_courses") else 1
+        if report.get("stopped_for_disk"):
+            return 2
+        return 0 if not report.get("failed_courses") else 1
+    finally:
+        if lock_acquired:
+            release_batch_lock(state_dir)
 
 
 if __name__ == "__main__":
