@@ -26,7 +26,8 @@
 | C018 | [分析与候选补足](../courses/C018/supplement-review.md) | 0 | `pending_user_confirmation` |
 | C019 | [分析与候选补足](../courses/C019/supplement-review.md) | 0 | `pending_user_confirmation` |
 | C020 | [分析与候选补足](../courses/C020/supplement-review.md) | 0 | `pending_user_confirmation` |
-| C021–C022 | 待重新分析 | 0 | `draft` |
+| C021 | [分析与候选补足](../courses/C021/supplement-review.md) | 0 | `pending_user_confirmation` |
+| C022 | 待重新分析 | 0 | `draft` |
 
 ## 登记规则
 
