@@ -5,8 +5,8 @@ views:
   - type: table
     name: 课题标签
     order:
+      - note.title
       - note.tag_id
-      - file.name
       - note.dimension
       - note.ob_count
       - note.course_count
@@ -17,6 +17,8 @@ views:
       - property: note.ob_count
         direction: DESC
 properties:
+  title:
+    displayName: 课题标签
   tag_id:
     displayName: 标签编号
   dimension:

@@ -10,6 +10,7 @@ views:
       - note.course_id
       - note.scene
       - note.female_line
+      - note.instructor_judgment
       - note.reply_directions
       - note.reply_category_count
       - note.example_count
@@ -28,6 +29,8 @@ properties:
     displayName: 场景
   female_line:
     displayName: 女生原话
+  instructor_judgment:
+    displayName: 讲师判断
   reply_directions:
     displayName: 回答分类
   reply_category_count:

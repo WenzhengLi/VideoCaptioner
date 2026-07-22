@@ -1,12 +1,15 @@
 ---
 record_type: prototype_home
-prototype_course: C027
-source_document_count: 6
-case_count: 2
-topic_tag_count: 18
-ob_count: 7
-reply_category_count: 28
-reply_example_count: 84
+prototype_courses:
+  - C002
+  - C027
+source_document_count: 12
+case_count: 5
+topic_tag_count: 76
+ob_count: 21
+reply_category_count: 84
+reply_example_count: 252
+branch_example_count: 140
 approval_status: pending_user_confirmation
 ---
 
@@ -18,26 +21,21 @@ approval_status: pending_user_confirmation
 
 | 范围 | 数量 |
 | --- | ---: |
-| 原始资料文件 | 6 |
-| P03 案例 | 2 |
-| 课题/场景相关标签 | 18 |
-| 候选 OB | 7 |
-| 回答方向 | 28 |
-| 主回复示例 | 84 |
+| 原始资料文件 | 12 |
+| P03 案例 | 5 |
+| 课题/场景相关标签 | 76 |
+| 候选 OB | 21 |
+| 回答方向 | 84 |
+| 主回复示例 | 252 |
+| 后续分支下一句 | 140 |
 | 正式 OB | 0 |
 
 ## 第一层：课程原始资料
 
-原始资料仍保存在机械事实层，不复制、不改写：
+原始资料仍保存在机械事实层，不复制、不改写。每课课程主页都先列出六份原始资料，再进入 OB：
 
-1. [[source-material/C027/课程原文|课程原文]]
-2. [[source-material/C027/聊天原话|聊天原话]]
-3. [[source-material/C027/讲师原话|讲师原话]]
-4. [[source-material/C027/课板原文|课板原文]]
-5. [[source-material/C027/案例边界|案例边界]]
-6. [[source-material/C027/提取校验|提取校验]]
-
-完整入口：[[OB原型/课程/C027/课程主页|C027 课程主页]]
+- [[OB原型/课程/C002/课程主页|C002 课程主页]]
+- [[OB原型/课程/C027/课程主页|C027 课程主页]]
 
 ## 第二层：我们的 OB
 
@@ -48,7 +46,7 @@ approval_status: pending_user_confirmation
 - [[OB原型/视图/OB总览.base|OB 总览]]
 - [[OB原型/视图/回答分类.base|回答分类总览]]
 
-下一课审阅入口：[[OB原型/课程/C002/课程审阅入口|C002 课程审阅入口]]。
+C002 原审阅记录：[[OB原型/课程/C002/课程审阅入口|C002 课程审阅入口]]。
 
 ![[OB原型/视图/课题标签.base]]
 
@@ -56,4 +54,4 @@ approval_status: pending_user_confirmation
 
 ## 状态边界
 
-本原型只证明信息架构和 Obsidian 浏览方式。7 个对象全部是 `pending_user_confirmation`，不得登记为正式 OB，也不得导入 Dify。
+本原型当前包含 21 个候选对象。C002 的课程主线与场景拆分已确认，但具体补足说法仍是 `pending_user_confirmation`；C027 仍为初版原型。两课都不得登记为正式 OB，也不得导入 Dify。

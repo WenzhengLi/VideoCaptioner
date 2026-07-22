@@ -1,25 +1,37 @@
 filters:
   and:
     - 'record_type == "ob"'
-    - 'course_id == "C027"'
 views:
   - type: table
-    name: C027回答分类
+    name: 全部回答分类
     order:
       - note.object_id
-      - file.name
+      - note.title
+      - note.course_id
       - note.female_line
       - note.reply_directions
       - note.example_count
+      - note.branch_example_count
       - note.approval_status
+    sort:
+      - property: note.course_id
+        direction: ASC
+      - property: note.object_id
+        direction: ASC
 properties:
   object_id:
     displayName: OB编号
+  title:
+    displayName: 场景
+  course_id:
+    displayName: 课程
   female_line:
     displayName: 女生原话
   reply_directions:
     displayName: 回答分类
   example_count:
     displayName: 示例数
+  branch_example_count:
+    displayName: 后续下一句
   approval_status:
     displayName: 状态
