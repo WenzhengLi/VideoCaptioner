@@ -27,7 +27,11 @@
 | C019 | [分析与候选补足](../courses/C019/supplement-review.md) | 0 | `pending_user_confirmation` |
 | C020 | [分析与候选补足](../courses/C020/supplement-review.md) | 0 | `pending_user_confirmation` |
 | C021 | [分析与候选补足](../courses/C021/supplement-review.md) | 0 | `pending_user_confirmation` |
-| C022 | 待重新分析 | 0 | `draft` |
+| C022 | [分析与候选补足](../courses/C022/supplement-review.md) | 0 | `pending_user_confirmation` |
+| C023 | [分析与候选补足](../courses/C023/supplement-review.md) | 0 | `pending_user_confirmation` |
+| C024 | [分析与候选补足](../courses/C024/supplement-review.md) | 0 | `pending_user_confirmation` |
+| C025 | [分析与候选补足](../courses/C025/supplement-review.md) | 0 | `pending_user_confirmation` |
+| C026 | [分析与候选补足](../courses/C026/supplement-review.md) | 0 | `pending_user_confirmation` |
 
 ## 登记规则
 
