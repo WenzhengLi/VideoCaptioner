@@ -33,18 +33,18 @@ OUTPUT_FILES = (
     "提取校验.md",
 )
 
-# Every structural check is a hard gate, including the source P02 order.
+# Hard gates decide ok/failed. Input-order time reversals are warnings only.
 HARD_CHECK_KEYS = (
     "segment_count",
     "role_file_counts",
     "unique_segment_ids",
-    "time_monotonic_original_order",
     "exported_order_time_monotonic",
     "segment_set_preserved",
     "p03_boundaries_in_p02",
     "utf8_readable",
     "deterministic_render",
 )
+WARNING_CHECK_KEYS = ("input_order_time_violations",)
 
 _EXCLUDED_TOKEN = re.compile(
     r"(?:^|[-_.])(?:qa|baseline|input|review|review-pack|review-decisions)(?:$|[-_.])"
@@ -280,8 +280,10 @@ def _base_checks(
             "unique": len(export_id_set),
             "duplicate_segment_ids": duplicate_ids,
         },
-        "time_monotonic_original_order": {
-            "passed": not input_violations,
+        "input_order_time_violations": {
+            "severity": "warning",
+            "passed": True,
+            "warning": bool(input_violations),
             "violation_count": len(input_violations),
             "violations": input_violations,
         },
@@ -311,6 +313,10 @@ def _hard_checks(checks: dict[str, Any]) -> dict[str, Any]:
     return {key: checks[key] for key in HARD_CHECK_KEYS if key in checks}
 
 
+def _warning_checks(checks: dict[str, Any]) -> dict[str, Any]:
+    return {key: checks[key] for key in WARNING_CHECK_KEYS if key in checks}
+
+
 def _all_hard_checks_pass(checks: dict[str, Any]) -> bool:
     return all(bool(check.get("passed")) for check in _hard_checks(checks).values())
 
@@ -319,11 +325,15 @@ def _count_failed_hard_checks(checks: dict[str, Any]) -> int:
     return sum(1 for check in _hard_checks(checks).values() if not check.get("passed"))
 
 
+def _count_warnings(checks: dict[str, Any]) -> int:
+    return sum(1 for check in _warning_checks(checks).values() if check.get("warning"))
+
+
 def _verification_lines(course_id: str, checks: dict[str, Any]) -> list[str]:
     count = checks["segment_count"]
     roles = checks["role_file_counts"]
     unique = checks["unique_segment_ids"]
-    input_order = checks["time_monotonic_original_order"]
+    input_order = checks["input_order_time_violations"]
     exported_order = checks["exported_order_time_monotonic"]
     preserved = checks["segment_set_preserved"]
     boundaries = checks["p03_boundaries_in_p02"]
@@ -353,8 +363,8 @@ def _verification_lines(course_id: str, checks: dict[str, Any]) -> list[str]:
         lines.append("5. P02 原始顺序时间逆序检查 → PASS（无输入逆序）")
     else:
         lines.append(
-            f"5. P02 原始顺序时间逆序检查 → FAIL，"
-            f"发现 {input_order['violation_count']} 处逆序"
+            f"5. P02 原始顺序时间逆序检查 → WARNING（输入数据），"
+            f"发现 {input_order['violation_count']} 处逆序；不判定导出失败"
         )
         for violation in input_order["violations"][:20]:
             lines.append(
@@ -413,9 +423,12 @@ def _verification_lines(course_id: str, checks: dict[str, Any]) -> list[str]:
         lines.append(f"   hash 不一致文件: {', '.join(deterministic['mismatches'])}")
 
     hard_ok = _all_hard_checks_pass(checks)
+    warning_count = _count_warnings(checks)
     summary = "ALL PASS"
     if not hard_ok:
         summary = "HAS FAILURES"
+    elif warning_count:
+        summary = f"ALL PASS WITH {warning_count} WARNING(S)"
     lines.extend(["", f"**总结: {summary}**"])
     return lines
 
@@ -465,6 +478,7 @@ def _build_packet(
         "mismatches": deterministic_mismatches,
     }
     all_ok = _all_hard_checks_pass(checks)
+    warning_count = _count_warnings(checks)
 
     start_ms = min(int(segment["start_ms"]) for segment in input_segments)
     end_ms = max(int(segment["end_ms"]) for segment in input_segments)
@@ -498,7 +512,8 @@ def _build_packet(
             "",
             "## 校验结果",
             "",
-            f"- {'ALL PASS' if all_ok else 'HAS FAILURES'}",
+            f"- {'ALL PASS' if all_ok else 'HAS FAILURES'}"
+            + (f" ({warning_count} warning)" if all_ok and warning_count else ""),
             "- 详见 `提取校验.md`",
         ]
     )
@@ -635,6 +650,7 @@ def _export_course(course_id: str) -> dict[str, Any]:
 
         output_hashes = {filename: _file_sha256(out_dir / filename) for filename in OUTPUT_FILES}
         hard_ok = _all_hard_checks_pass(checks)
+        warning_count = _count_warnings(checks)
         failed_hard = _count_failed_hard_checks(checks)
         status = "ok" if hard_ok else "failed"
         reason = None if hard_ok else "one or more hard validation checks failed"
@@ -649,7 +665,7 @@ def _export_course(course_id: str) -> dict[str, Any]:
             "role_counts": role_counts,
             "checks": checks,
             "all_ok": hard_ok,
-            "warning_count": 0,
+            "warning_count": warning_count,
             "failed_checks_count": failed_hard,
             "output_hashes": output_hashes,
         }

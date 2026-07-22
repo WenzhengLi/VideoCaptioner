@@ -204,23 +204,26 @@ def test_markdown_special_characters_in_code_fence(tmp_path: Path, monkeypatch) 
     assert "原样保留" in course_text
 
 
-def test_original_order_time_reversal_fails(tmp_path: Path, monkeypatch) -> None:
+def test_input_order_reversal_is_warning_and_export_is_monotonic(
+    tmp_path: Path, monkeypatch
+) -> None:
     output_root = _configure_roots(tmp_path, monkeypatch)
     segments = _make_segments()
     segments[4]["start_ms"] = 500
     segments[4]["end_ms"] = 900
     _setup_course(tmp_path, p02=_make_p02(segments))
     result = _export_course("C099")
-    input_check = result["checks"]["time_monotonic_original_order"]
-    assert input_check["passed"] is False
-    assert input_check["violations"][0]["previous_segment_id"] == "SEG-C099-000004"
-    assert input_check["violations"][0]["current_segment_id"] == "SEG-C099-000005"
+    input_check = result["checks"]["input_order_time_violations"]
+    assert input_check["severity"] == "warning"
+    assert input_check["warning"] is True
+    assert input_check["passed"] is True
+    assert input_check["violation_count"] >= 1
     assert result["checks"]["exported_order_time_monotonic"]["passed"] is True
     assert result["checks"]["segment_set_preserved"]["passed"] is True
-    assert result["status"] == "failed"
-    assert result["reason"] == "one or more hard validation checks failed"
-    assert result["warning_count"] == 0
-    assert result["failed_checks_count"] >= 1
+    assert result["status"] == "ok"
+    assert result["reason"] is None
+    assert result["warning_count"] == 1
+    assert result["failed_checks_count"] == 0
     ordered = _ordered_segments(segments)
     assert {s["segment_id"] for s in ordered} == {s["segment_id"] for s in segments}
     assert len(ordered) == len(segments)
@@ -248,7 +251,7 @@ def test_hard_gate_failure_sets_status_failed_and_cli_nonzero(
     assert main() == 1
 
 
-def test_original_order_failure_propagates_to_global_report(tmp_path: Path, monkeypatch) -> None:
+def test_warning_only_allows_all_passed_true(tmp_path: Path, monkeypatch) -> None:
     _configure_roots(tmp_path, monkeypatch)
     segments = _make_segments()
     segments[4]["start_ms"] = 500
@@ -259,11 +262,11 @@ def test_original_order_failure_propagates_to_global_report(tmp_path: Path, monk
     second = _export_course("C099")
     results = _attach_rerun_hash_evidence([first], [second])
     report = json.loads(_write_global_report(results, 1.1).read_text(encoding="utf-8"))
-    assert report["warning_count"] == 0
-    assert report["failed_checks_count"] >= 1
-    assert report["all_passed"] is False
-    assert results[0]["status"] == "failed"
-    assert results[0]["reason"] == "one or more hard validation checks failed"
+    assert report["warning_count"] == 1
+    assert report["failed_checks_count"] == 0
+    assert report["all_passed"] is True
+    assert results[0]["status"] == "ok"
+    assert results[0]["reason"] is None
 
 
 def test_status_ok_never_has_failure_reason(tmp_path: Path, monkeypatch) -> None:
