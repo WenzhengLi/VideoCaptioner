@@ -1,0 +1,38 @@
+filters:
+  and:
+    - 'record_type == "ob"'
+views:
+  - type: table
+    name: OB总览
+    order:
+      - note.object_id
+      - file.name
+      - note.course_id
+      - note.scene
+      - note.female_line
+      - note.reply_directions
+      - note.reply_category_count
+      - note.example_count
+      - note.approval_status
+    sort:
+      - property: note.course_id
+        direction: ASC
+      - property: note.object_id
+        direction: ASC
+properties:
+  object_id:
+    displayName: OB编号
+  course_id:
+    displayName: 课程
+  scene:
+    displayName: 场景
+  female_line:
+    displayName: 女生原话
+  reply_directions:
+    displayName: 回答分类
+  reply_category_count:
+    displayName: 分类数
+  example_count:
+    displayName: 示例数
+  approval_status:
+    displayName: 状态

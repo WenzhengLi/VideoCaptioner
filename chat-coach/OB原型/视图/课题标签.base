@@ -1,0 +1,29 @@
+filters:
+  and:
+    - 'record_type == "tag"'
+views:
+  - type: table
+    name: 课题标签
+    order:
+      - note.tag_id
+      - file.name
+      - note.dimension
+      - note.ob_count
+      - note.course_count
+      - note.courses
+    sort:
+      - property: note.dimension
+        direction: ASC
+      - property: note.ob_count
+        direction: DESC
+properties:
+  tag_id:
+    displayName: 标签编号
+  dimension:
+    displayName: 标签维度
+  ob_count:
+    displayName: 关联OB
+  course_count:
+    displayName: 关联课程数
+  courses:
+    displayName: 关联课程

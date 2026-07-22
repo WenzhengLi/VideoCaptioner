@@ -1,0 +1,33 @@
+filters:
+  and:
+    - 'record_type == "course"'
+views:
+  - type: table
+    name: 课程总览
+    order:
+      - note.course_id
+      - file.name
+      - note.source_document_count
+      - note.case_count
+      - note.topic_tag_count
+      - note.ob_count
+      - note.reply_category_count
+      - note.reply_example_count
+      - note.approval_status
+properties:
+  course_id:
+    displayName: 课程
+  source_document_count:
+    displayName: 原始资料
+  case_count:
+    displayName: 案例数
+  topic_tag_count:
+    displayName: 标签数
+  ob_count:
+    displayName: OB数
+  reply_category_count:
+    displayName: 回答分类
+  reply_example_count:
+    displayName: 示例数
+  approval_status:
+    displayName: 状态

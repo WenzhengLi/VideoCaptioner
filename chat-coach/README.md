@@ -1,5 +1,7 @@
 # Chat Coach Workspace
 
+Obsidian 数据化原型入口：[[OB原型/README|C027 OB 原型]]。请只把 `chat-coach` 作为仓库根目录打开。
+
 这是新的聊天分析知识库工作区。旧的课程案例/Dify 数据只作为原文与证据参考，不再决定本工作区的知识结构。
 
 ## 当前目标
