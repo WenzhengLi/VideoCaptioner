@@ -1,0 +1,153 @@
+{
+  "all_ok": true,
+  "case_count": 0,
+  "checks": {
+    "deterministic_render": {
+      "mismatches": [],
+      "passed": true
+    },
+    "exported_order_time_monotonic": {
+      "passed": true,
+      "violation_count": 0,
+      "violations": []
+    },
+    "input_order_time_violations": {
+      "passed": true,
+      "severity": "warning",
+      "violation_count": 6,
+      "violations": [
+        {
+          "current_segment_id": "SEG-C071-000004",
+          "current_start_ms": 4810,
+          "previous_segment_id": "SEG-C071-000003",
+          "previous_start_ms": 5000
+        },
+        {
+          "current_segment_id": "SEG-C071-000008",
+          "current_start_ms": 8189,
+          "previous_segment_id": "SEG-C071-000007",
+          "previous_start_ms": 10000
+        },
+        {
+          "current_segment_id": "SEG-C071-000026",
+          "current_start_ms": 51630,
+          "previous_segment_id": "SEG-C071-000025",
+          "previous_start_ms": 55000
+        },
+        {
+          "current_segment_id": "SEG-C071-000038",
+          "current_start_ms": 73670,
+          "previous_segment_id": "SEG-C071-000037",
+          "previous_start_ms": 75000
+        },
+        {
+          "current_segment_id": "SEG-C071-000050",
+          "current_start_ms": 88030,
+          "previous_segment_id": "SEG-C071-000049",
+          "previous_start_ms": 90000
+        },
+        {
+          "current_segment_id": "SEG-C071-000062",
+          "current_start_ms": 114500,
+          "previous_segment_id": "SEG-C071-000061",
+          "previous_start_ms": 115000
+        }
+      ],
+      "warning": true
+    },
+    "p03_boundaries_in_p02": {
+      "failure_count": 0,
+      "failures": [],
+      "passed": true
+    },
+    "role_file_counts": {
+      "actual": {
+        "聊天原话.md": 0,
+        "讲师原话.md": 55,
+        "课板原文.md": 10
+      },
+      "expected": {
+        "聊天原话.md": 0,
+        "讲师原话.md": 55,
+        "课板原文.md": 10
+      },
+      "passed": true
+    },
+    "segment_count": {
+      "exported_count": 66,
+      "p02_count": 66,
+      "passed": true
+    },
+    "segment_set_preserved": {
+      "exported_count": 66,
+      "exported_unique_ids": 66,
+      "extra_ids": [],
+      "missing_ids": [],
+      "p02_count": 66,
+      "p02_unique_ids": 66,
+      "passed": true
+    },
+    "unique_segment_ids": {
+      "duplicate_segment_ids": [],
+      "passed": true,
+      "total": 66,
+      "unique": 66
+    },
+    "utf8_readable": {
+      "checked_files": [
+        "source-manifest.md",
+        "课程原文.md",
+        "聊天原话.md",
+        "讲师原话.md",
+        "课板原文.md",
+        "案例边界.md",
+        "提取校验.md"
+      ],
+      "passed": true
+    }
+  },
+  "course_id": "C071",
+  "failed_checks_count": 0,
+  "output_hashes": {
+    "source-manifest.md": "12310ee6145725eda99c8ce0c4bc0b12b90476fc9f8cc6965f7dcc61f38d07e3",
+    "提取校验.md": "2a4f89e528dd566d9d21ee92acf5e06af14ef87b1b5e1a873feb2ff166d2ebc1",
+    "案例边界.md": "39fa46f10e4327f0fd81d60aec90a46dc428dd475334bef954ee2c814bcf45e3",
+    "聊天原话.md": "f8ac98e3e5dd03c8180a9848149cadcc1d4bb789cc9c617a22b144c3b5e79064",
+    "讲师原话.md": "0283502fb299b4978e458c664d3bc54d21568dac696f1c50043b643cff99ff86",
+    "课板原文.md": "3ff7c9c35c3745bbf15d5443faf6e29be8cff70c02e32d0dda5c92409e386a37",
+    "课程原文.md": "0e07f391c5337cf5dda2eb8c4fd8236efe8d77ed3a28751d33c93b2298eba9cf"
+  },
+  "p02_path": "data/courses/C071/02_normalized/P02-knowledge-v003.json",
+  "p03_path": "data/courses/C071/03_cases/P03-knowledge-v003.json",
+  "reason": null,
+  "rerun_delay_seconds": 1.1,
+  "rerun_hash_check": {
+    "first_hashes": {
+      "source-manifest.md": "12310ee6145725eda99c8ce0c4bc0b12b90476fc9f8cc6965f7dcc61f38d07e3",
+      "提取校验.md": "2a4f89e528dd566d9d21ee92acf5e06af14ef87b1b5e1a873feb2ff166d2ebc1",
+      "案例边界.md": "39fa46f10e4327f0fd81d60aec90a46dc428dd475334bef954ee2c814bcf45e3",
+      "聊天原话.md": "f8ac98e3e5dd03c8180a9848149cadcc1d4bb789cc9c617a22b144c3b5e79064",
+      "讲师原话.md": "0283502fb299b4978e458c664d3bc54d21568dac696f1c50043b643cff99ff86",
+      "课板原文.md": "3ff7c9c35c3745bbf15d5443faf6e29be8cff70c02e32d0dda5c92409e386a37",
+      "课程原文.md": "0e07f391c5337cf5dda2eb8c4fd8236efe8d77ed3a28751d33c93b2298eba9cf"
+    },
+    "first_status": "ok",
+    "mismatches": [],
+    "passed": true,
+    "second_hashes": {
+      "source-manifest.md": "12310ee6145725eda99c8ce0c4bc0b12b90476fc9f8cc6965f7dcc61f38d07e3",
+      "提取校验.md": "2a4f89e528dd566d9d21ee92acf5e06af14ef87b1b5e1a873feb2ff166d2ebc1",
+      "案例边界.md": "39fa46f10e4327f0fd81d60aec90a46dc428dd475334bef954ee2c814bcf45e3",
+      "聊天原话.md": "f8ac98e3e5dd03c8180a9848149cadcc1d4bb789cc9c617a22b144c3b5e79064",
+      "讲师原话.md": "0283502fb299b4978e458c664d3bc54d21568dac696f1c50043b643cff99ff86",
+      "课板原文.md": "3ff7c9c35c3745bbf15d5443faf6e29be8cff70c02e32d0dda5c92409e386a37",
+      "课程原文.md": "0e07f391c5337cf5dda2eb8c4fd8236efe8d77ed3a28751d33c93b2298eba9cf"
+    },
+    "second_status": "ok"
+  },
+  "schema_version": "1.2",
+  "script_version": "1.4.0",
+  "segment_count": 66,
+  "status": "ok",
+  "warning_count": 1
+}
