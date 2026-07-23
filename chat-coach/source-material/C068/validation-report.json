@@ -1,0 +1,123 @@
+{
+  "all_ok": true,
+  "case_count": 0,
+  "checks": {
+    "deterministic_render": {
+      "mismatches": [],
+      "passed": true
+    },
+    "exported_order_time_monotonic": {
+      "passed": true,
+      "violation_count": 0,
+      "violations": []
+    },
+    "input_order_time_violations": {
+      "passed": true,
+      "severity": "warning",
+      "violation_count": 1,
+      "violations": [
+        {
+          "current_segment_id": "SEG-C068-000039",
+          "current_start_ms": 70310,
+          "previous_segment_id": "SEG-C068-000038",
+          "previous_start_ms": 75000
+        }
+      ],
+      "warning": true
+    },
+    "p03_boundaries_in_p02": {
+      "failure_count": 0,
+      "failures": [],
+      "passed": true
+    },
+    "role_file_counts": {
+      "actual": {
+        "聊天原话.md": 1,
+        "讲师原话.md": 38,
+        "课板原文.md": 1
+      },
+      "expected": {
+        "聊天原话.md": 1,
+        "讲师原话.md": 38,
+        "课板原文.md": 1
+      },
+      "passed": true
+    },
+    "segment_count": {
+      "exported_count": 39,
+      "p02_count": 39,
+      "passed": true
+    },
+    "segment_set_preserved": {
+      "exported_count": 39,
+      "exported_unique_ids": 39,
+      "extra_ids": [],
+      "missing_ids": [],
+      "p02_count": 39,
+      "p02_unique_ids": 39,
+      "passed": true
+    },
+    "unique_segment_ids": {
+      "duplicate_segment_ids": [],
+      "passed": true,
+      "total": 39,
+      "unique": 39
+    },
+    "utf8_readable": {
+      "checked_files": [
+        "source-manifest.md",
+        "课程原文.md",
+        "聊天原话.md",
+        "讲师原话.md",
+        "课板原文.md",
+        "案例边界.md",
+        "提取校验.md"
+      ],
+      "passed": true
+    }
+  },
+  "course_id": "C068",
+  "failed_checks_count": 0,
+  "output_hashes": {
+    "source-manifest.md": "a3dc8f751b1f2a015eb078a7b1a6ae82c6d52cf74b4e20ac1e1edfdd1c2a4136",
+    "提取校验.md": "565797fee2e9f906b48042bc14b6600ca0c3b77afecd0176501943b3dc2e0c4a",
+    "案例边界.md": "5af7ee55182d918241c36c91578366084ee663eb37bca9004379ed53efa48deb",
+    "聊天原话.md": "8ff879615bb0d6987a4104ab307d08ee54fc6fe4c8c2168dce8ced8ba4cea15e",
+    "讲师原话.md": "7ffff9a37b451c16b2c4aec3f76eeb5102bac6ddd510616611aebd4e7682ec0a",
+    "课板原文.md": "d6bb8813b053e79ed953c240c1f2fe09201e25b8e602ea158ae195bf65c0a429",
+    "课程原文.md": "da9864f2b85b5c62c67ae2f37b34e5ef032477da4ea71fca495b9e9a8d72a5c0"
+  },
+  "p02_path": "data/courses/C068/02_normalized/P02-knowledge-v003.json",
+  "p03_path": "data/courses/C068/03_cases/P03-knowledge-v003.json",
+  "reason": null,
+  "rerun_delay_seconds": 1.1,
+  "rerun_hash_check": {
+    "first_hashes": {
+      "source-manifest.md": "a3dc8f751b1f2a015eb078a7b1a6ae82c6d52cf74b4e20ac1e1edfdd1c2a4136",
+      "提取校验.md": "565797fee2e9f906b48042bc14b6600ca0c3b77afecd0176501943b3dc2e0c4a",
+      "案例边界.md": "5af7ee55182d918241c36c91578366084ee663eb37bca9004379ed53efa48deb",
+      "聊天原话.md": "8ff879615bb0d6987a4104ab307d08ee54fc6fe4c8c2168dce8ced8ba4cea15e",
+      "讲师原话.md": "7ffff9a37b451c16b2c4aec3f76eeb5102bac6ddd510616611aebd4e7682ec0a",
+      "课板原文.md": "d6bb8813b053e79ed953c240c1f2fe09201e25b8e602ea158ae195bf65c0a429",
+      "课程原文.md": "da9864f2b85b5c62c67ae2f37b34e5ef032477da4ea71fca495b9e9a8d72a5c0"
+    },
+    "first_status": "ok",
+    "mismatches": [],
+    "passed": true,
+    "second_hashes": {
+      "source-manifest.md": "a3dc8f751b1f2a015eb078a7b1a6ae82c6d52cf74b4e20ac1e1edfdd1c2a4136",
+      "提取校验.md": "565797fee2e9f906b48042bc14b6600ca0c3b77afecd0176501943b3dc2e0c4a",
+      "案例边界.md": "5af7ee55182d918241c36c91578366084ee663eb37bca9004379ed53efa48deb",
+      "聊天原话.md": "8ff879615bb0d6987a4104ab307d08ee54fc6fe4c8c2168dce8ced8ba4cea15e",
+      "讲师原话.md": "7ffff9a37b451c16b2c4aec3f76eeb5102bac6ddd510616611aebd4e7682ec0a",
+      "课板原文.md": "d6bb8813b053e79ed953c240c1f2fe09201e25b8e602ea158ae195bf65c0a429",
+      "课程原文.md": "da9864f2b85b5c62c67ae2f37b34e5ef032477da4ea71fca495b9e9a8d72a5c0"
+    },
+    "second_status": "ok"
+  },
+  "schema_version": "1.2",
+  "script_version": "1.4.0",
+  "segment_count": 39,
+  "status": "ok",
+  "warning_count": 1
+}

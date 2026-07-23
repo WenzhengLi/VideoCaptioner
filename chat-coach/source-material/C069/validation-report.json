@@ -1,0 +1,165 @@
+{
+  "all_ok": true,
+  "case_count": 0,
+  "checks": {
+    "deterministic_render": {
+      "mismatches": [],
+      "passed": true
+    },
+    "exported_order_time_monotonic": {
+      "passed": true,
+      "violation_count": 0,
+      "violations": []
+    },
+    "input_order_time_violations": {
+      "passed": true,
+      "severity": "warning",
+      "violation_count": 8,
+      "violations": [
+        {
+          "current_segment_id": "SEG-C069-000005",
+          "current_start_ms": 4030,
+          "previous_segment_id": "SEG-C069-000004",
+          "previous_start_ms": 5000
+        },
+        {
+          "current_segment_id": "SEG-C069-000008",
+          "current_start_ms": 8590,
+          "previous_segment_id": "SEG-C069-000007",
+          "previous_start_ms": 10000
+        },
+        {
+          "current_segment_id": "SEG-C069-000012",
+          "current_start_ms": 14590,
+          "previous_segment_id": "SEG-C069-000011",
+          "previous_start_ms": 15000
+        },
+        {
+          "current_segment_id": "SEG-C069-000014",
+          "current_start_ms": 17450,
+          "previous_segment_id": "SEG-C069-000013",
+          "previous_start_ms": 20000
+        },
+        {
+          "current_segment_id": "SEG-C069-000019",
+          "current_start_ms": 23770,
+          "previous_segment_id": "SEG-C069-000018",
+          "previous_start_ms": 25000
+        },
+        {
+          "current_segment_id": "SEG-C069-000029",
+          "current_start_ms": 34750,
+          "previous_segment_id": "SEG-C069-000028",
+          "previous_start_ms": 35000
+        },
+        {
+          "current_segment_id": "SEG-C069-000032",
+          "current_start_ms": 39730,
+          "previous_segment_id": "SEG-C069-000031",
+          "previous_start_ms": 40000
+        },
+        {
+          "current_segment_id": "SEG-C069-000035",
+          "current_start_ms": 42750,
+          "previous_segment_id": "SEG-C069-000034",
+          "previous_start_ms": 45000
+        }
+      ],
+      "warning": true
+    },
+    "p03_boundaries_in_p02": {
+      "failure_count": 0,
+      "failures": [],
+      "passed": true
+    },
+    "role_file_counts": {
+      "actual": {
+        "聊天原话.md": 0,
+        "讲师原话.md": 31,
+        "课板原文.md": 10
+      },
+      "expected": {
+        "聊天原话.md": 0,
+        "讲师原话.md": 31,
+        "课板原文.md": 10
+      },
+      "passed": true
+    },
+    "segment_count": {
+      "exported_count": 42,
+      "p02_count": 42,
+      "passed": true
+    },
+    "segment_set_preserved": {
+      "exported_count": 42,
+      "exported_unique_ids": 42,
+      "extra_ids": [],
+      "missing_ids": [],
+      "p02_count": 42,
+      "p02_unique_ids": 42,
+      "passed": true
+    },
+    "unique_segment_ids": {
+      "duplicate_segment_ids": [],
+      "passed": true,
+      "total": 42,
+      "unique": 42
+    },
+    "utf8_readable": {
+      "checked_files": [
+        "source-manifest.md",
+        "课程原文.md",
+        "聊天原话.md",
+        "讲师原话.md",
+        "课板原文.md",
+        "案例边界.md",
+        "提取校验.md"
+      ],
+      "passed": true
+    }
+  },
+  "course_id": "C069",
+  "failed_checks_count": 0,
+  "output_hashes": {
+    "source-manifest.md": "595b6fae79fca966329d2ce6358f19630c62ac7a024b49c283c3d5c325e69098",
+    "提取校验.md": "612cb1cf892852c4e96ae568d66a6c2ea5f540b74198a0e2526b12e7d3bbe5ee",
+    "案例边界.md": "70a0f86557ad7ae1431bd0ec7fc7bd4bf1bf26ccc6debb8e2a9ebe43e72f59fe",
+    "聊天原话.md": "dc247cc3ef89fd541f03ee91e45bf28d315063dc3a3292b3af216041b05c1f01",
+    "讲师原话.md": "b7c2dfda50b29bced3940a3ac01b16d09c9fd6ffec7cacb54d86abed8d1bcd72",
+    "课板原文.md": "64f5850cbf56145437924fbc331e4d672e980333ff14b9e433886272f0c42262",
+    "课程原文.md": "199a1344ea568793d366ff83ad3213d7448de0fd3da1cc4e8edfabaac6036fcb"
+  },
+  "p02_path": "data/courses/C069/02_normalized/P02-knowledge-v003.json",
+  "p03_path": "data/courses/C069/03_cases/P03-knowledge-v003.json",
+  "reason": null,
+  "rerun_delay_seconds": 1.1,
+  "rerun_hash_check": {
+    "first_hashes": {
+      "source-manifest.md": "595b6fae79fca966329d2ce6358f19630c62ac7a024b49c283c3d5c325e69098",
+      "提取校验.md": "612cb1cf892852c4e96ae568d66a6c2ea5f540b74198a0e2526b12e7d3bbe5ee",
+      "案例边界.md": "70a0f86557ad7ae1431bd0ec7fc7bd4bf1bf26ccc6debb8e2a9ebe43e72f59fe",
+      "聊天原话.md": "dc247cc3ef89fd541f03ee91e45bf28d315063dc3a3292b3af216041b05c1f01",
+      "讲师原话.md": "b7c2dfda50b29bced3940a3ac01b16d09c9fd6ffec7cacb54d86abed8d1bcd72",
+      "课板原文.md": "64f5850cbf56145437924fbc331e4d672e980333ff14b9e433886272f0c42262",
+      "课程原文.md": "199a1344ea568793d366ff83ad3213d7448de0fd3da1cc4e8edfabaac6036fcb"
+    },
+    "first_status": "ok",
+    "mismatches": [],
+    "passed": true,
+    "second_hashes": {
+      "source-manifest.md": "595b6fae79fca966329d2ce6358f19630c62ac7a024b49c283c3d5c325e69098",
+      "提取校验.md": "612cb1cf892852c4e96ae568d66a6c2ea5f540b74198a0e2526b12e7d3bbe5ee",
+      "案例边界.md": "70a0f86557ad7ae1431bd0ec7fc7bd4bf1bf26ccc6debb8e2a9ebe43e72f59fe",
+      "聊天原话.md": "dc247cc3ef89fd541f03ee91e45bf28d315063dc3a3292b3af216041b05c1f01",
+      "讲师原话.md": "b7c2dfda50b29bced3940a3ac01b16d09c9fd6ffec7cacb54d86abed8d1bcd72",
+      "课板原文.md": "64f5850cbf56145437924fbc331e4d672e980333ff14b9e433886272f0c42262",
+      "课程原文.md": "199a1344ea568793d366ff83ad3213d7448de0fd3da1cc4e8edfabaac6036fcb"
+    },
+    "second_status": "ok"
+  },
+  "schema_version": "1.2",
+  "script_version": "1.4.0",
+  "segment_count": 42,
+  "status": "ok",
+  "warning_count": 1
+}
