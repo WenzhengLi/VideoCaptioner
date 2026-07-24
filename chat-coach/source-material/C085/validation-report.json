@@ -1,0 +1,243 @@
+{
+  "all_ok": true,
+  "case_count": 0,
+  "checks": {
+    "deterministic_render": {
+      "mismatches": [],
+      "passed": true
+    },
+    "exported_order_time_monotonic": {
+      "passed": true,
+      "violation_count": 0,
+      "violations": []
+    },
+    "input_order_time_violations": {
+      "passed": true,
+      "severity": "warning",
+      "violation_count": 21,
+      "violations": [
+        {
+          "current_segment_id": "SEG-C085-000003",
+          "current_start_ms": 3610,
+          "previous_segment_id": "SEG-C085-000002",
+          "previous_start_ms": 5000
+        },
+        {
+          "current_segment_id": "SEG-C085-000008",
+          "current_start_ms": 9610,
+          "previous_segment_id": "SEG-C085-000007",
+          "previous_start_ms": 10000
+        },
+        {
+          "current_segment_id": "SEG-C085-000061",
+          "current_start_ms": 129960,
+          "previous_segment_id": "SEG-C085-000060",
+          "previous_start_ms": 130000
+        },
+        {
+          "current_segment_id": "SEG-C085-000112",
+          "current_start_ms": 274620,
+          "previous_segment_id": "SEG-C085-000111",
+          "previous_start_ms": 275000
+        },
+        {
+          "current_segment_id": "SEG-C085-000128",
+          "current_start_ms": 309510,
+          "previous_segment_id": "SEG-C085-000127",
+          "previous_start_ms": 310000
+        },
+        {
+          "current_segment_id": "SEG-C085-000160",
+          "current_start_ms": 388890,
+          "previous_segment_id": "SEG-C085-000159",
+          "previous_start_ms": 390000
+        },
+        {
+          "current_segment_id": "SEG-C085-000242",
+          "current_start_ms": 584810,
+          "previous_segment_id": "SEG-C085-000241",
+          "previous_start_ms": 585000
+        },
+        {
+          "current_segment_id": "SEG-C085-000246",
+          "current_start_ms": 589580,
+          "previous_segment_id": "SEG-C085-000245",
+          "previous_start_ms": 595000
+        },
+        {
+          "current_segment_id": "SEG-C085-000272",
+          "current_start_ms": 659610,
+          "previous_segment_id": "SEG-C085-000271",
+          "previous_start_ms": 660000
+        },
+        {
+          "current_segment_id": "SEG-C085-000284",
+          "current_start_ms": 692860,
+          "previous_segment_id": "SEG-C085-000283",
+          "previous_start_ms": 695000
+        },
+        {
+          "current_segment_id": "SEG-C085-000315",
+          "current_start_ms": 783350,
+          "previous_segment_id": "SEG-C085-000314",
+          "previous_start_ms": 785000
+        },
+        {
+          "current_segment_id": "SEG-C085-000317",
+          "current_start_ms": 788860,
+          "previous_segment_id": "SEG-C085-000316",
+          "previous_start_ms": 790000
+        },
+        {
+          "current_segment_id": "SEG-C085-000329",
+          "current_start_ms": 814120,
+          "previous_segment_id": "SEG-C085-000328",
+          "previous_start_ms": 815000
+        },
+        {
+          "current_segment_id": "SEG-C085-000331",
+          "current_start_ms": 816250,
+          "previous_segment_id": "SEG-C085-000330",
+          "previous_start_ms": 820000
+        },
+        {
+          "current_segment_id": "SEG-C085-000336",
+          "current_start_ms": 829850,
+          "previous_segment_id": "SEG-C085-000335",
+          "previous_start_ms": 830000
+        },
+        {
+          "current_segment_id": "SEG-C085-000517",
+          "current_start_ms": 1244160,
+          "previous_segment_id": "SEG-C085-000516",
+          "previous_start_ms": 1245000
+        },
+        {
+          "current_segment_id": "SEG-C085-000520",
+          "current_start_ms": 1248670,
+          "previous_segment_id": "SEG-C085-000519",
+          "previous_start_ms": 1250000
+        },
+        {
+          "current_segment_id": "SEG-C085-000545",
+          "current_start_ms": 1308440,
+          "previous_segment_id": "SEG-C085-000544",
+          "previous_start_ms": 1310000
+        },
+        {
+          "current_segment_id": "SEG-C085-000579",
+          "current_start_ms": 1374970,
+          "previous_segment_id": "SEG-C085-000578",
+          "previous_start_ms": 1375000
+        },
+        {
+          "current_segment_id": "SEG-C085-000601",
+          "current_start_ms": 1429620,
+          "previous_segment_id": "SEG-C085-000600",
+          "previous_start_ms": 1430000
+        },
+        {
+          "current_segment_id": "SEG-C085-000651",
+          "current_start_ms": 1528160,
+          "previous_segment_id": "SEG-C085-000650",
+          "previous_start_ms": 1530000
+        }
+      ],
+      "warning": true
+    },
+    "p03_boundaries_in_p02": {
+      "failure_count": 0,
+      "failures": [],
+      "passed": true
+    },
+    "role_file_counts": {
+      "actual": {
+        "聊天原话.md": 2,
+        "讲师原话.md": 643,
+        "课板原文.md": 25
+      },
+      "expected": {
+        "聊天原话.md": 2,
+        "讲师原话.md": 643,
+        "课板原文.md": 25
+      },
+      "passed": true
+    },
+    "segment_count": {
+      "exported_count": 668,
+      "p02_count": 668,
+      "passed": true
+    },
+    "segment_set_preserved": {
+      "exported_count": 668,
+      "exported_unique_ids": 668,
+      "extra_ids": [],
+      "missing_ids": [],
+      "p02_count": 668,
+      "p02_unique_ids": 668,
+      "passed": true
+    },
+    "unique_segment_ids": {
+      "duplicate_segment_ids": [],
+      "passed": true,
+      "total": 668,
+      "unique": 668
+    },
+    "utf8_readable": {
+      "checked_files": [
+        "source-manifest.md",
+        "课程原文.md",
+        "聊天原话.md",
+        "讲师原话.md",
+        "课板原文.md",
+        "案例边界.md",
+        "提取校验.md"
+      ],
+      "passed": true
+    }
+  },
+  "course_id": "C085",
+  "failed_checks_count": 0,
+  "output_hashes": {
+    "source-manifest.md": "fbacf57cacf179733c94236380d793e41e101cf89d5b59b251aaf24d5f59bee8",
+    "提取校验.md": "3a838e78dec8be58f7b99d8c037ac59b45e36082e43e94811ccf56c3e430d226",
+    "案例边界.md": "a0df47c91f3b4bdfd2fc8605423fb59d8dc809672d5c024ecab51ca63c0208b1",
+    "聊天原话.md": "5636407bf3fdf0dfddb5c86d7a036a1d88ff254a5a3f16cdf73401500b6c928a",
+    "讲师原话.md": "c86bbf2d53857422ed41386281249527ab8dd78b3d41df35f6a55dacb6d3dc3c",
+    "课板原文.md": "cdaf03cd7a44e9c55a24fa72fe9ffdeccb948e51e6695ad6a9e7833e0f672071",
+    "课程原文.md": "16e19d05c4a3a6642d906eabbdab74f571adaa1efb0f5b6397854145ffa0a48f"
+  },
+  "p02_path": "data/courses/C085/02_normalized/P02-knowledge-v003.json",
+  "p03_path": "data/courses/C085/03_cases/P03-knowledge-v003.json",
+  "reason": null,
+  "rerun_delay_seconds": 1.1,
+  "rerun_hash_check": {
+    "first_hashes": {
+      "source-manifest.md": "fbacf57cacf179733c94236380d793e41e101cf89d5b59b251aaf24d5f59bee8",
+      "提取校验.md": "3a838e78dec8be58f7b99d8c037ac59b45e36082e43e94811ccf56c3e430d226",
+      "案例边界.md": "a0df47c91f3b4bdfd2fc8605423fb59d8dc809672d5c024ecab51ca63c0208b1",
+      "聊天原话.md": "5636407bf3fdf0dfddb5c86d7a036a1d88ff254a5a3f16cdf73401500b6c928a",
+      "讲师原话.md": "c86bbf2d53857422ed41386281249527ab8dd78b3d41df35f6a55dacb6d3dc3c",
+      "课板原文.md": "cdaf03cd7a44e9c55a24fa72fe9ffdeccb948e51e6695ad6a9e7833e0f672071",
+      "课程原文.md": "16e19d05c4a3a6642d906eabbdab74f571adaa1efb0f5b6397854145ffa0a48f"
+    },
+    "first_status": "ok",
+    "mismatches": [],
+    "passed": true,
+    "second_hashes": {
+      "source-manifest.md": "fbacf57cacf179733c94236380d793e41e101cf89d5b59b251aaf24d5f59bee8",
+      "提取校验.md": "3a838e78dec8be58f7b99d8c037ac59b45e36082e43e94811ccf56c3e430d226",
+      "案例边界.md": "a0df47c91f3b4bdfd2fc8605423fb59d8dc809672d5c024ecab51ca63c0208b1",
+      "聊天原话.md": "5636407bf3fdf0dfddb5c86d7a036a1d88ff254a5a3f16cdf73401500b6c928a",
+      "讲师原话.md": "c86bbf2d53857422ed41386281249527ab8dd78b3d41df35f6a55dacb6d3dc3c",
+      "课板原文.md": "cdaf03cd7a44e9c55a24fa72fe9ffdeccb948e51e6695ad6a9e7833e0f672071",
+      "课程原文.md": "16e19d05c4a3a6642d906eabbdab74f571adaa1efb0f5b6397854145ffa0a48f"
+    },
+    "second_status": "ok"
+  },
+  "schema_version": "1.2",
+  "script_version": "1.4.0",
+  "segment_count": 668,
+  "status": "ok",
+  "warning_count": 1
+}
